@@ -1,0 +1,25 @@
+doctype html
+html
+	head
+		title Test
+	body
+		div.container
+			header
+				h1 test
+
+				p pinar en viola
+				
+				
+			div
+				h2 Input
+				div#webcam
+
+			div
+				h2 Output
+				canvas#canvas(height='240' width='320')
+					
+			button#btn123 click
+		
+		script(src='bower_components/getusermedia.js/lib/getUserMedia.js')
+		script(src='socket.io/socket.io.js')
+		script(src='js/main.js')
