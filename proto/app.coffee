@@ -37,8 +37,17 @@ io.sockets.on 'connection', (socket) ->
 	#	console.log 123
 	#, 1001
 	
-	socket.on 'news', (data) ->
+	socket.on 'video', (data) ->
 		console.log data
+	
+	socket.on 'pseudo', (data) ->
+		socket.set 'pseudo', data
+
+	socket.on 'message', (message) ->
+		socket.get 'pseudo', (error, name) ->
+			data = { 'message': message, 'pseudo' : name}
+			socket.broadcast.emit 'message', data
+			console.log 'user ' + name + ' sent this ' + message
 
 	socket.on 'disconnect', () ->
 		io.sockets.emit 'user disconnected'
@@ -49,5 +58,6 @@ io.sockets.on 'connection', (socket) ->
 
 
 app.get '/', routes.getIndex
+app.get '/chat', routes.getChat
 
 

@@ -7,7 +7,6 @@
 * for use with https://github.com/addyosmani/getUserMedia.js
 * Copyright (c) 2012 addyosmani; Licensed MIT */
 
- (function () {
 
 	var App = {
 
@@ -64,7 +63,7 @@
 			mode: "stream",
 			// callback | save | stream
 			swffile: "js/fallback/jscam_canvas_only.swf",
-			quality: 5,
+			quality: 85,
 			context: "",
 			effect: 'hipster',
 
@@ -107,7 +106,6 @@
 				
 				if ((typeof MediaStream !== "undefined" && MediaStream !== null) && stream instanceof MediaStream) {
 		
-					console.log('first')
 					if (video.mozSrcObject !== undefined) { //FF18a
 						video.mozSrcObject = stream;
 					} else { //FF16a, 17a
@@ -121,7 +119,6 @@
 					video.src = vendorURL ? vendorURL.createObjectURL(stream) : stream;
 				}
 
-
 				video.onerror = function () {
 					stream.stop();
 					streamError();
@@ -131,9 +128,6 @@
 				window.webcam.capture();
 			}
 
-			
-
-			
 		},
 
 		deviceError: function (error) {
@@ -141,13 +135,12 @@
 			console.error('An error occurred: [CODE ' + error.code + ']');
 		},
 
-		changeFilter: function () {
-			if (this.filter_on) {
-				this.filter_id = (this.filter_id + 1) & 7;
-			}
-		},
 
-		getSnapshot: function () {
+		startWindow: function () {
+
+			var socket = io.connect();
+
+
 
 			// If the current context is WebRTC/getUserMedia (something
 			// passed back from the shim to avoid doing further feature
@@ -163,7 +156,6 @@
 			// directly call window.webcam, where our shim is located
 			// and ask it to capture for us.
 			} else if(App.options.context === 'flash'){
-				console.log(window.webcam);
 				window.webcam.capture();
 			}
 
@@ -181,9 +173,11 @@
 			back.width = cw;
         	back.height = ch;
 
-			draw(video,ctx,ctx,cw,ch);
+			draw(video,canvas,ctx,cw,ch);
 			
-			function draw(v,c,bc,w,h) {
+			function draw(v,canvas, ctx, w,h) {
+				var bc = ctx;
+
 				bc.drawImage(v,0,0,w,h);
 				// Grab the pixel data from the backing canvas
 				var idata = bc.getImageData(0,0,w,h);
@@ -194,7 +188,6 @@
 					var r = data[i];
 					var g = data[i+1];
 					var b = data[i+2];
-					var brightness = (3*r+4*g+b)>>>3;
 					data[i] = r * 3;
 					data[i+1] = g * 2;
 					data[i+2] = b * 10;
@@ -202,9 +195,14 @@
 
 				//				idata.data = data;
 				// Draw the pixels onto the visible canvas
-				c.putImageData(idata,0,0);
+				bc.putImageData(idata,0,0);
+
+				var imgData = canvas.toDataURL();
 				// Start over!
-				setTimeout(function(){ draw(v,c,bc,w,h); }, 0);
+				setTimeout(function(){ 
+					draw(v,canvas,ctx,w,h);  
+					socket.emit('video', imgData);
+				}, 60);
 			
 
 			}
@@ -214,25 +212,18 @@
 
 	};
 
-	App.init();
 
-})();
 
 
 
 window.onload = function(){
 
-	var socket = io.connect('http://localhost');
-	var el = document.getElementById('stage');	
-	socket.on('turn passed', function (data) {
-		//el.innerHTML = data.log;
-		
-		el.innerHTML = data.stage;
-	});	
-
-	socket.on('disconnect', function() {
-		io.sockets.emit('user disconnected');
-	});
-
+	App.init();
+	
+	var el = document.getElementById('btn123');
+	el.addEventListener('click', App.startWindow)
 
 }
+
+
+
