@@ -31,6 +31,30 @@ textarea {
 	height: 70px;
 }
 
-#mouth-list li {	
+.list {	
 	list-style-type: none;
 }
+
+.list img {
+	height: 50px;
+}
+
+.user-avatar {
+	position: relative;
+	width: 130px;
+	height: 100px;
+	float: left;
+}
+
+.user-mouth {
+	position: absolute;
+	width: 130px;
+}
+
+.user-cig {
+	position: absolute;
+	max-height: 90px;
+	margin-left: 60px;
+	margin-top: 40px;
+}
+

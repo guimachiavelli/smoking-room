@@ -18,9 +18,15 @@ window.onload = function(){
 	var $mouth = $('#mouth-list li');
 	$mouth.click(function(){
 		var the_mouth = $(this).find('img').attr('src');
-		console.log(the_mouth);
 		socket.emit('set mouth', the_mouth);
 	})
+
+	var $cig = $('#cig-list li');
+	$cig.click(function(){
+		var the_cig = $(this).find('img').attr('src');
+		socket.emit('set cig', the_cig);
+	})
+
 
 	var $userBtn = $('#username-btn');
 	$userBtn.click(function(){
@@ -51,9 +57,17 @@ window.onload = function(){
 		$('#user-list').empty();
 
 		for (var user in data) {
+			var the_cig = '', the_mouth = '';
+
+			if (data[user].avatar !== null) {
+				the_mouth = '<img class="user-mouth" src="' + data[user].avatar + '" alt="">';
+			}
+			if (data[user].cig !== null) {
+				the_cig = '<img class="user-cig" src="' + data[user].cig + '" alt="">';
+			}
 			
 			//$('#user-list').append('<canvas id="'+ user +'" width="320" height="240"/>');
-			$('#user-list').append('<img src="' + data[user].avatar + '" alt="">');
+			$('#user-list').append('<div class="user-avatar" id="'+ user +'">'+ the_mouth + the_cig + '</div>');
 			/*
 			var the_canvas = $('#'+user)[0];
 			var ctx = the_canvas.getContext('2d');

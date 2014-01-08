@@ -37,7 +37,7 @@ app.configure () ->
 users = {}
 
 io.sockets.on 'connection', (socket) ->
-	users[socket.id] = {name: null, avatar: null}
+	users[socket.id] = {name: null, avatar: null, cig: null}
 	
 	socket.on 'set avatar', (data) ->
 		users[socket.id].avatar = data
@@ -46,6 +46,11 @@ io.sockets.on 'connection', (socket) ->
 	socket.on 'set mouth', (data) ->
 		users[socket.id].avatar = data
 		io.sockets.emit 'users', users
+
+	socket.on 'set cig', (data) ->
+		users[socket.id].cig = data
+		io.sockets.emit 'users', users
+
 
 
 	socket.on 'set user', (data) ->
