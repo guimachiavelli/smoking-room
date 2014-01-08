@@ -15,7 +15,7 @@
     "grunt-coffeelint": "0.0.8",
 	"coffee-script": "1.6.3",
 	"bower": "1.2.8"
-  }
+  },
   "scripts": {
     "postinstall": "./node_modules/.bin/bower install"
   }
