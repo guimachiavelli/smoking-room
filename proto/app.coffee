@@ -32,28 +32,44 @@ app.configure () ->
 
 	#io.set 'log level', 2
 
-io.sockets.on 'connection', (socket) ->
-	#setInterval ->
-	#	console.log 123
-	#, 1001
-	
-	socket.on 'video', (data) ->
-		console.log data
-	
-	socket.on 'pseudo', (data) ->
-		socket.set 'pseudo', data
+users = {}
 
-	socket.on 'message', (message) ->
-		socket.get 'pseudo', (error, name) ->
-			data = { 'message': message, 'pseudo' : name}
-			socket.broadcast.emit 'message', data
-			console.log 'user ' + name + ' sent this ' + message
+io.sockets.on 'connection', (socket) ->
+	users[socket.id] = {name: null, avatar: null}
+	
+	socket.on 'set avatar', (data) ->
+		users[socket.id].avatar = data
+		io.sockets.emit 'users', users
+
+	socket.on 'set user', (data) ->
+		users[socket.id].name = data
+		io.sockets.emit 'users', users
+
+
+	socket.on 'message', (data) ->
+		message = users[socket.id].name + ': ' + data
+		io.sockets.emit 'message', message
 
 	socket.on 'disconnect', () ->
-		io.sockets.emit 'user disconnected'
+		delete users[socket.id]
+		io.sockets.emit 'users', users
+		
 
-	socket.on 'end', () ->
-		io.sockets.emit 'user disconnected'
+
+	
+	broadcastStuff = () ->
+		username = null
+		avatar = null
+
+		socket.get 'user', (e, name) ->
+			username = name
+
+		socket.get 'avatar', (e, image64) ->
+			avatar = image64
+
+
+
+	
 
 
 

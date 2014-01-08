@@ -1,25 +1,44 @@
 doctype html
 html
 	head
-		title Test
+		title smoking room
+		link(rel='stylesheet' href='css/main.css')
+
 	body
 		div.container
 			header
-				h1 test
+				h1 smoking room
 
-				p pinar en viola
-				
-				
-			div
-				h2 Input
-				div#webcam
+			section#own
+				div
+					h2 type message
+					textarea#message
+					button#send send
+				div
+					h2 make avatar
+					div#webcam
+					button#make-avatar make avatar
+					button#vitamin extra vitamin c
 
-			div
-				h2 Output
-				canvas#canvas(height='240' width='320')
-					
-			button#btn123 click
-		
+				div
+					h2 avatar
+					canvas#canvas(width='320' height='240')
+
+				div
+					h2 set username
+					input(type='text')#user-field
+					button#username-btn go
+
+			section#others
+				h2 messages
+				div#chat-entries
+
+
+				h2 online users
+				div#user-list
+
+
+		script(src='//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js')
 		script(src='bower_components/getusermedia.js/lib/getUserMedia.js')
 		script(src='socket.io/socket.io.js')
 		script(src='js/main.js')
