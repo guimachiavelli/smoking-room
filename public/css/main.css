@@ -17,6 +17,7 @@ body {
 #chat-entries {
 	border: 1px solid #000;
 	height: 400px;
+	overflow: auto;
 }
 
 canvas {
