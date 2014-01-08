@@ -15,14 +15,10 @@ html
 					textarea#message
 					button#send send
 				div
-					h2 choose avatar
-					ul#mouth-list
-						li
-							img(src='img/mouth1.gif')
-						li
-							img(src='img/mouth2.gif')
-						li
-							img(src='img/mouth3.gif')
+					h2 make avatar
+					div#webcam
+					button#make-avatar make avatar
+					button#vitamin extra vitamin c
 
 				div
 					h2 avatar
@@ -43,5 +39,6 @@ html
 
 
 		script(src='//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js')
+		script(src='components/getUserMedia.js/lib/getUserMedia.js')
 		script(src='socket.io/socket.io.js')
-		script(src='js/main.js')
+		script(src='js/selfie.js')

@@ -30,3 +30,7 @@ textarea {
 	width: 100%;
 	height: 70px;
 }
+
+#mouth-list li {	
+	list-style-type: none;
+}

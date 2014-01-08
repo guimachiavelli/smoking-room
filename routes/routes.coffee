@@ -8,4 +8,8 @@ module.exports = {
 
 	getChat: (req, res) ->
 		res.render 'chat'
+
+
+	getSelfie: (req, res) ->
+		res.render 'selfie'
 }

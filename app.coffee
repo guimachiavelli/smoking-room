@@ -43,6 +43,11 @@ io.sockets.on 'connection', (socket) ->
 		users[socket.id].avatar = data
 		io.sockets.emit 'users', users
 
+	socket.on 'set mouth', (data) ->
+		users[socket.id].avatar = data
+		io.sockets.emit 'users', users
+
+
 	socket.on 'set user', (data) ->
 		users[socket.id].name = data
 		io.sockets.emit 'users', users
@@ -77,5 +82,6 @@ io.sockets.on 'connection', (socket) ->
 
 app.get '/', routes.getIndex
 app.get '/chat', routes.getChat
+app.get '/selfie', routes.getSelfie
 
 
