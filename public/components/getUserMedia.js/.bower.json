@@ -1,0 +1,14 @@
+{
+  "name": "getUserMedia.js",
+  "homepage": "https://github.com/addyosmani/getUserMedia.js",
+  "_release": "eb4d74df14",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "eb4d74df14f31080565269687634b187c626eb00"
+  },
+  "_source": "git://github.com/addyosmani/getUserMedia.js.git",
+  "_target": "*",
+  "_originalSource": "addyosmani/getUserMedia.js",
+  "_direct": true
+}
