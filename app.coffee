@@ -13,8 +13,10 @@ jade = require 'jade'
 express = require 'express'
 app = express()
 
+port = process.env.PORT || 3000
+
 server = http.createServer app
-server = server.listen 3000
+server = server.listen port
 
 io = require('socket.io').listen server
 
