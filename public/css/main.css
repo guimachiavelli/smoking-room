@@ -37,6 +37,7 @@ textarea {
 
 .list img {
 	height: 50px;
+	cursor:pointer;
 }
 
 .user-avatar {

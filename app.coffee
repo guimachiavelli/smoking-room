@@ -37,8 +37,10 @@ app.configure () ->
 users = {}
 
 io.sockets.on 'connection', (socket) ->
-	users[socket.id] = {name: null, avatar: null, cig: null}
-	
+	users[socket.id] = {name: 'anon#' + socket.id.substr(0, 5), avatar: null, cig: null}
+	io.sockets.emit 'message', users[socket.id].name + ' connected'
+
+
 	socket.on 'set avatar', (data) ->
 		users[socket.id].avatar = data
 		io.sockets.emit 'users', users
@@ -63,6 +65,7 @@ io.sockets.on 'connection', (socket) ->
 		io.sockets.emit 'message', message
 
 	socket.on 'disconnect', () ->
+		io.sockets.emit 'message', users[socket.id].name + ' disconnected'
 		delete users[socket.id]
 		io.sockets.emit 'users', users
 		

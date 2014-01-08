@@ -41,6 +41,7 @@ window.onload = function(){
 	$msgBtn.click(function(){
 		var the_msg = $('#message').val();
 		socket.emit('message', the_msg);
+		$('#message').val('')
 
 		return false
 
@@ -48,9 +49,6 @@ window.onload = function(){
 	
 	socket.on('message', function(data){
 		$('#chat-entries').append('<p>' + data + '</p>');
-
-		
-		
 	});
 
 	socket.on('users', function(data){
