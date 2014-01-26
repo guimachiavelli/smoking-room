@@ -1,61 +1,34 @@
+body, html {
+	width: 100%;
+	height: 100%;
+}
+
 body {
-	margin: 20px;
+	background: url(../img/bg.jpg) fixed;
+	background-size: auto 100%;
+	font-family: arial;
+}
+
+header {
+	position: absolute;
+	width: 30%;
+	background: #172;
+	border: 5px solid #fff;
+	padding: 1em;
+	color: #fff;
+	left: 50%;
+	margin-left: -15%;
+	text-align: center;
+}
+
+header h1, header p {
+	margin: 0;
 }
 
 #own {
-	float: left;
-	width: 320px;
-	margin-right: 60px;
-	height: 800px;
+	background: #000;
+	background: rgba(0,0,0,0.8);
+	color: #fff;
+	-webkit-font-smoothing: antialiased;
+	padding: 3em;
 }
-
-#others {
-	float: left;
-	width: 600px;
-}
-
-#chat-entries {
-	border: 1px solid #000;
-	height: 400px;
-	overflow: auto;
-}
-
-canvas {
-	width: 100px;
-	float: left;
-	margin-right: 10px;
-}
-
-textarea {
-	width: 100%;
-	height: 70px;
-}
-
-.list {	
-	list-style-type: none;
-}
-
-.list img {
-	height: 50px;
-	cursor:pointer;
-}
-
-.user-avatar {
-	position: relative;
-	width: 130px;
-	height: 100px;
-	float: left;
-}
-
-.user-mouth {
-	position: absolute;
-	width: 130px;
-}
-
-.user-cig {
-	position: absolute;
-	max-height: 90px;
-	margin-left: 60px;
-	margin-top: 40px;
-}
-
