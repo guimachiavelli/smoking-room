@@ -12,6 +12,8 @@ window.onload = function(){
 
 	$('.cig').click(function(){
 		var cig_type = $(this).attr('id');
+		$('.cig').removeClass('selected');
+		$(this).addClass('selected');
 		App.glasses.src = 'img/' + cig_type + '.png';
 	})
 
@@ -24,14 +26,9 @@ window.onload = function(){
 		App.makeAvatar()
 	});
 
-	var $avatarBtn = $('#vitamin');
+	var $readyBtn = $('#ready-go');
 	$avatarBtn.click(function(){
-		App.makeAvatar('vitamin');
-	});
-
-	var $avatar2Btn = $('#vitamin-a');
-	$avatar2Btn.click(function(){
-		App.makeAvatar('vitamin-a');
+		App.chooseAvatar();
 	});
 
 	var $userBtn = $('#username-btn');

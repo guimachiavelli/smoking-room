@@ -30,7 +30,7 @@ var App = {
 
 		App.options.videoEl.addEventListener('canplay', function(){
 			App.options.videoEl.removeEventListener('canplay');
-			App.makeAvatar();
+			App.avatarSelection();
 		});
 
 	},
@@ -122,22 +122,8 @@ var App = {
 	},
 
 
-	makeAvatar: function (cig) {
-		requestAnimationFrame(App.makeAvatar);
-
-		//switch (cig) {
-			//case 'cig1':
-				//App.glasses.src = 'img/cig1.png'
-				//break;
-
-			//case 'cig2':
-				//App.glasses.src = 'img/cig2.png'
-				//break;
-
-			//default:
-				//App.glasses.src = 'img/cig1.png'
-				//break;
-		//}
+	avatarSelection: function (cig) {
+		requestAnimationFrame(App.avatarSelection);
 
 		if (App.options.context === 'webrtc') {
 			var video = document.getElementsByTagName('video')[0];
@@ -171,6 +157,23 @@ var App = {
 				ctx.drawImage(App.glasses, sc.x, sc.y+sc.height/2.3, sc.width, sc.height*1.25);
 			}
 		}
+	},
+
+	makeAvatar: function(){
+		var canvas = document.getElementById('canvas');
+		var ctx = canvas.getContext('2d');
+		var canvas2 = document.getElementById('canvas2');
+		var ctx2 = canvas2.getContext('2d');
+
+		// Grab the pixel data from the backing canvas
+		var idata = ctx.getImageData(200,0, 600, 420);
+		ctx2.putImageData(idata, 0, 0);
+	},
+
+	chooseAvatar: function(){
+		var canvas = document.getElementById('canvas2');
+		var ctx = canvas.getContext('2d');
+		var imgData = canvas.toDataURL('image/jpeg');
 	}
 };
 
