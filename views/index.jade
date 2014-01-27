@@ -7,48 +7,40 @@ html
 	body
 		div.container
 			header
-				h1 smoking room
+				h1.site-title rhizome smoking room
 
-			section#own
-				div
-					h2 type message
-					textarea#message
-					button#send send
-				div
-					h2 choose mouth
-					ul#mouth-list.list
-						li
-							img(src='img/mouth1.gif')
-						li
-							img(src='img/mouth2.gif')
-						li
-							img(src='img/mouth3.gif')
-				div
-					h2 choose e-cig
+			section#set-up
+				div#set-username.module
+					p select your username, e-cigarette and take a selfie
+					h2 set username
+					input(type='text')#user-field
+					button#username-btn go
+				div#set-avatar.module
+					h2 strike a pose
+					div#webcam
+
+					div#canvas-container
+						canvas#canvas(width='300' height='420')
+				button#make-avatar make avatar
+				div#set-cig.module
+					h2 choose your e-cig
 					ul#cig-list.list
 						li
 							img(src='img/cig1.png')
 						li
 							img(src='img/cig2.png')
-
-				div
+				div#confirm-avatar
 					h2 avatar
-					canvas#canvas(width='320' height='240')
 
-				div
-					h2 set username
-					input(type='text')#user-field
-					button#username-btn go
-
-			section#others
-				h2 messages
-				div#chat-entries
+				button#ready-go my body is ready
 
 
-				h2 online users
-				div#user-list
 
 
 		script(src='//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js')
 		script(src='socket.io/socket.io.js')
+		script(src='components/getUserMedia.js/lib/getUserMedia.js')
+		script(src='components/getUserMedia.js/face-detection-demo/js/glasses/ccv.js')
+		script(src='components/getUserMedia.js/face-detection-demo/js/glasses/face.js')
+		script(src='js/webcam.js')
 		script(src='js/main.js')

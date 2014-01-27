@@ -4,7 +4,7 @@ body, html {
 }
 
 body {
-	background: url(../img/bg.jpg) fixed;
+	background: url(../img/bg.jpg);
 	background-size: auto 100%;
 	font-family: arial;
 }
@@ -21,14 +21,67 @@ header {
 	text-align: center;
 }
 
-header h1, header p {
+.site-title, header p {
 	margin: 0;
 }
 
-#own {
+#set-up {
 	background: #000;
 	background: rgba(0,0,0,0.8);
 	color: #fff;
 	-webkit-font-smoothing: antialiased;
-	padding: 3em;
+	padding: 10em 3em 3em 3em;
+	overflow: hidden;
+}
+
+#webcam {
+	width: 300px;
+	overflow: hidden;
+	display: none;
+}
+
+#webcam video {
+	margin-left: -150px;
+}
+
+#canvas-container {
+	width:300px;
+	overflow:hidden;
+}
+
+#canvas {
+	margin-left: -150px;
+
+}
+
+.module {
+	float: left;
+	width: 30%;
+	margin-right: 5%;
+	background: #172;
+	border: 5px solid #fff;
+	padding: 1em;
+	box-sizing: border-box;
+}
+.module:nth-child(3) {
+	margin: 0;
+	float: right;
+}
+
+.module img {
+	max-width: 100px;
+	max-height: 100px;
+}
+
+.module li {
+	list-style-type: none;
+
+}
+
+#confirm-avatar {
+	clear: both;
+	margin: 0 auto;
+	width: 320px;
+	padding: 1em;
+
 }

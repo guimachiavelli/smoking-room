@@ -1,6 +1,8 @@
 ###########################################################################
 ###########################################################################
-#		test
+#
+#		Digital smoking room
+#
 ###########################################################################
 ###########################################################################
 
@@ -43,9 +45,9 @@ app.configure () ->
 # starting socket magic
 io.sockets.on 'connection', (socket) ->
 	# on user connection, add it to the users object
-	users[socket.id] = {name: 'anon#' + socket.id.substr(0, 5), avatar: null, cig: null}
+	users[socket.id] = {name: 'anon#' + socket.id.substr(0, 5), avatar: null}
 	# and tell everyone a new user has entered the room
-	io.sockets.emit 'message', users[socket.id].name + ' connected'
+	io.sockets.emit 'message', users[socket.id].name + ' connected';
 
 	# when a user sets a new avatar,
 	# emit it to all users
@@ -58,7 +60,6 @@ io.sockets.on 'connection', (socket) ->
 	socket.on 'set cig', (data) ->
 		users[socket.id].cig = data
 		io.sockets.emit 'users', users
-
 
 	# when a user picks a cigarette
 	# emit it to all users

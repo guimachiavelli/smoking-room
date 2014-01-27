@@ -12,14 +12,63 @@ window.onload = function(){
 
 	var socket = io.connect();
 
-	
+	App.init();
 
+	var $avatarBtn = $('#make-avatar');
+	$avatarBtn.click(function(){
+		App.makeAvatar()
+	});
 
-	var $mouth = $('#mouth-list li');
-	$mouth.click(function(){
-		var the_mouth = $(this).find('img').attr('src');
-		socket.emit('set mouth', the_mouth);
+	var $avatarBtn = $('#vitamin');
+	$avatarBtn.click(function(){
+		App.makeAvatar('vitamin');
+	});
+
+	var $avatar2Btn = $('#vitamin-a');
+	$avatar2Btn.click(function(){
+		App.makeAvatar('vitamin-a');
+	});
+
+	var $userBtn = $('#username-btn');
+	$userBtn.click(function(){
+		var the_name = $('#user-field').val();
+		socket.emit('set user', the_name);
+
+		return false
+	});
+
+	var $msgBtn = $('#send');
+	$msgBtn.click(function(){
+		var the_msg = $('#message').val();
+		socket.emit('message', the_msg);
+
+		return false
+
 	})
+
+	socket.on('message', function(data){
+		$('#chat-entries').append('<p>' + data + '</p>');
+	});
+
+	socket.on('users', function(data){
+		$('#user-list').empty();
+
+		//for (var user in data) {
+
+			//$('#user-list').append('<canvas id="'+ user +'" width="320" height="240"/>');
+
+			//var the_canvas = $('#'+user)[0];
+			//var ctx = the_canvas.getContext('2d');
+			//var myImage = new Image();
+
+			//myImage.src = data[user].avatar;
+			//ctx.drawImage(myImage, 0, 0);
+
+		//}
+
+
+	})
+
 
 	var $cig = $('#cig-list li');
 	$cig.click(function(){
@@ -46,7 +95,7 @@ window.onload = function(){
 		return false
 
 	})
-	
+
 	socket.on('message', function(data){
 		$('#chat-entries').append('<p>' + data + '</p>');
 	});
@@ -63,7 +112,7 @@ window.onload = function(){
 			if (data[user].cig !== null) {
 				the_cig = '<img class="user-cig" src="' + data[user].cig + '" alt="">';
 			}
-			
+
 			//$('#user-list').append('<canvas id="'+ user +'" width="320" height="240"/>');
 			$('#user-list').append('<div class="user-avatar" id="'+ user +'">'+ the_mouth + the_cig + '</div>');
 			/*
@@ -75,7 +124,7 @@ window.onload = function(){
 			ctx.drawImage(myImage, 0, 0);
 			*/
 		}
-		
+
 
 	})
 
