@@ -168,7 +168,7 @@ var App = {
 			});
 			var sc = comp[0];
 			if (comp[0]) {
-				ctx.drawImage(App.glasses, sc.x, sc.y*1.4, sc.width, sc.height*1.25);
+				ctx.drawImage(App.glasses, sc.x, sc.y+sc.height/2.3, sc.width, sc.height*1.25);
 			}
 		}
 	}
