@@ -5,6 +5,7 @@
 'use strict';
 
 var App = {
+
 	init: function () {
 		if ( !!this.options ) {
 			this.pos = 0;
@@ -26,6 +27,12 @@ var App = {
 		} else {
 			alert('No options were supplied to the shim!');
 		}
+
+		App.options.videoEl.addEventListener('canplay', function(){
+			App.options.videoEl.removeEventListener('canplay');
+			App.makeAvatar();
+		});
+
 	},
 
 	options: {
@@ -115,9 +122,22 @@ var App = {
 	},
 
 
-	makeAvatar: function (flags) {
-
+	makeAvatar: function (cig) {
 		requestAnimationFrame(App.makeAvatar);
+
+		//switch (cig) {
+			//case 'cig1':
+				//App.glasses.src = 'img/cig1.png'
+				//break;
+
+			//case 'cig2':
+				//App.glasses.src = 'img/cig2.png'
+				//break;
+
+			//default:
+				//App.glasses.src = 'img/cig1.png'
+				//break;
+		//}
 
 		if (App.options.context === 'webrtc') {
 			var video = document.getElementsByTagName('video')[0];
@@ -136,25 +156,23 @@ var App = {
 		canvas.width = cw;
 		canvas.height = ch;
 
-		draw(video,canvas,ctx,cw,ch,flags);
+		draw(video,canvas,ctx,cw,ch);
 
-		function draw(v,canvas,ctx,w,h,flags) {
+		function draw(v,canvas,ctx,w,h) {
 			ctx.drawImage(v,0,0,w,h);
-
 			var comp = ccv.detect_objects({
 				"canvas": (canvas),
 				"cascade": cascade,
 				"interval": 1,
 				"min_neighbors": 1
 			});
-
-			ctx.drawImage(App.glasses, comp[0].x + 70, comp[0].y+160, 31, 147);
-
-			glasses.src = '';
+			var sc = comp[0];
+			if (comp[0]) {
+				ctx.drawImage(App.glasses, sc.x, sc.y*1.4, sc.width, sc.height*1.25);
+			}
 		}
 	}
 };
 
 App.glasses = new Image();
-App.glasses.src = 'img/cig3.png';
-
+App.glasses.src = "img/cig3.png";

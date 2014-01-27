@@ -77,6 +77,23 @@ header {
 	list-style-type: none;
 
 }
+.module .module {
+	width: 100%;
+	border: 0;
+	clear:both;
+
+}
+.cig {
+	float: left;
+	padding: 1em;
+	margin: 0 2em 0 0;
+	cursor: pointer
+}
+
+.cig.selected {
+	background-color: rgba(255, 255, 255, 0.2);
+}
+
 
 #confirm-avatar {
 	clear: both;

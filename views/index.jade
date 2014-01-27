@@ -10,25 +10,29 @@ html
 				h1.site-title rhizome smoking room
 
 			section#set-up
-				div#set-username.module
-					p select your username, e-cigarette and take a selfie
-					h2 set username
-					input(type='text')#user-field
-					button#username-btn go
+				div.module
+					div#set-username.module
+						p select your username, e-cigarette and take a selfie
+						h2 set username
+						input(type='text')#user-field
+						button#username-btn go
+					div#set-cig.module
+						h2 choose your e-cig
+						ul#cig-list.list
+							li.cig.selected#cig3
+								img(src='img/cig3.png')
+							li.cig#cig2
+								img(src='img/cig2.png')
+							li.cig#cig1
+								img(src='img/cig1.png')
 				div#set-avatar.module
 					h2 strike a pose
 					div#webcam
 
 					div#canvas-container
 						canvas#canvas(width='300' height='420')
-				button#make-avatar make avatar
-				div#set-cig.module
-					h2 choose your e-cig
-					ul#cig-list.list
-						li
-							img(src='img/cig1.png')
-						li
-							img(src='img/cig2.png')
+					button#make-avatar make avatar
+
 				div#confirm-avatar
 					h2 avatar
 

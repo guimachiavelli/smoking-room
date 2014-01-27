@@ -10,6 +10,11 @@
 
 window.onload = function(){
 
+	$('.cig').click(function(){
+		var cig_type = $(this).attr('id');
+		App.glasses.src = 'img/' + cig_type + '.png';
+	})
+
 	var socket = io.connect();
 
 	App.init();
