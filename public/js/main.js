@@ -27,17 +27,25 @@ window.onload = function(){
 	});
 
 	var $readyBtn = $('#ready-go');
-	$avatarBtn.click(function(){
-		App.chooseAvatar();
+	$readyBtn.click(function(){
+		var avatar = App.chooseAvatar(),
+			username = $('#username').val(),
+			data = {'avatar' : avatar, 'username' : username}
+		console.log(avatar, username)
+
+		if (!avatar || !username) {
+			alert('fill in your username and take a selfie, plz');
+			return false;
+		}
+
+		App.stream.stop();
+		App.stopped = true;
+		socket.emit('user enter', data);
+		$('#set-up').fadeOut(100);
+		$('canvas').remove();
+
 	});
 
-	var $userBtn = $('#username-btn');
-	$userBtn.click(function(){
-		var the_name = $('#user-field').val();
-		socket.emit('set user', the_name);
-
-		return false
-	});
 
 	var $msgBtn = $('#send');
 	$msgBtn.click(function(){
@@ -52,26 +60,6 @@ window.onload = function(){
 		$('#chat-entries').append('<p>' + data + '</p>');
 	});
 
-	socket.on('users', function(data){
-		$('#user-list').empty();
-
-		//for (var user in data) {
-
-			//$('#user-list').append('<canvas id="'+ user +'" width="320" height="240"/>');
-
-			//var the_canvas = $('#'+user)[0];
-			//var ctx = the_canvas.getContext('2d');
-			//var myImage = new Image();
-
-			//myImage.src = data[user].avatar;
-			//ctx.drawImage(myImage, 0, 0);
-
-		//}
-
-
-	})
-
-
 	var $cig = $('#cig-list li');
 	$cig.click(function(){
 		var the_cig = $(this).find('img').attr('src');
@@ -79,20 +67,11 @@ window.onload = function(){
 	})
 
 
-	var $userBtn = $('#username-btn');
-	$userBtn.click(function(){
-		var the_name = $('#user-field').val();
-		socket.emit('set user', the_name);
-
-		return false
-
-	});
-
 	var $msgBtn = $('#send');
 	$msgBtn.click(function(){
 		var the_msg = $('#message').val();
 		socket.emit('message', the_msg);
-		$('#message').val('')
+		$('#message').val('');
 
 		return false
 
@@ -106,25 +85,16 @@ window.onload = function(){
 		$('#user-list').empty();
 
 		for (var user in data) {
-			var the_cig = '', the_mouth = '';
 
-			if (data[user].avatar !== null) {
-				the_mouth = '<img class="user-mouth" src="' + data[user].avatar + '" alt="">';
-			}
-			if (data[user].cig !== null) {
-				the_cig = '<img class="user-cig" src="' + data[user].cig + '" alt="">';
-			}
+			$('#user-list').append('<canvas id="'+ user +'" width="320" height="240"/>');
 
-			//$('#user-list').append('<canvas id="'+ user +'" width="320" height="240"/>');
-			$('#user-list').append('<div class="user-avatar" id="'+ user +'">'+ the_mouth + the_cig + '</div>');
-			/*
 			var the_canvas = $('#'+user)[0];
 			var ctx = the_canvas.getContext('2d');
 			var myImage = new Image();
 
 			myImage.src = data[user].avatar;
 			ctx.drawImage(myImage, 0, 0);
-			*/
+
 		}
 
 

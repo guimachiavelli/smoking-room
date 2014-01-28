@@ -6,6 +6,10 @@
 
 var App = {
 
+	face: false,
+	stopped: false,
+	stream: null,
+
 	init: function () {
 		if ( !!this.options ) {
 			this.pos = 0;
@@ -115,6 +119,7 @@ var App = {
 			window.webcam.capture();
 		}
 
+		App.stream = stream;
 	},
 
 	deviceError: function (error) {
@@ -122,8 +127,10 @@ var App = {
 	},
 
 
-	avatarSelection: function (cig) {
-		requestAnimationFrame(App.avatarSelection);
+	avatarSelection: function () {
+		if (!App.stopped) {
+			requestAnimationFrame(App.avatarSelection);
+		}
 
 		if (App.options.context === 'webrtc') {
 			var video = document.getElementsByTagName('video')[0];
@@ -155,6 +162,9 @@ var App = {
 			var sc = comp[0];
 			if (comp[0]) {
 				ctx.drawImage(App.glasses, sc.x, sc.y+sc.height/2.3, sc.width, sc.height*1.25);
+				App.face = true;
+			} else {
+				App.face = false;
 			}
 		}
 	},
@@ -165,17 +175,19 @@ var App = {
 		var canvas2 = document.getElementById('canvas2');
 		var ctx2 = canvas2.getContext('2d');
 
-		// Grab the pixel data from the backing canvas
-		var idata = ctx.getImageData(200,0, 600, 420);
-		ctx2.putImageData(idata, 0, 0);
+		if (App.face === true) {
+			// Grab the pixel data from the backing canvas
+			var idata = ctx.getImageData(200,0, 600, 420);
+			ctx2.putImageData(idata, 0, 0);
+		}
 	},
 
 	chooseAvatar: function(){
 		var canvas = document.getElementById('canvas2');
 		var ctx = canvas.getContext('2d');
-		var imgData = canvas.toDataURL('image/jpeg');
+		return canvas.toDataURL('image/jpeg');
 	}
 };
 
 App.glasses = new Image();
-App.glasses.src = "img/cig3.png";
+App.glasses.src = 'img/cig3.png';
