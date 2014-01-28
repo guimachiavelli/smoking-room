@@ -31,8 +31,13 @@ window.onload = function(){
 	$readyBtn.click(function(){
 		var avatar = App.chooseAvatar(),
 			username = $('#username').val(),
-			data = {'avatar' : avatar, 'username' : username}
-		console.log(avatar, username)
+			x = Math.random() * 1000,
+			y = Math.random() * (window.innerHeight - 420);
+		var data = {
+			'avatar' : avatar,
+			'username' : username,
+			'pos' : [x,y]
+		}
 
 		if (!avatar || !username) {
 			alert('fill in your username and take a selfie, plz');
@@ -51,9 +56,7 @@ window.onload = function(){
 	$msgBtn.click(function(){
 		var the_msg = $('#message').val();
 		socket.emit('message', the_msg);
-
 		return false
-
 	})
 
 	socket.on('userid', function(data){
@@ -63,7 +66,6 @@ window.onload = function(){
 	var $cig = $('#cig-list li');
 	$cig.click(function(){
 		var the_cig = $(this).find('img').attr('src');
-		socket.emit('set cig', the_cig);
 	})
 
 
@@ -84,14 +86,26 @@ window.onload = function(){
 	socket.on('users', function(data){
 		$('#user-list').empty();
 
-
 		for (var user in data) {
+			var the_user = data[user];
 			if (socketid === user) {
-				$('#user-list').append('<li class="current_user"><img id="'+ data[user].name +'" src="'+ data[user].avatar +'" /></li>');
+				$('#user-list').append('<li style="left:'+the_user.pos[0]+'px; top:'+the_user.pos[1]+'px" class="current-user"><img id="'+ the_user.name +'" src="'+ the_user.avatar +'" /></li>');
 			} else {
-				$('#user-list').append('<li><img id="'+ data[user].name +'" src="'+ data[user].avatar +'" /></li>');
+				$('#user-list').append('<li style="left:'+the_user.pos[0]+'px; top:'+the_user.pos[1]+'px"><img id="'+ data[user].name +'" src="'+ data[user].avatar +'" /></li>');
 			}
 		}
+	})
+
+	$('#room').click(function(e){
+		var $avatar = $('.current-user'),
+			m_x = e.clientX - 150,
+			m_y = e.clientY - 210;
+		$avatar.css({
+			'left' 	: m_x,
+			'top'	: m_y
+		})
+		socket.emit('user move', [m_x, m_y]);
+
 	})
 
 

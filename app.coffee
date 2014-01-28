@@ -48,10 +48,9 @@ io.sockets.on 'connection', (socket) ->
 	# send sessionid to the user on connection
 	socket.emit 'userid', socket.id
 
-
 	socket.on 'user enter', (data)->
 		# on user connection, add it to the users object
-		users[socket.id] = { name: data.username, avatar: data.avatar }
+		users[socket.id] = { name: data.username, avatar: data.avatar, pos: data.pos }
 		io.sockets.emit 'users', users
 
 	# when a user sets a new avatar,
@@ -62,28 +61,37 @@ io.sockets.on 'connection', (socket) ->
 
 	# when a user picks a cigarette
 	# emit it to all users
-	socket.on 'set cig', (data) ->
-		users[socket.id].cig = data
-		io.sockets.emit 'users', users
+	#socket.on 'set cig', (data) ->
+		#users[socket.id].cig = data
+		#io.sockets.emit 'users', users
 
 	# when a user picks a cigarette
 	# emit it to all users
-	socket.on 'set user', (data) ->
-		users[socket.id].name = data
+	#socket.on 'set user', (data) ->
+		#users[socket.id].name = data
+		#io.sockets.emit 'users', users
+
+	# when a user picks a cigarette
+	# emit it to all users
+	socket.on 'user move', (data) ->
+		console.log 'now: ' + users[socket.id].pos
+		users[socket.id].pos = data
+		console.log 'then: ' + users[socket.id].pos
 		io.sockets.emit 'users', users
+
 
 	# when a user sends an image
 	# emit it to all users
-	socket.on 'message', (data) ->
-		message = users[socket.id].name + ': ' + data
-		io.sockets.emit 'message', message
+	#socket.on 'message', (data) ->
+		#message = users[socket.id].name + ': ' + data
+		#io.sockets.emit 'message', message
 
 	# on disconnect, remove user from our user object
 	socket.on 'disconnect', () ->
-		io.sockets.emit 'message', users[socket.id].name + ' disconnected'
+		# io.sockets.emit 'message', users[socket.id].name + ' disconnected'
 		delete users[socket.id]
 		io.sockets.emit 'users', users
 
 app.get '/', routes.getIndex
-app.get '/chat', routes.getChat
-app.get '/selfie', routes.getSelfie
+#app.get '/chat', routes.getChat
+#app.get '/selfie', routes.getSelfie
