@@ -18,6 +18,7 @@ window.onload = function(){
 	})
 
 	var socket = io.connect();
+	var socketid = null;
 
 	App.init();
 
@@ -43,7 +44,6 @@ window.onload = function(){
 		socket.emit('user enter', data);
 		$('#set-up').fadeOut(100);
 		$('canvas').remove();
-
 	});
 
 
@@ -56,8 +56,8 @@ window.onload = function(){
 
 	})
 
-	socket.on('message', function(data){
-		$('#chat-entries').append('<p>' + data + '</p>');
+	socket.on('userid', function(data){
+		socketid = data;
 	});
 
 	var $cig = $('#cig-list li');
@@ -84,20 +84,14 @@ window.onload = function(){
 	socket.on('users', function(data){
 		$('#user-list').empty();
 
+
 		for (var user in data) {
-
-			$('#user-list').append('<canvas id="'+ user +'" width="320" height="240"/>');
-
-			var the_canvas = $('#'+user)[0];
-			var ctx = the_canvas.getContext('2d');
-			var myImage = new Image();
-
-			myImage.src = data[user].avatar;
-			ctx.drawImage(myImage, 0, 0);
-
+			if (socketid === user) {
+				$('#user-list').append('<li class="current_user"><img id="'+ data[user].name +'" src="'+ data[user].avatar +'" /></li>');
+			} else {
+				$('#user-list').append('<li><img id="'+ data[user].name +'" src="'+ data[user].avatar +'" /></li>');
+			}
 		}
-
-
 	})
 
 

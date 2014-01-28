@@ -44,10 +44,15 @@ app.configure () ->
 
 # starting socket magic
 io.sockets.on 'connection', (socket) ->
-	# on user connection, add it to the users object
-	users[socket.id] = {name: 'anon#' + socket.id.substr(0, 5), avatar: null}
-	# and tell everyone a new user has entered the room
-	io.sockets.emit 'message', users[socket.id].name + ' connected';
+
+	# send sessionid to the user on connection
+	socket.emit 'userid', socket.id
+
+
+	socket.on 'user enter', (data)->
+		# on user connection, add it to the users object
+		users[socket.id] = { name: data.username, avatar: data.avatar }
+		io.sockets.emit 'users', users
 
 	# when a user sets a new avatar,
 	# emit it to all users
