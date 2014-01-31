@@ -25,7 +25,7 @@ io = require('socket.io').listen server
 # requiring and declaring needed libs/vars
 jade = require 'jade'
 routes = require './lib/routes.coffee'
-users = {}
+users = { }
 
 ## server configs
 app.configure () ->
@@ -50,14 +50,30 @@ io.sockets.on 'connection', (socket) ->
 
 	socket.on 'user enter', (data)->
 		# on user connection, add it to the users object
-		users[socket.id] = { name: data.username, avatar: data.avatar, pos: data.pos }
-		io.sockets.emit 'users', users
+		users[data.username] = socket
+		users[data.username].set 'name', data.username
+		users[data.username].set 'avatar', data.avatar
+		users[data.username].set 'pos', data.pos
 
-	# when a user sets a new avatar,
-	# emit it to all users
-	socket.on 'set avatar', (data) ->
-		users[socket.id].avatar = data
-		io.sockets.emit 'users', users
+		public_users = []
+
+		for username of users
+			user = users[username]
+			name = avatar = pos = null
+
+			user.get 'name', (err, data) -> name = data
+			user.get 'avatar', (err, data) -> avatar = data
+			user.get 'pos', (err, data) -> pos = data
+
+			public_user =
+				name: name,
+				avatar: avatar,
+				pos: pos,
+				ref: user.id
+
+			public_users.push public_user
+
+		io.sockets.emit 'users', public_users
 
 	# when a user picks a cigarette
 	# emit it to all users
@@ -74,11 +90,12 @@ io.sockets.on 'connection', (socket) ->
 	# when a user picks a cigarette
 	# emit it to all users
 	socket.on 'user move', (data) ->
-		console.log 'now: ' + users[socket.id].pos
 		users[socket.id].pos = data
-		console.log 'then: ' + users[socket.id].pos
 		io.sockets.emit 'users', users
 
+
+	socket.on 'start pvt', (data) ->
+		io.sockets.socket(data.recipient).emit 'chat request', {from: data.sender}
 
 	# when a user sends an image
 	# emit it to all users
