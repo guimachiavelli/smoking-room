@@ -112,19 +112,33 @@ io.sockets.on 'connection', (socket) ->
 
 
 	socket.on 'start pvt', (data) ->
-		io.sockets.socket(data.recipient).emit 'chat request', {from: data.sender}
-
-	# when a user sends an image
-	# emit it to all users
-	#socket.on 'message', (data) ->
-		#message = users[socket.id].name + ': ' + data
-		#io.sockets.emit 'message', message
+		users[data.recipient].emit 'chat request', { from: data.sender }
 
 	# on disconnect, remove user from our user object
 	socket.on 'disconnect', () ->
 		# io.sockets.emit 'message', users[socket.id].name + ' disconnected'
 		delete users[socket.id]
-		io.sockets.emit 'users', users
+
+		public_users = []
+		for username of users
+			user = users[username]
+			name = avatar = pos = null
+
+			user.get 'name', (err, data) -> name = data
+			user.get 'avatar', (err, data) -> avatar = data
+			user.get 'pos', (err, data) -> pos = data
+
+			public_user =
+				name: name,
+				avatar: avatar,
+				pos: pos,
+				ref: user.id
+
+			public_users.push public_user
+
+		# console.log public_users
+
+		io.sockets.emit 'users', public_users
 
 app.get '/', routes.getIndex
 #app.get '/chat', routes.getChat

@@ -74,21 +74,17 @@ window.onload = function(){
 	 *});
 	 */
 
-	socket.on('chat request', function(data){
-		console.log(data);
-	});
 
 
 	socket.on('users', function(data){
 		$('#user-list').empty();
 
 		for (var user in data) {
-			console.log(user, user_socket);
 			var the_user = data[user];
 			if (user_socket === the_user.name) {
-				$('#user-list').append('<li id="' + user_socket + '" style="left:'+the_user.pos[0]+'px; top:'+the_user.pos[1]+'px" class="user current-user"><img id="'+ the_user.name +'" src="'+ the_user.avatar +'" /></li>');
+				$('#user-list').append('<li id="' + the_user.name + '" style="left:'+the_user.pos[0]+'px; top:'+the_user.pos[1]+'px" class="user current-user"><img id="'+ the_user.name +'" src="'+ the_user.avatar +'" /></li>');
 			} else {
-				$('#user-list').append('<li id="' + user_socket + '" style="left:'+the_user.pos[0]+'px; top:'+the_user.pos[1]+'px" class="user"><img id="'+ data[user].name +'" src="'+ data[user].avatar +'" /></li>');
+				$('#user-list').append('<li id="' + the_user.name  + '" style="left:'+the_user.pos[0]+'px; top:'+the_user.pos[1]+'px" class="user"><img id="'+ data[user].name +'" src="'+ data[user].avatar +'" /></li>');
 			}
 		}
 
@@ -97,11 +93,13 @@ window.onload = function(){
 				var recipient = $(this).attr('id'),
 					data =  { 'recipient':recipient, 'sender': user_socket };
 
-				console.log(data);
-
-//				socket.emit('start pvt',);
+				socket.emit('start pvt', data);
 			});
 		}, 100);
+	});
+
+	socket.on('chat request', function(data){
+		console.log(data);
 	});
 
 
@@ -113,8 +111,6 @@ window.onload = function(){
 			'left' 	: m_x,
 			'top'	: m_y
 		});
-
-		console.log(user_socket);
 
 		socket.emit('user move', { username: user_socket, new_pos: [m_x, m_y]});
 	});
