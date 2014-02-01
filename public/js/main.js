@@ -9,7 +9,11 @@
 
 
 window.onload = function(){
+	// setting up sockets
+	var socket = io.connect();
+	var user_socket = null;
 
+	// avatar creation and intro page
 	$('.cig').click(function(){
 		var cig_type = $(this).attr('id');
 		$('.cig').removeClass('selected');
@@ -17,15 +21,17 @@ window.onload = function(){
 		App.glasses.src = 'img/' + cig_type + '.png';
 	})
 
-	var socket = io.connect();
-	var socketid = null;
-
 	App.init();
 
 	var $avatarBtn = $('#make-avatar');
 	$avatarBtn.click(function(){
 		App.makeAvatar()
 	});
+
+	var $cig = $('#cig-list li');
+	$cig.click(function(){
+		var the_cig = $(this).find('img').attr('src');
+	})
 
 	var $readyBtn = $('#ready-go');
 	$readyBtn.click(function(){
@@ -49,52 +55,55 @@ window.onload = function(){
 		socket.emit('user enter', data);
 		$('#set-up').fadeOut(100);
 		$('canvas').remove();
+		user_socket = username;
 	});
 
 
-	var $msgBtn = $('#send');
-	$msgBtn.click(function(){
-		var the_msg = $('#message').val();
-		socket.emit('message', the_msg);
-		return false
-	})
+	/*
+	 *var $msgBtn = $('#send');
+	 *$msgBtn.click(function(){
+	 *    var the_msg = $('#message').val();
+	 *    socket.emit('message', the_msg);
+	 *    return false
+	 *})
+	 */
 
-	socket.on('userid', function(data){
-		socketid = data;
+	/*
+	 *socket.on('message', function(data){
+	 *    $('#chat-entries').append('<p>' + data + '</p>');
+	 *});
+	 */
+
+	socket.on('chat request', function(data){
+		console.log(data);
 	});
 
-	var $cig = $('#cig-list li');
-	$cig.click(function(){
-		var the_cig = $(this).find('img').attr('src');
-	})
-
-
-	var $msgBtn = $('#send');
-	$msgBtn.click(function(){
-		var the_msg = $('#message').val();
-		socket.emit('message', the_msg);
-		$('#message').val('');
-
-		return false
-
-	})
-
-	socket.on('message', function(data){
-		$('#chat-entries').append('<p>' + data + '</p>');
-	});
 
 	socket.on('users', function(data){
 		$('#user-list').empty();
 
 		for (var user in data) {
+			console.log(user, user_socket);
 			var the_user = data[user];
-			if (socketid === user) {
-				$('#user-list').append('<li style="left:'+the_user.pos[0]+'px; top:'+the_user.pos[1]+'px" class="current-user"><img id="'+ the_user.name +'" src="'+ the_user.avatar +'" /></li>');
+			if (user_socket === the_user.name) {
+				$('#user-list').append('<li id="' + user_socket + '" style="left:'+the_user.pos[0]+'px; top:'+the_user.pos[1]+'px" class="user current-user"><img id="'+ the_user.name +'" src="'+ the_user.avatar +'" /></li>');
 			} else {
-				$('#user-list').append('<li style="left:'+the_user.pos[0]+'px; top:'+the_user.pos[1]+'px"><img id="'+ data[user].name +'" src="'+ data[user].avatar +'" /></li>');
+				$('#user-list').append('<li id="' + user_socket + '" style="left:'+the_user.pos[0]+'px; top:'+the_user.pos[1]+'px" class="user"><img id="'+ data[user].name +'" src="'+ data[user].avatar +'" /></li>');
 			}
 		}
-	})
+
+		setTimeout(function(){
+			$('.user').click(function(){
+				var recipient = $(this).attr('id'),
+					data =  { 'recipient':recipient, 'sender': user_socket };
+
+				console.log(data);
+
+//				socket.emit('start pvt',);
+			});
+		}, 100);
+	});
+
 
 	$('#room').click(function(e){
 		var $avatar = $('.current-user'),
@@ -103,13 +112,10 @@ window.onload = function(){
 		$avatar.css({
 			'left' 	: m_x,
 			'top'	: m_y
-		})
-		socket.emit('user move', [m_x, m_y]);
+		});
 
-	})
+		console.log(user_socket);
 
-
+		socket.emit('user move', { username: user_socket, new_pos: [m_x, m_y]});
+	});
 }
-
-
-

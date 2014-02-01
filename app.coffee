@@ -26,6 +26,7 @@ io = require('socket.io').listen server
 jade = require 'jade'
 routes = require './lib/routes.coffee'
 users = { }
+public_users = []
 
 ## server configs
 app.configure () ->
@@ -44,9 +45,6 @@ app.configure () ->
 
 # starting socket magic
 io.sockets.on 'connection', (socket) ->
-
-	# send sessionid to the user on connection
-	socket.emit 'userid', socket.id
 
 	socket.on 'user enter', (data)->
 		# on user connection, add it to the users object
@@ -90,8 +88,27 @@ io.sockets.on 'connection', (socket) ->
 	# when a user picks a cigarette
 	# emit it to all users
 	socket.on 'user move', (data) ->
-		users[socket.id].pos = data
-		io.sockets.emit 'users', users
+		users[data.username].set 'pos', data.new_pos
+		public_users = []
+		for username of users
+			user = users[username]
+			name = avatar = pos = null
+
+			user.get 'name', (err, data) -> name = data
+			user.get 'avatar', (err, data) -> avatar = data
+			user.get 'pos', (err, data) -> pos = data
+
+			public_user =
+				name: name,
+				avatar: avatar,
+				pos: pos,
+				ref: user.id
+
+			public_users.push public_user
+
+		# console.log public_users
+
+		io.sockets.emit 'users', public_users
 
 
 	socket.on 'start pvt', (data) ->
