@@ -37,6 +37,20 @@ var App = {
 			App.avatarSelection();
 		});
 
+		var $avatarBtn = $('#make-avatar');
+		$avatarBtn.click(function(){
+			App.makeAvatar()
+		});
+
+		// avatar creation and intro page
+		$('.cig').click(function(){
+			var cig_type = $(this).attr('id');
+			$('.cig').removeClass('selected');
+			$(this).addClass('selected');
+			App.glasses.src = 'img/' + cig_type + '.png';
+		})
+
+
 	},
 
 	options: {
