@@ -106,8 +106,6 @@ io.sockets.on 'connection', (socket) ->
 
 			public_users.push public_user
 
-		# console.log public_users
-
 		io.sockets.emit 'users', public_users
 
 
@@ -136,10 +134,9 @@ io.sockets.on 'connection', (socket) ->
 
 			public_users.push public_user
 
-		# console.log public_users
-
 		io.sockets.emit 'users', public_users
 
+	socket.on 'confirm pvt', (data) ->
+		users[data.with].emit 'request accepted', data.with
+
 app.get '/', routes.getIndex
-#app.get '/chat', routes.getChat
-#app.get '/selfie', routes.getSelfie
