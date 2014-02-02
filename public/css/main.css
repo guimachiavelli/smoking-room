@@ -125,3 +125,33 @@ header {
 #user-list .current-user {
 	cursor: default;
 }
+
+#pvt-request {
+	width: 350px;
+	position: absolute;
+	left: 50%;
+	margin-left: -175px;
+	top: 100px;
+	text-align: center;
+	background: #172;
+	border: 5px solid #fff;
+	padding: 1em;
+	box-sizing: border-box;
+
+}
+
+#pvt-chat {
+	width: 350px;
+	position: absolute;
+	left: 50%;
+	margin-left: -175px;
+	top: 100px;
+	text-align: center;
+	background: #fff;
+	border: 5px solid #172;
+	padding: 1em;
+	box-sizing: border-box;
+}
+
+	
+
