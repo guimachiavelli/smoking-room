@@ -1,37 +1,41 @@
-'use strict';
+$(document).ready(function(){
+	'use strict';
 
-
-/*globals  $: true, getUserMedia: true, alert:true, ccv:true */
-
-/*! getUserMedia demo - v1.0
-* for use with https://github.com/addyosmani/getUserMedia.js
-* Copyright (c) 2012 addyosmani; Licensed MIT */
-
-
-window.onload = function(){
 	// setting up sockets
 	var socket = io.connect();
 	var user_socket = null;
 
-	// avatar creation and intro page
-	$('.cig').click(function(){
-		var cig_type = $(this).attr('id');
-		$('.cig').removeClass('selected');
-		$(this).addClass('selected');
-		App.glasses.src = 'img/' + cig_type + '.png';
-	})
+	var chat_window  = '<div id="pvt-chat">';
+		chat_window += '	<textarea id="send-chat"></textarea>';
+		chat_window += '	<button id="sender-chat-btn">send</button>';
+		chat_window += '</div>';
+
+	var user_list_item = function(user, classes) {
+		var id = user.name,
+			styles = 'left:' + user.pos[0] + 'px; top:' + user.pos[1]+'px',
+			classes = 'user ' + classes;
+
+		var item = '<li id="' + id + '" style="' + styles + '" class="' + classes + '">';
+			item += '	<img src="'+ user.avatar +'" />';
+			item += '</li>';
+
+		return item;
+	}
+
+	var chat_request = function(name){
+		if (!name) {
+			return false
+		}
+		var request  = '<div id="pvt-request">';
+			request +=		name + ' says hi. do you want to talk?';
+			request +=		'<button id="yes">yes</button>';
+			request +=		'<button id="no">no</button>';
+			request += '</div>';
+
+		return request;
+	}
 
 	App.init();
-
-	var $avatarBtn = $('#make-avatar');
-	$avatarBtn.click(function(){
-		App.makeAvatar()
-	});
-
-	var $cig = $('#cig-list li');
-	$cig.click(function(){
-		var the_cig = $(this).find('img').attr('src');
-	})
 
 	var $readyBtn = $('#ready-go');
 	$readyBtn.click(function(){
@@ -59,49 +63,53 @@ window.onload = function(){
 	});
 
 
-	/*
-	 *var $msgBtn = $('#send');
-	 *$msgBtn.click(function(){
-	 *    var the_msg = $('#message').val();
-	 *    socket.emit('message', the_msg);
-	 *    return false
-	 *})
-	 */
-
-	/*
-	 *socket.on('message', function(data){
-	 *    $('#chat-entries').append('<p>' + data + '</p>');
-	 *});
-	 */
-
-
-
 	socket.on('users', function(data){
 		$('#user-list').empty();
 
 		for (var user in data) {
-			var the_user = data[user];
+			var the_user = data[user],
+				item;
 			if (user_socket === the_user.name) {
-				$('#user-list').append('<li id="' + the_user.name + '" style="left:'+the_user.pos[0]+'px; top:'+the_user.pos[1]+'px" class="user current-user"><img id="'+ the_user.name +'" src="'+ the_user.avatar +'" /></li>');
+				item = user_list_item(the_user, 'current_user');
 			} else {
-				$('#user-list').append('<li id="' + the_user.name  + '" style="left:'+the_user.pos[0]+'px; top:'+the_user.pos[1]+'px" class="user"><img id="'+ data[user].name +'" src="'+ data[user].avatar +'" /></li>');
+				item = user_list_item(the_user)
 			}
+			$('#user-list').append(item);
 		}
 
 		setTimeout(function(){
 			$('.user').click(function(){
 				var recipient = $(this).attr('id'),
 					data =  { 'recipient':recipient, 'sender': user_socket };
-
 				socket.emit('start pvt', data);
 			});
 		}, 100);
 	});
 
 	socket.on('chat request', function(data){
-		console.log(data);
+		if ($('#pvt-request').length < 1) {
+			var request_window = chat_request(data.from);
+			$('#room').append(request_window);
+		}
+
+		$('#yes').click(function(){
+			var confirm_data = {'with': data.from}
+			$('#pvt-request').remove();
+			$('#room').append(chat_window);
+
+			socket.emit('confirm pvt', confirm_data);
+		});
+
 	});
 
+	socket.on('request accepted', function(data){
+		$('#room').append(chat_window);
+		$('#send-chat-btn').click(function(){
+			var msg = $('#send-chat').val();
+			var msg_data = {msg: msg};
+			socket.emit('message', msg_data);
+		});
+	});
 
 	$('#room').click(function(e){
 		var $avatar = $('.current-user'),
@@ -114,4 +122,7 @@ window.onload = function(){
 
 		socket.emit('user move', { username: user_socket, new_pos: [m_x, m_y]});
 	});
-}
+
+
+
+});
