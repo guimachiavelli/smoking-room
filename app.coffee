@@ -25,8 +25,20 @@ io = require('socket.io').listen server
 # requiring and declaring needed libs/vars
 jade = require 'jade'
 routes = require './lib/routes.coffee'
-users = { }
+model = require './lib/models.coffee'
+
+users = {}
 public_users = []
+socket_events = [
+		'connection',
+		'user enter',
+		'user list update',
+		'chat request',
+		'message',
+		'confirm pvt'
+		'request accepted'
+		'user move'
+]
 
 ## server configs
 app.configure () ->
@@ -45,98 +57,51 @@ app.configure () ->
 
 # starting socket magic
 io.sockets.on 'connection', (socket) ->
-
-	socket.on 'user enter', (data)->
-		# on user connection, add it to the users object
+	
+	# on user connection, add it to the users object
+	socket.on 'user enter', (data) ->
 		users[data.username] = socket
 		users[data.username].set 'name', data.username
 		users[data.username].set 'avatar', data.avatar
 		users[data.username].set 'pos', data.pos
 
-		public_users = []
+		public_users = model.updatePublicUserList users
 
-		for username of users
-			user = users[username]
-			name = avatar = pos = null
-
-			user.get 'name', (err, data) -> name = data
-			user.get 'avatar', (err, data) -> avatar = data
-			user.get 'pos', (err, data) -> pos = data
-
-			public_user =
-				name: name,
-				avatar: avatar,
-				pos: pos,
-				ref: user.id
-
-			public_users.push public_user
-
-		io.sockets.emit 'users', public_users
-
-	# when a user picks a cigarette
-	# emit it to all users
-	#socket.on 'set cig', (data) ->
-		#users[socket.id].cig = data
-		#io.sockets.emit 'users', users
-
-	# when a user picks a cigarette
-	# emit it to all users
-	#socket.on 'set user', (data) ->
-		#users[socket.id].name = data
-		#io.sockets.emit 'users', users
+		io.sockets.emit 'user list update', public_users
 
 	# when a user picks a cigarette
 	# emit it to all users
 	socket.on 'user move', (data) ->
+		console.log data
 		users[data.username].set 'pos', data.new_pos
-		public_users = []
-		for username of users
-			user = users[username]
-			name = avatar = pos = null
+		public_users = model.updatePublicUserList users
 
-			user.get 'name', (err, data) -> name = data
-			user.get 'avatar', (err, data) -> avatar = data
-			user.get 'pos', (err, data) -> pos = data
+		io.sockets.emit 'user list update', public_users
 
-			public_user =
-				name: name,
-				avatar: avatar,
-				pos: pos,
-				ref: user.id
-
-			public_users.push public_user
-
-		io.sockets.emit 'users', public_users
-
-
+	# pvt chat request
 	socket.on 'start pvt', (data) ->
 		users[data.recipient].emit 'chat request', { from: data.sender }
+
+	# accepted pvt chat
+	socket.on 'request accepted', (data) ->
+		users[data.with].emit 'request accepted', data.with
+
+	# chatting
+	# expects:
+	# data.from: username
+	# data.to: username
+	# data.txt: message
+	socket.on 'message', (data) ->
+		console.log data
+		users[data.to].emit 'message', {from: data.from, to: data.to, msg: data.msg }
 
 	# on disconnect, remove user from our user object
 	socket.on 'disconnect', () ->
 		# io.sockets.emit 'message', users[socket.id].name + ' disconnected'
 		delete users[socket.id]
+		public_users = model.updatePublicUserList users
 
-		public_users = []
-		for username of users
-			user = users[username]
-			name = avatar = pos = null
+		io.sockets.emit 'user list update', public_users
 
-			user.get 'name', (err, data) -> name = data
-			user.get 'avatar', (err, data) -> avatar = data
-			user.get 'pos', (err, data) -> pos = data
-
-			public_user =
-				name: name,
-				avatar: avatar,
-				pos: pos,
-				ref: user.id
-
-			public_users.push public_user
-
-		io.sockets.emit 'users', public_users
-
-	socket.on 'confirm pvt', (data) ->
-		users[data.with].emit 'request accepted', data.with
 
 app.get '/', routes.getIndex
