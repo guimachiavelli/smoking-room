@@ -137,7 +137,6 @@ header {
 	border: 5px solid #fff;
 	padding: 1em;
 	box-sizing: border-box;
-
 }
 
 #pvt-chat {
@@ -151,4 +150,14 @@ header {
 	border: 5px solid #172;
 	padding: 1em;
 	box-sizing: border-box;
+}
+
+#pvt-chat-list {
+	list-style-type: none;
+	text-align: left;
+	border: 1px solid #172;
+}
+
+li {
+	list-style-type: none;
 }

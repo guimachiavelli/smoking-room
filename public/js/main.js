@@ -5,19 +5,47 @@ $(document).ready(function(){
 	var socket = io.connect();
 	var user_socket = {
 		name: null,
-		pvt_with: null
+		to: null
 	};
 
-	var socket_events = [
-		'connection',
-		'user enter',
-		'user list update',
-		'chat request',
-		'message',
-		'request accepted',
-		'user move',
-		'confirm pvt'
-	]
+	var send_chat_request = function(to, from) {
+		var data = {'to': to, 'from': from};
+		socket.emit('send chat request', data);
+	}
+
+	var incoming_chat_request = function(to, from) {
+		var data = {'to': to, 'from': from};
+		socket.emit('incoming request chat', data);
+	}
+
+	var accept_chat_request = function(to, from) {
+		var data = {'to':to, 'from': from };
+		socket.emit('accept chat request', data)
+	}
+
+	var chat_request_accepted = function(to, from) {
+		var data = {'to':to, 'from': from };
+		socket.emit('accept chat', data)
+	}
+
+	var send_message = function() {
+		$('#send-chat-btn').click(function(e){
+			e.preventDefault();
+
+			var msg = $('#send-chat').val();
+			$('#send-chat').val('');
+
+			var msg_data = {from: user_socket.name, to: user_socket.to, msg: msg};
+
+			$('#pvt-chat-list').append('<li>'+ msg_data.from + ': ' + msg_data.msg + '</li>');
+
+			socket.emit('message', msg_data);
+			console.log('sent message to ' + msg_data.to + ' from ' + msg_data.from);
+
+			return false;
+		});
+	}
+
 
 	App.init();
 
@@ -49,7 +77,6 @@ $(document).ready(function(){
 
 	socket.on('user list update', function(data){
 		$('#user-list').empty();
-
 		for (var user in data) {
 			var the_user = data[user],
 				item;
@@ -58,60 +85,52 @@ $(document).ready(function(){
 			} else {
 				item = user_list_item(the_user)
 			}
+
 			$('#user-list').append(item);
+			$('.user').click(function(){
+				var to = $(this).attr('id');
+				send_chat_request(to, user_socket.name);
+			});
+
 		}
 
-		setTimeout(function(){
-			$('.user').click(function(){
-				var recipient = $(this).attr('id'),
-					data = { 'recipient':recipient, 'sender': user_socket.name };
-				socket.emit('start pvt', data);
-			});
-		}, 100);
 	});
 
-	socket.on('chat request', function(data){
+
+	socket.on('incoming chat request', function(data){
 		if ($('#pvt-request').length < 1) {
 			var request_window = chat_request(data.from);
 			$('#room').append(request_window);
 		}
 
 		$('#yes').click(function(){
-			var confirm_data = {'with': data.from}
+			var confirm_data = {'with': data.from};
 			var pvt_chat = chat_window(data.from);
 			$('#pvt-request').remove();
 			$('#room').append(pvt_chat);
 
-			user_socket.pvt_with = data.from;
-			socket.emit('request accepted', confirm_data);
+			user_socket.to = data.from;
+			accept_chat_request(user_socket.to, user_socket.name);
 
-			$('#send-chat-btn').click(function(){
-				console.log(user_socket);
-				var msg = $('#send-chat').val();
-				var msg_data = {from: user_socket.name, to: user_socket.pvt_with, msg: msg};
-				socket.emit('message', msg_data);
-			});
+			send_message();
 
 		});
 
 	});
 
-	socket.on('request accepted', function(data){
-		var pvt_chat = chat_window(data);
-		user_socket.pvt_with = data;
+
+	socket.on('chat request accepted', function(data){
+		var pvt_chat = chat_window(data.from);
+		user_socket.to = data.from;
 
 		console.log(user_socket, data);
 
 		$('#room').append(pvt_chat);
-		$('#send-chat-btn').click(function(){
-			var msg = $('#send-chat').val();
-			var msg_data = {from: user_socket.name, to: user_socket.pvt_with, msg: msg};
-			socket.emit('message', msg_data);
-		});
+		send_message();
 	});
 
 	socket.on('message', function(data){
-		$('#pvt-chat').append('<li>' + data.msg + '</li>');
+		$('#pvt-chat-list').append('<li>'+ data.from + ': ' + data.msg + '</li>');
 	});
 
 

@@ -1,8 +1,9 @@
 	var chat_window  = function(to){
-		var chat ='<form id="pvt-chat" data-to="'+to+'">';
+		var chat  = '<form id="pvt-chat" data-to="'+to+'">';
+			chat += '	<ul id="pvt-chat-list"></ul>';
 			chat += '	<textarea id="send-chat"></textarea>';
-			chat += '	<a id="send-chat-btn">send</a>';
-			chat += '</div>';
+			chat += '	<button id="send-chat-btn">send</button>';
+			chat += '</form>';
 
 		return chat;
 	}
@@ -10,7 +11,7 @@
 
 
 	var user_list_item = function(user, classes) {
-		if (!classes) classes = ''
+		if (!classes) classes = '';
 		var id = user.name,
 			styles = 'left:' + user.pos[0] + 'px; top:' + user.pos[1]+'px',
 			classes = 'user ' + classes;
@@ -27,9 +28,9 @@
 			return false
 		}
 		var request  = '<div id="pvt-request">';
-			request +=		name + ' says hi. do you want to talk?';
-			request +=		'<a id="yes">yes</a>';
-			request +=		'<a id="no">no</a>';
+			request +=		'<p>' + name + ' says hi. do you want to talk?</p>';
+			request +=		'<button id="yes">yes</button>';
+			request +=		'<button id="no">no</button>';
 			request += '</div>';
 
 		return request;

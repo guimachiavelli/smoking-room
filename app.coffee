@@ -72,27 +72,33 @@ io.sockets.on 'connection', (socket) ->
 	# when a user picks a cigarette
 	# emit it to all users
 	socket.on 'user move', (data) ->
-		console.log data
 		users[data.username].set 'pos', data.new_pos
 		public_users = model.updatePublicUserList users
 
 		io.sockets.emit 'user list update', public_users
 
+
+
+
+
+
 	# pvt chat request
-	socket.on 'start pvt', (data) ->
-		users[data.recipient].emit 'chat request', { from: data.sender }
+	socket.on 'send chat request', (data) ->
+		console.log 'sending chat request to ' + data.to + ' from ' + data.from
+		users[data.to].emit 'incoming chat request', data
 
 	# accepted pvt chat
-	socket.on 'request accepted', (data) ->
-		users[data.with].emit 'request accepted', data.with
+	socket.on 'accept chat request', (data) ->
+		console.log 'sending chat request accept to ' + data.to + ' from ' + data.from
+		users[data.to].emit 'chat request accepted', data
+
+
+
+
 
 	# chatting
-	# expects:
-	# data.from: username
-	# data.to: username
-	# data.txt: message
 	socket.on 'message', (data) ->
-		console.log data
+		console.log 'sending message from ' + data.from + ' to ' + data.to
 		users[data.to].emit 'message', {from: data.from, to: data.to, msg: data.msg }
 
 	# on disconnect, remove user from our user object
