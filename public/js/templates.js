@@ -1,8 +1,9 @@
-	var chat_window  = function(to){
+	var chat_window = function(to){
 		var chat  = '<form id="pvt-chat" data-to="'+to+'">';
 			chat += '	<ul id="pvt-chat-list"></ul>';
 			chat += '	<textarea id="send-chat"></textarea>';
 			chat += '	<button id="send-chat-btn">send</button>';
+			chat += '	<a id="close-chat-btn" href="#">close</a>';
 			chat += '</form>';
 
 		return chat;

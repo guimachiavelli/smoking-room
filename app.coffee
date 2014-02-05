@@ -93,6 +93,8 @@ io.sockets.on 'connection', (socket) ->
 		users[data.to].emit 'chat request accepted', data
 
 
+	socket.on 'close chat', (data) ->
+		users[data.to].emit 'close chat', data
 
 
 
@@ -103,8 +105,8 @@ io.sockets.on 'connection', (socket) ->
 
 	# on disconnect, remove user from our user object
 	socket.on 'disconnect', () ->
-		# io.sockets.emit 'message', users[socket.id].name + ' disconnected'
-		delete users[socket.id]
+		socket.get 'name', (err, data)-> name = delete users[data]
+
 		public_users = model.updatePublicUserList users
 
 		io.sockets.emit 'user list update', public_users

@@ -19,6 +19,7 @@ module.exports =
 					pos: pos,
 					ref: user.id
 
+				
 				public_users.push public_user
 
 			public_users

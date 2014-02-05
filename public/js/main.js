@@ -28,8 +28,20 @@ $(document).ready(function(){
 		socket.emit('accept chat', data)
 	}
 
+	var close_chat = function() {
+		$(document).on('click', '#close-chat-btn', function(e){
+			e.preventDefault();
+			var data = {from: user_socket.name, to: user_socket.to};
+			$('#pvt-chat-list').append('<li><em>'+ user_socket.name + ' disconnected</em></li>');
+			$('#pvt-chat').remove();
+			socket.emit('close chat', data);
+			console.log('close chat');
+			return false;
+		});
+	}
+
 	var send_message = function() {
-		$('#send-chat-btn').click(function(e){
+		$(document).on('click', '#send-chat-btn', function(e){
 			e.preventDefault();
 
 			var msg = $('#send-chat').val();
@@ -44,8 +56,11 @@ $(document).ready(function(){
 
 			return false;
 		});
+
+		close_chat();
 	}
 
+	send_message();
 
 	App.init();
 
@@ -104,15 +119,15 @@ $(document).ready(function(){
 		}
 
 		$('#yes').click(function(){
-			var confirm_data = {'with': data.from};
 			var pvt_chat = chat_window(data.from);
 			$('#pvt-request').remove();
-			$('#room').append(pvt_chat);
+
+			if ($('#pvt_chat').length < 1) {
+				$('#room').append(pvt_chat);
+			}
 
 			user_socket.to = data.from;
 			accept_chat_request(user_socket.to, user_socket.name);
-
-			send_message();
 
 		});
 
@@ -120,18 +135,25 @@ $(document).ready(function(){
 
 
 	socket.on('chat request accepted', function(data){
-		var pvt_chat = chat_window(data.from);
+		if ($('#pvt_chat').length < 1) {
+			var pvt_chat = chat_window(data.from);
+			$('#room').append(pvt_chat);
+		}
+
 		user_socket.to = data.from;
 
-		console.log(user_socket, data);
-
 		$('#room').append(pvt_chat);
-		send_message();
 	});
 
 	socket.on('message', function(data){
 		$('#pvt-chat-list').append('<li>'+ data.from + ': ' + data.msg + '</li>');
 	});
+
+
+	socket.on('close chat', function(data){
+		$('#pvt-chat').remove();
+	});
+
 
 
 	$('#room').click(function(e){
