@@ -1,3 +1,7 @@
+/*jslint browser: true */
+/*devel: true */
+/*global $, jQuery, sockets, App, io, templates */
+
 var sockets = {
 	socket: null,
 	user_socket: {
@@ -29,21 +33,29 @@ var sockets = {
 		});
 
 
-		sockets.socket.on('close chat', function(data){
+		sockets.socket.on('close chat', function(){
 			$('#pvt-chat').remove();
 		});
 
+		sockets.socket.on('chat request refused', function(){
+			$('#pvt-request').remove();
+		});
+
+
 		sockets.send_message();
 		sockets.accept_request();
+		sockets.refuse_request();
 
 		$(document).on('click', '.user', function(){
 			var to = $(this).attr('id');
 			sockets.send_chat_request(to, sockets.user_socket.name);
 		});
 
+		$(document).on('click', '#smoke-btn', function(){
+			templates.smoke_window();
+		});
+
 	},
-
-
 
 	start_chat: function(data) {
 		if ($('#pvt_chat').length < 1) {
@@ -78,6 +90,14 @@ var sockets = {
 		});
 	},
 
+	refuse_request: function() {
+		$(document).on('click', '#no', function(e){
+			e.preventDefault();
+			$('#pvt-request').remove();
+			sockets.refuse_chat_request(sockets.user_socket.to, sockets.user_socket.name);
+		});
+	},
+
 
 	chat_request_window: function(data) {
 		if ($('#pvt-request').length < 1) {
@@ -86,20 +106,20 @@ var sockets = {
 		}
 	},
 
-
-
-
 	accept_chat_request: function(to, from) {
 		var data = {'to':to, 'from': from };
-		sockets.socket.emit('accept chat request', data)
+		sockets.socket.emit('accept chat request', data);
 	},
+
+	refuse_chat_request: function(to, from) {
+		var data = {'to':to, 'from': from };
+		sockets.socket.emit('refuse chat request', data);
+	},
+
 
 	chat_request_accepted: function(data) {
 		sockets.user_socket.to = data.from;
 	},
-
-
-
 
 	send_message: function() {
 		$(document).on('click', '#send-chat-btn', function(e){
@@ -121,5 +141,4 @@ var sockets = {
 	},
 
 
-}
-
+};

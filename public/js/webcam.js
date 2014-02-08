@@ -1,3 +1,7 @@
+/*jslint browser: true */
+/*devel: true */
+/*global $, jQuery, sockets, App, getUserMedia, ccv, cascade */
+
 /*! getUserMedia demo - v1.0
 * for use with https://github.com/addyosmani/getUserMedia.js
 * Copyright (c) 2012 addyosmani; Licensed MIT */
@@ -29,7 +33,7 @@ var App = {
 			window.webcam = this.options;
 
 		} else {
-			alert('No options were supplied to the shim!');
+			window.alert('No options were supplied to the shim!');
 		}
 
 		App.options.videoEl.addEventListener('canplay', function(){
@@ -39,7 +43,7 @@ var App = {
 
 		var $avatarBtn = $('#make-avatar');
 		$avatarBtn.click(function(){
-			App.makeAvatar()
+			App.makeAvatar();
 		});
 
 		// avatar creation and intro page
@@ -48,9 +52,7 @@ var App = {
 			$('.cig').removeClass('selected');
 			$(this).addClass('selected');
 			App.glasses.src = 'img/' + cig_type + '.png';
-		})
-
-
+		});
 	},
 
 	options: {
@@ -71,24 +73,25 @@ var App = {
 		context: "",
 		effect: null,
 
-		debug: function () {},
+		debug: null,
 
 		// flash fallback options
 		onCapture: function () {
 			window.webcam.save();
 		},
-		onTick: function () {},
+		onTick: null,
 		onSave: function (data) {
 
 			var col = data.split(";"),
 				img = App.image,
 				tmp = null,
 				w = this.width,
-				h = this.height;
+				h = this.height,
+				i;
 
-			for (var i = 0; i < w; i++) {
+			for (i = 0; i < w; i++) {
 				tmp = parseInt(col[i], 10);
-				img.data[App.pos + 0] = (tmp >> 16) & 0xff;
+				img.data[App.pos] = (tmp >> 16) & 0xff;
 				img.data[App.pos + 1] = (tmp >> 8) & 0xff;
 				img.data[App.pos + 2] = tmp & 0xff;
 				img.data[App.pos + 3] = 0xff;
@@ -101,7 +104,7 @@ var App = {
 			}
 
 		},
-		onLoad: function () {}
+		onLoad: null
 	},
 
 	success: function (stream) {
@@ -109,7 +112,7 @@ var App = {
 		if (App.options.context === 'webrtc') {
 			var video = App.options.videoEl;
 
-			if ((typeof MediaStream !== "undefined" && MediaStream !== null) && stream instanceof MediaStream) {
+			if ((window.MediaStream !== undefined && window.MediaStream !== null) && stream instanceof window.MediaStream) {
 
 				if (video.mozSrcObject !== undefined) { //FF18a
 					video.mozSrcObject = stream;
@@ -119,14 +122,15 @@ var App = {
 
 				return video.play();
 
-			} else {
-				var vendorURL = window.URL || window.webkitURL;
-				video.src = vendorURL ? vendorURL.createObjectURL(stream) : stream;
 			}
+
+			var vendorURL = window.URL || window.webkitURL;
+			video.src = vendorURL ? vendorURL.createObjectURL(stream) : stream;
+
 
 			video.onerror = function () {
 				stream.stop();
-				streamError();
+				window.streamError();
 			};
 
 		} else {
@@ -142,12 +146,15 @@ var App = {
 
 
 	avatarSelection: function () {
+		var canvas = document.getElementById('canvas'),
+			ctx = canvas.getContext('2d'),
+			video;
 		if (!App.stopped) {
-			requestAnimationFrame(App.avatarSelection);
+			window.requestAnimationFrame(App.avatarSelection);
 		}
 
 		if (App.options.context === 'webrtc') {
-			var video = document.getElementsByTagName('video')[0];
+			video = document.getElementsByTagName('video')[0];
 			App.canvas.width = video.videoWidth;
 			App.canvas.height = video.videoHeight;
 			App.canvas.getContext('2d').drawImage(video, 0, 0);
@@ -155,33 +162,34 @@ var App = {
 			window.webcam.capture();
 		}
 
-		var canvas = document.getElementById('canvas');
-		var ctx = canvas.getContext('2d');
+
 
 		var cw = 560;
 		var ch = 420;
 		canvas.width = cw;
 		canvas.height = ch;
 
-		draw(video,canvas,ctx,cw,ch);
+		App.draw(video,canvas,ctx,cw,ch);
 
-		function draw(v,canvas,ctx,w,h) {
-			ctx.drawImage(v,0,0,w,h);
-			var comp = ccv.detect_objects({
-				"canvas": (canvas),
-				"cascade": cascade,
-				"interval": 1,
-				"min_neighbors": 1
-			});
-			var sc = comp[0];
-			if (comp[0]) {
-				ctx.drawImage(App.glasses, sc.x, sc.y+sc.height/2.3, sc.width, sc.height*1.25);
-				App.face = true;
-			} else {
-				App.face = false;
-			}
+	},
+
+	draw: function (v,canvas,ctx,w,h) {
+		ctx.drawImage(v,0,0,w,h);
+		var comp = ccv.detect_objects({
+			"canvas": canvas,
+			"cascade": cascade,
+			"interval": 1,
+			"min_neighbors": 1
+		});
+		var sc = comp[0];
+		if (comp[0]) {
+			ctx.drawImage(App.glasses, sc.x, sc.y+sc.height/2.3, sc.width, sc.height*1.25);
+			App.face = true;
+		} else {
+			App.face = false;
 		}
 	},
+
 
 	makeAvatar: function(){
 		var canvas = document.getElementById('canvas');
@@ -198,7 +206,6 @@ var App = {
 
 	chooseAvatar: function(){
 		var canvas = document.getElementById('canvas2');
-		var ctx = canvas.getContext('2d');
 		return canvas.toDataURL('image/jpeg');
 	}
 };

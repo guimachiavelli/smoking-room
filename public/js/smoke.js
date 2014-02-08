@@ -1,7 +1,7 @@
 // Based on http://www.dgp.toronto.edu/people/stam/reality/Research/pdf/GDC03.pdf
 /**
  * Copyright (c) 2009 Oliver Hunt <http://nerget.com>
- * 
+ *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
  * files (the "Software"), to deal in the Software without
@@ -10,10 +10,10 @@
  * copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following
  * conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
  * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -62,11 +62,11 @@ function FluidField(canvas) {
         dens_step(dens, dens_prev, u, v, dt);
         displayFunc(new Field(dens, u, v));
     }
-	
+
     this.setDisplayFunction = function(func) {
         displayFunc = func;
     }
-    
+
     this.iterations = function() { return iterations; }
 
     this.setIterations = function(iters) {
@@ -196,12 +196,12 @@ function FluidField(canvas) {
             }
         }
     }
-    
+
     function diffuse(b, x, x0, dt) {
         var a = 0;
         lin_solve(b, x, x0, a, 1 + 4*a);
     }
-    
+
     function lin_solve2(x, x0, y, y0, a, c) {
         if (a === 0 && c === 1) {
             for (var j=1 ; j <= height; j++) {
@@ -235,12 +235,12 @@ function FluidField(canvas) {
             }
         }
     }
-    
+
     function diffuse2(x, x0, y, y0, dt) {
         var a = 0;
         lin_solve2(x, x0, y, y0, a, 1 + 4 * a);
     }
-    
+
     function advect(b, d, d0, u, v, dt) {
         var Wdt0 = dt * width;
         var Hdt0 = dt * height;
@@ -249,7 +249,7 @@ function FluidField(canvas) {
         for (var j = 1; j<= height; j++) {
             var pos = j * rowSize;
             for (var i = 1; i <= width; i++) {
-                var x = i - Wdt0 * u[++pos]; 
+                var x = i - Wdt0 * u[++pos];
                 var y = j - Hdt0 * v[pos];
                 if (x < 0.5)
                     x = 0.5;
@@ -274,7 +274,7 @@ function FluidField(canvas) {
         }
         set_bnd(b, d);
     }
-    
+
     function project(u, v, p, div) {
         var h = -0.5 / Math.sqrt(width * height);
         for (var j = 1 ; j <= height; j++ ) {
@@ -291,7 +291,7 @@ function FluidField(canvas) {
         }
         set_bnd(0, div);
         set_bnd(0, p);
-        
+
         lin_solve(0, p, div, 1, 4 );
         var wScale = 0.5 * width;
         var hScale = 0.5 * height;
@@ -311,13 +311,13 @@ function FluidField(canvas) {
         set_bnd(1, u);
         set_bnd(2, v);
     }
-    
+
     function dens_step(x, x0, u, v, dt) {
         addFields(x, x0, dt);
         diffuse(0, x0, x, dt );
         advect(0, x, x0, u, v, dt );
     }
-    
+
     function vel_step(u, v, u0, v0, dt) {
         addFields(u, u0, dt );
         addFields(v, v0, dt );
@@ -325,7 +325,7 @@ function FluidField(canvas) {
         var temp = v0; v0 = v; v = temp;
         diffuse2(u,u0,v,v0, dt);
         project(u, v, u0, v0);
-        var temp = u0; u0 = u; u = temp; 
+        var temp = u0; u0 = u; u = temp;
         var temp = v0; v0 = v; v = temp;
         advect(1, u, u0, u0, v0, dt);
         advect(2, v, v0, u0, v0, dt);
@@ -337,7 +337,7 @@ function FluidField(canvas) {
 
 /**
  * Copyright (c) 2009 Oliver Hunt <http://nerget.com>
- * 
+ *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
  * files (the "Software"), to deal in the Software without
@@ -346,10 +346,10 @@ function FluidField(canvas) {
  * copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following
  * conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
  * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -372,7 +372,7 @@ if (this.CanvasRenderingContext2D && !CanvasRenderingContext2D.createImageData) 
     var clampData = false;
 
     function prepareBuffer(field) {
-        canvas = canvas || document.getElementById("canvas");
+        canvas = canvas || document.getElementById("smoke-window");
         if (buffer && buffer.width == field.width() && buffer.height == field.height())
             return;
         buffer = document.createElement("canvas");
@@ -421,9 +421,9 @@ if (this.CanvasRenderingContext2D && !CanvasRenderingContext2D.createImageData) 
 
                 for (var x = 0; x < width; x++) {
                     for (var y = 0; y < height; y++) {
-						var r = 250;
-						var g = 50;
-						var b = 250;
+						var r = 240;
+						var g = 240;
+						var b = 240;
                         data[4*(y * height + x)] = r;
 						data[4*(y * height + x) + 1] =  g;
                         data[4*(y * height + x) + 2] =  b;
@@ -457,7 +457,7 @@ if (this.CanvasRenderingContext2D && !CanvasRenderingContext2D.createImageData) 
         for (var x = 0; x < field.width(); x++) {
             for (var y = 0; y < field.height(); y++) {
                 context.moveTo(x * wScale + 0.5 * wScale, y * hScale + 0.5 * hScale);
-                context.lineTo((x + 0.5 + vectorScale * field.getXVelocity(x, y)) * wScale, 
+                context.lineTo((x + 0.5 + vectorScale * field.getXVelocity(x, y)) * wScale,
                                (y + 0.5 + vectorScale * field.getYVelocity(x, y)) * hScale);
             }
         }

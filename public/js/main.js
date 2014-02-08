@@ -1,3 +1,7 @@
+/*jslint browser: true */
+/*devel: true */
+/*global $, jQuery, sockets, App */
+
 $(document).ready(function(){
 	'use strict';
 
@@ -15,10 +19,10 @@ $(document).ready(function(){
 			'avatar' : avatar,
 			'username' : username,
 			'pos' : [x,y]
-		}
+		};
 
 		if (!avatar || !username) {
-			alert('fill in your username and take a selfie, plz');
+			window.alert('fill in your username and take a selfie, plz');
 			return false;
 		}
 
@@ -26,7 +30,7 @@ $(document).ready(function(){
 		App.stopped = true;
 		sockets.socket.emit('user enter', data);
 		$('#set-up').fadeOut(100);
-		$('canvas').remove();
+		$('#canvas').remove();
 		sockets.user_socket.name = username;
 	});
 
@@ -37,7 +41,7 @@ $(document).ready(function(){
 			m_y = e.clientY - 210;
 
 		$avatar.css({
-			'left' 	: m_x,
+			'left'	: m_x,
 			'top'	: m_y
 		});
 

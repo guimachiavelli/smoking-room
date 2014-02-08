@@ -1,3 +1,7 @@
+/*jslint browser: true */
+/*devel: true */
+/*global $, jQuery, sockets, App */
+
 var templates = {
 
 	add_message: function(data){
@@ -13,17 +17,18 @@ var templates = {
 
 
 	refresh_user_list: function(data){
+		var user, the_user, item;
 		$('#user-list').empty();
-		for (var user in data) {
-			var the_user = data[user],
-				item;
-			if (sockets.user_socket.name === the_user.name) {
-				item = templates.user_list_item(the_user, 'current-user');
-			} else {
-				item = templates.user_list_item(the_user)
+		for (user in data) {
+			if (data.hasOwnProperty(user)) {
+				the_user = data[user];
+				if (sockets.user_socket.name === the_user.name) {
+					item = templates.user_list_item(the_user, 'current-user');
+				} else {
+					item = templates.user_list_item(the_user);
+				}
+				$('#user-list').append(item);
 			}
-
-			$('#user-list').append(item);
 		}
 	},
 
@@ -33,16 +38,20 @@ var templates = {
 			chat += '	<textarea id="send-chat"></textarea>';
 			chat += '	<button id="send-chat-btn">send</button>';
 			chat += '	<a id="close-chat-btn" href="#">close</a>';
+			chat += '	<a id="smoke-btn" href="#">send smoke shape</a>';
 			chat += '</form>';
 
 		return chat;
 	},
 
 	user_list_item: function(user, classes) {
-		if (!classes) classes = '';
+		if (!classes) {
+			classes = '';
+		}
 		var id = user.name,
-			styles = 'left:' + user.pos[0] + 'px; top:' + user.pos[1]+'px',
-			classes = 'user ' + classes;
+			styles = 'left:' + user.pos[0] + 'px; top:' + user.pos[1]+'px';
+
+		classes = 'user ' + classes;
 
 		var item = '<li id="' + id + '" style="' + styles + '" class="' + classes + '">';
 			item += '	<img src="'+ user.avatar +'" />';
@@ -53,7 +62,7 @@ var templates = {
 
 	chat_request: function(name){
 		if (!name) {
-			return false
+			return false;
 		}
 		var request  = '<div id="pvt-request" data-from="'+name+'">';
 			request +=		'<p>' + name + ' says hi. do you want to talk?</p>';
@@ -62,10 +71,11 @@ var templates = {
 			request += '</div>';
 
 		return request;
+	},
+
+	smoke_window: function(){
+		window.makeSmokeWindow();
+		window.heart();
 	}
 
-
-
-
-}
-
+};
