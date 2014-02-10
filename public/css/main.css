@@ -119,6 +119,7 @@ header {
 
 #user-list li {
 	position: absolute;
+	z-index: 2;
 	cursor: pointer;
 	-webkit-transition-property: all;
 	-webkit-transition-duration: 200ms;
@@ -131,6 +132,7 @@ header {
 #pvt-request {
 	width: 350px;
 	position: absolute;
+	z-index: 3;
 	left: 50%;
 	margin-left: -175px;
 	top: 100px;
@@ -145,6 +147,7 @@ header {
 	width: 350px;
 	position: absolute;
 	left: 50%;
+	z-index: 3;
 	margin-left: -175px;
 	top: 100px;
 	text-align: center;
@@ -163,3 +166,5 @@ header {
 li {
 	list-style-type: none;
 }
+
+
