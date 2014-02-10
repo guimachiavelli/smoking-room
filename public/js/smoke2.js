@@ -117,7 +117,7 @@ function makeSmokeWindow() {
                 field.setUICallback(prepareFrame);
 
                 updateRes = function() {
-                    var r = parseInt(128);
+                    var r = parseInt(256);
                     canvas.width = r;
                     canvas.height = r;
                     fieldRes = r;
