@@ -84,33 +84,38 @@ io.sockets.on 'connection', (socket) ->
 
 	# pvt chat request
 	socket.on 'send chat request', (data) ->
-		console.log 'sending chat request to ' + data.to + ' from ' + data.from
 		users[data.to].emit 'incoming chat request', data
 
 	# pvt chat request
 	socket.on 'refuse chat request', (data) ->
-		console.log data
 		users[data.to].emit 'chat request refused', data
 
 	# accepted pvt chat
 	socket.on 'accept chat request', (data) ->
-		console.log 'sending chat request accept to ' + data.to + ' from ' + data.from
+		users[data.from].set 'chatting_with', data.to
+		users[data.to].set 'chatting_with', data.from
 		users[data.to].emit 'chat request accepted', data
 
 
 	socket.on 'close chat', (data) ->
+		users[data.from].set 'chatting_with', null
+		users[data.to].set 'chatting_with', null
 		users[data.to].emit 'close chat', data
 
 
 
 	# chatting
 	socket.on 'message', (data) ->
-		console.log 'sending message from ' + data.from + ' to ' + data.to
 		users[data.to].emit 'message', {from: data.from, to: data.to, msg: data.msg }
 
 	# on disconnect, remove user from our user object
 	socket.on 'disconnect', () ->
-		socket.get 'name', (err, data)-> name = delete users[data]
+		socket.get 'chatting_with', (err, data)-> 
+			users[data].emit 'close chat'
+			users[data].set 'chatting_with', null
+
+		socket.get 'name', (err, data)-> delete users[data]
+
 
 		public_users = model.updatePublicUserList users
 
