@@ -421,9 +421,9 @@ if (this.CanvasRenderingContext2D && !CanvasRenderingContext2D.createImageData) 
 
                 for (var x = 0; x < width; x++) {
                     for (var y = 0; y < height; y++) {
-						var r = 240;
-						var g = 240;
-						var b = 240;
+						var r = 250;
+						var g = 250;
+						var b = 250;
                         data[4*(y * height + x)] = r;
 						data[4*(y * height + x) + 1] =  g;
                         data[4*(y * height + x) + 2] =  b;

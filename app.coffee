@@ -89,6 +89,7 @@ io.sockets.on 'connection', (socket) ->
 
 	# pvt chat request
 	socket.on 'refuse chat request', (data) ->
+		console.log data
 		users[data.to].emit 'chat request refused', data
 
 	# accepted pvt chat

@@ -94,7 +94,7 @@ var sockets = {
 		$(document).on('click', '#no', function(e){
 			e.preventDefault();
 			$('#pvt-request').remove();
-			sockets.refuse_chat_request(sockets.user_socket.to, sockets.user_socket.name);
+			sockets.refuse_chat_request($(this).parents('#pvt-request').data('from'), sockets.user_socket.name);
 		});
 	},
 
@@ -114,6 +114,7 @@ var sockets = {
 	refuse_chat_request: function(to, from) {
 		var data = {'to':to, 'from': from };
 		sockets.socket.emit('refuse chat request', data);
+		console.log('refuse chat request sent to ' + data.to);
 	},
 
 

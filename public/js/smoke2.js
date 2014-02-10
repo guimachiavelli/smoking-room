@@ -1,7 +1,3 @@
-/*jslint browser: true */
-/*devel: true */
-/*global $, jQuery, sockets, App, io, templates */
-
            var frames = 0;
             var force = 5;
             var source = 10;
@@ -14,7 +10,7 @@
             var fieldRes;
             var canvas;
             var running = false;
-            var start = new Date();
+            var start = new Date;
             var frames = 0;
             var options = {};
 
@@ -22,30 +18,26 @@
 			iter = 0;
 
 			function makeLine(start, len, arr) {
-				var i;
-				for (i = 0; i < len; i+=2) {
-					arr.push([start[0]+i, start[1]]);
+				for (var i = 0; i < len; i+=2) {
+					arr.push([start[0]+i, start[1]])
 				}
 			}
 
 			function makeLine2(start, len, arr) {
-				var i;
-				for (i = 0; i < len; i+=2) {
-					arr.push([start[0], start[1]+i]);
+				for (var i = 0; i < len; i+=2) {
+					arr.push([start[0], start[1]+i])
 				}
 			}
 
 			function makeLine3(start, len, arr) {
-				var i;
-				for (i = 0; i < len; i+=2) {
-					arr.push([start[0]-i, start[1]]);
+				for (var i = 0; i < len; i+=2) {
+					arr.push([start[0]-i, start[1]])
 				}
 			}
 
 			function makeLine4(start, len, arr) {
-				var i;
-				for (i = 0; i < len; i+=2) {
-					arr.push([start[0], start[1]-i]);
+				for (var i = 0; i < len; i+=2) {
+					arr.push([start[0], start[1]-i])
 				}
 			}
 
@@ -60,29 +52,28 @@
 				makeLine3([350, 360], 100, shape);
 				makeLine4([250, 360], 100, shape);
 
-				setInterval(function(){
+				shape_int = setInterval(function(){
 					if (iter < shape.length) {
 						sources.push([mx, my]);
 						mx = shape[iter][0];
 						my = shape[iter][1];
 						iter++;
 					}
-				}, 10);
-			};
+				}, 10)
+			}
 
 
 
             function prepareFrame(field)  {
-                var canvas = document.getElementById("smoke-window");
+                var canvas = document.getElementById("canvas");
                 if ((omx >= 0 && omx < displaySize && omy >= 0 && omy < displaySize)) {
                     var dx = mx - omx;
                     var dy = my - omy;
-					var i,x,y;
                     var length = (Math.sqrt(dx * dx + dy * dy) + 0.5) | 0;
-                    if (length < 1) { length = 1; }
-                    for (i = 0; i < length; i++) {
-                        x = (((omx + dx * (i / length)) / displaySize) * field.width()) | 0;
-                        y = (((omy + dy * (i / length)) / displaySize) * field.height()) | 0;
+                    if (length < 1) length = 1;
+                    for (var i = 0; i < length; i++) {
+                        var x = (((omx + dx * (i / length)) / displaySize) * field.width()) | 0
+                        var y = (((omy + dy * (i / length)) / displaySize) * field.height()) | 0;
                         field.setVelocity(x, y, dx, dy);
                         field.setDensity(x, y, 50);
                     }
@@ -124,10 +115,9 @@ function makeSmokeWindow() {
 				console.log(canvas);
                 field = new FluidField(canvas);
                 field.setUICallback(prepareFrame);
-				field.setIterations(1);
 
                 updateRes = function() {
-                    var r = 128;
+                    var r = parseInt(128);
                     canvas.width = r;
                     canvas.height = r;
                     fieldRes = r;

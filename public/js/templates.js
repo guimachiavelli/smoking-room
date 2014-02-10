@@ -41,6 +41,8 @@ var templates = {
 			chat += '	<a id="smoke-btn" href="#">send smoke shape</a>';
 			chat += '</form>';
 
+		window.makeSmokeWindow();
+
 		return chat;
 	},
 
@@ -74,7 +76,6 @@ var templates = {
 	},
 
 	smoke_window: function(){
-		window.makeSmokeWindow();
 		window.heart();
 	}
 

@@ -1,8 +1,9 @@
 {
-  "name": "the-village",
-  "version": "0.0.1",
+  "name": "smoking room",
+  "version": "0.2",
   "private": true,
   "dependencies": {
+    "node": 0.10.25,
     "mocha": "1.12.0",
     "sinon": "~1.7.3",
     "grunt": "~0.4.1",
@@ -17,6 +18,6 @@
 	"bower": "1.2.8"
   },
   "scripts": {
-    "postinstall": "./node_modules/bower/bin/bower install"  
+    "postinstall": "./node_modules/bower/bin/bower install"
   }
 }
