@@ -34,6 +34,7 @@ var sockets = {
 
 
 		sockets.socket.on('close chat', function(){
+			sockets.user_socket.to = null;
 			$('#pvt-chat').remove();
 		});
 
@@ -41,12 +42,12 @@ var sockets = {
 			$('#pvt-request').remove();
 		});
 
-
 		sockets.send_message();
 		sockets.accept_request();
 		sockets.refuse_request();
 
 		$(document).on('click', '.user', function(){
+			if (sockets.user_socket.to !== null) { return; }
 			var to = $(this).attr('id');
 			sockets.send_chat_request(to, sockets.user_socket.name);
 		});
@@ -71,6 +72,7 @@ var sockets = {
 			$('#pvt-chat-list').append('<li><em>'+ sockets.user_socket.name + ' disconnected</em></li>');
 			$('#pvt-chat').remove();
 			sockets.socket.emit('close chat', data);
+			sockets.user_socket.to = null;
 		});
 	},
 
