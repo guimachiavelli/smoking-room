@@ -1,6 +1,6 @@
 {
   "name": "smoking-room",
-  "version": "0.2",
+  "version": "0.0.2",
   "private": true,
   "dependencies": {
     "node": "0.10.25",
