@@ -3,7 +3,7 @@
   "version": "0.0.2",
   "engines": {
     "node": "0.10.25"
-  }
+  },
   "private": true,
   "dependencies": {
     "mocha": "1.12.0",
