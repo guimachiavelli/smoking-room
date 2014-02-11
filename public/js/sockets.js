@@ -54,6 +54,11 @@ var sockets = {
 
 		$(document).on('click', '#smoke-btn', function(){
 			templates.smoke_window();
+			sockets.socket.emit('smoke shape');
+		});
+
+		sockets.socket.on('smoke shape', function(){
+			templates.smoke_window();
 		});
 
 	},
