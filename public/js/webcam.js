@@ -164,8 +164,8 @@ var App = {
 
 
 
-		var cw = 560;
-		var ch = 420;
+		var cw = 466;
+		var ch = 350;
 		canvas.width = cw;
 		canvas.height = ch;
 
@@ -179,11 +179,11 @@ var App = {
 			"canvas": canvas,
 			"cascade": cascade,
 			"interval": 1,
-			"min_neighbors": 1
+			"min_neighbors": 0
 		});
 		var sc = comp[0];
 		if (comp[0]) {
-			ctx.drawImage(App.glasses, sc.x, sc.y+sc.height/2.3, sc.width, sc.height*1.25);
+			ctx.drawImage(App.glasses, sc.x+5, sc.y+sc.height/1.1, sc.width/1.2, sc.height/1.1);
 			App.face = true;
 		} else {
 			App.face = false;
@@ -199,7 +199,7 @@ var App = {
 
 		if (App.face === true) {
 			// Grab the pixel data from the backing canvas
-			var idata = ctx.getImageData(200,0, 600, 420);
+			var idata = ctx.getImageData(135,0, 290, 350);
 			ctx2.putImageData(idata, 0, 0);
 		}
 	},

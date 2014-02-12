@@ -39,7 +39,6 @@
 
 .module {
 	width: 350px;
-	height: 500px;
 	float: left;
 	margin-right: 40px;
 	overflow: hidden;
@@ -98,17 +97,21 @@
 
 	img {
 		height: 110px;
-
 	}
 }
 
 #set-avatar {
+  height: 458px;
+  position: relative;
+
 	.btn {
-		width: 120px;
+		width: 150px;
 		float: left;
+		margin-top: 20px;
 
 		&:last-child {
-			float: right;
+		  float: right;
+		  text-align: right;
 		}
 	}
 
@@ -121,21 +124,17 @@
 	display: none;
 }
 
-#webcam video {
-	margin-left: -150px;
-}
-
 #canvas-container {
 	width:100%;
 	overflow:hidden;
 }
 
 #canvas-container2 {
-	position: absolute;
+  position: absolute;
+  top: rhythm(2);
 }
 
 #canvas {
-	height: 100%;
-	margin-left: -65%;
+	margin-left: -45%;
 }
 

@@ -66,7 +66,7 @@ input, textarea {
 
 .btn {
     width: 100px;
-    @include adjust-font-size-to(28px);
+    @include adjust-font-size-to(34px);
     font-family: $main-font;
 	border: 0;
     color: $grey;

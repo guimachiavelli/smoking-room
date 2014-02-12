@@ -29,7 +29,13 @@ $(document).ready(function(){
 		App.stream.stop();
 		App.stopped = true;
 		sockets.socket.emit('user enter', data);
-		$('#set-up').fadeOut(100);
+		$('#intro-wrap').fadeOut(1500, function(){
+			$('#intro').animate({
+				'top': 3000
+			}, 2000, function() {
+				$('#intro').remove();
+			});
+		});
 		$('#canvas').remove();
 		sockets.user_socket.name = username;
 	});
