@@ -29,16 +29,6 @@ model = require './lib/models.coffee'
 
 users = {}
 public_users = []
-socket_events = [
-		'connection',
-		'user enter',
-		'user list update',
-		'chat request',
-		'message',
-		'confirm pvt'
-		'request accepted'
-		'user move'
-]
 
 ## server configs
 app.configure () ->

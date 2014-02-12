@@ -1,0 +1,16 @@
+#project-listing {
+	
+	.project {
+		margin-bottom: rhythm(4);
+	}
+
+	.thumb {
+		width: 100%;
+		float: none;
+		line-height: 0;
+		display: block;
+
+		img { margin-bottom: rhythm(2); }
+	}
+
+}

@@ -1,0 +1,98 @@
+/********************************************
+/********************************************
+
+	general html elements and helpers
+
+/********************************************
+/********************************************/
+
+a {
+	color: $link-color;
+	text-decoration: none;
+	@include transition-property(color);
+	@include transition-duration(.2s);
+
+
+	&:hover  {
+		text-decoration: none;
+		color: $text-color;
+	}
+}
+
+strong { font-weight: 800; }
+em { font-style: italic; }
+
+q {
+	&:before { content: "“"; }
+	&:after { content: "”"; }
+}
+
+::-moz-selection {
+
+}
+
+::selection {
+
+}
+
+.chromeframe {
+    margin: 0.2em 0;
+    background: #ccc;
+    color: #000000;
+    padding: 0.2em 0;
+}
+
+
+.outline { display: none }
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none;
+}
+
+input, textarea {
+	border: 0;
+	font-family: $main-font;
+}
+
+
+.titles {
+    @include text-shadow(rgba(0,0,0,0.9) -1px 1px 1px);
+    color: #fff;
+    font-family: $main-font;
+}
+
+.btn {
+    width: 100px;
+    @include adjust-font-size-to(28px);
+    font-family: $main-font;
+	border: 0;
+    color: $grey;
+    display: block;
+    position: relative;
+    @include background-size(300%);
+    @include background-image(linear-gradient(left, $grey 0, white 90%));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+-webkit-animation: slidetounlock 2s 4s infinite linear;
+  -moz-background-clip: text;
+  -moz-text-fill-color: transparent linear;
+  -moz-animation: slidetounlock 2ms infinite linear;
+  // thanks to Chris Coyier for the tutorial on css-tricks
+
+
+}
+
+
+@include keyframes(slidetounlock) {
+  0% {
+    background-position: -100px 0;
+  }
+  100% {
+    background-position: 200px 0;
+  }
+}
+
+

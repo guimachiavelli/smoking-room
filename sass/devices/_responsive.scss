@@ -1,0 +1,57 @@
+/* ==========================================================================
+   Media queries breakingpoints
+   ========================================================================== */
+
+$mobile-portrait: 'only screen and (max-width: 568px)';
+$mobile-landscape: 'only screen and (min-width: 321px) and (max-width: 568px) and (orientation:landscape)';
+$above-mobile: 'only screen and (min-width : 768px)';
+$tablet-and-under: 'only screen and (max-width : 1024px)';
+$tablet: 'only screen and (min-width : 768px) and (max-width : 1024px)';
+$tablet-portrait: 'only screen and (min-width : 768px) and (max-width : 1024px) and (orientation : portrait)';
+$tablet-landscape: 'only screen and (min-width : 768px) and (max-width : 1024px) and (orientation : landscape)';
+$above-tablet: 'only screen and (min-width : 1025px)';
+$tablet-desktop: 'only screen and (min-width : 1025px) and (max-width : 1200px)';
+$large-screen: 'only screen and (min-width : 1300px)';
+
+
+/* ==========================================================================
+   Media queries for responsiveness
+   ========================================================================== */
+
+@media #{$mobile-portrait} {
+	@import 'devices/mobile-portrait';
+}
+
+@media #{$mobile-landscape} {
+	@import 'devices/mobile-landscape';
+
+}
+
+@media #{$tablet-portrait} {
+
+}
+
+@media #{$tablet-landscape} {
+
+}
+
+@media #{$tablet-and-under} {
+
+}
+
+@media #{$above-tablet} {
+
+
+}
+
+@media #{$tablet} {
+
+}
+
+@media #{$tablet-desktop} {
+        
+}
+
+@media #{$large-screen} {
+
+}

@@ -1,0 +1,111 @@
+#intro {
+	width: 100%;
+	height: 100%;
+	min-height: 800px;
+	background: #000 url(../img/intro-bg.jpg) no-repeat center 20%;
+	overflow: hidden;
+	margin: 0;
+	position: absolute;
+	z-index: 10;
+	@include background-size(cover);
+}
+
+#intro-wrap {
+	width: 740px;
+	margin: 0 auto;
+}
+
+.site-title {
+    @extend .titles;
+    @include adjust-font-size-to(50px);
+
+    margin: 35px auto;
+    text-align: center;
+    font-weight: 100;
+}
+
+
+
+.module-title {
+	@extend .titles;
+	@include adjust-font-size-to(28px, 3.5);
+	font-weight: 200;
+	text-align: center;
+
+}
+
+
+
+
+.module {
+	width: 350px;
+	height: 500px;
+	float: left;
+	margin-right: 40px;
+	overflow: hidden;
+
+	&:last-child {
+		margin: 0;
+	}
+}
+
+.box {
+	@include box-shadow(inset 0 0 10px 8px rgba($grey, .9));
+	@include box-sizing(border-box);
+	padding: rhythm(3) 2em;
+    background-color: rgba($white, 0.5);
+	border: $black 1px solid;
+
+}
+
+#set-username {
+	height: 120px;
+	input {
+		width: 100%;
+		height: 45px;
+		border: 1px solid #000;
+		@include adjust-font-size-to(24px);
+		text-align: center;
+	}
+}
+
+#set-cig {
+  margin-top: rhythm(2);
+  overflow: hidden;
+
+	.cig {
+		float: left;
+		margin-right: 10px;
+	}
+
+	img {
+		height: 130px;
+
+	}
+}
+
+
+#webcam {
+	width: 300px;
+	overflow: hidden;
+	display: none;
+}
+
+#webcam video {
+	margin-left: -150px;
+}
+
+#canvas-container {
+	width:100%;
+	overflow:hidden;
+}
+
+#canvas-container2 {
+	position: absolute;
+}
+
+#canvas {
+	height: 100%;
+	margin-left: -65%;
+}
+

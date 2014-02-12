@@ -1,0 +1,53 @@
+#room {
+	width: 100%;
+	height: 100%;
+	cursor: crosshair;
+}
+
+#user-list li {
+	position: absolute;
+	z-index: 2;
+	cursor: pointer;
+	-webkit-transition-property: all;
+	-webkit-transition-duration: 200ms;
+}
+
+#user-list .current-user {
+	cursor: default;
+}
+
+#pvt-request {
+	width: 350px;
+	position: absolute;
+	z-index: 3;
+	left: 50%;
+	margin-left: -175px;
+	top: 100px;
+	text-align: center;
+	background: #172;
+	border: 5px solid #fff;
+	padding: 1em;	box-sizing: border-box;
+}
+
+#pvt-chat {
+	width: 350px;
+	position: absolute;
+	left: 50%;
+	z-index: 3;
+	margin-left: -175px;
+	top: 100px;
+	text-align: center;
+	background: #fff;
+	border: 5px solid #172;
+	padding: 1em;
+	box-sizing: border-box;
+}
+
+#pvt-chat-list {
+	list-style-type: none;
+	text-align: left;
+	border: 1px solid #172;
+}
+
+
+

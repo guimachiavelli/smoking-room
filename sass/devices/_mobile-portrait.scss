@@ -1,0 +1,98 @@
+#wrapper {
+	padding: 0 15px;
+	overflow: hidden;
+}
+
+#intro {
+	position: static;
+	width: 100%;
+	padding-top: rhythm(10);
+	overflow: auto;
+
+	#logo {		
+		width: 170px;
+		text-align: center;
+		margin: 5px auto 0 auto;
+		padding: 0;
+		float: none;
+		position: relative;
+		display: block;
+	}
+
+	&.mini {
+		.header-content {
+			border-bottom-color: #fff;
+		}
+	}
+
+}
+
+#primary-nav {
+	display: none;
+}
+
+.main-content {
+	clear: both;
+	padding-top: 0
+}
+
+@import 'devices/mobile-nav';
+
+
+
+.home-content {
+	.main-project-header {
+		@include adjust-font-size-to(20px);
+		margin-bottom: rhythm(2);
+	}
+
+	.social-links, .read-more {
+		display: none;
+	}
+
+}
+
+#site-info {
+	padding: rhythm(4) 0;
+	margin-top: rhythm(2);
+
+	.grid {
+		padding: 0 17px;
+	}
+
+	#card {
+		margin-bottom: rhythm(2);
+	}
+	
+	#newsletter-subscribe {
+		margin-bottom: rhythm(.5);
+	}
+
+	#newsletter-subscribe, #card {
+		width: 100%;
+		float: none;
+		display: block;
+		padding-left: 0;
+		text-align: left;
+	}
+
+	small {
+		display: block;
+	
+	}
+
+}
+
+#project-listing .thumbs {
+	.thumb {
+		display: none;
+	}
+
+	.thumb:first-child {
+		display: block;
+	}
+}
+
+@import 'devices/mobile-formatting';
+
+@import 'devices/portrait-projects';

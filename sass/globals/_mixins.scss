@@ -1,0 +1,42 @@
+@mixin smooth {
+	-webkit-font-smoothing: antialiased;
+}
+
+
+@mixin overflow-control {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+@mixin placeholder($colour) {
+	&.placeholder {
+		color: $colour;
+	}
+	&:-moz-placeholder {
+		color: $colour; 
+	}
+	&::-webkit-input-placeholder {
+		color: $colour; 
+	}
+	&:-ms-input-placeholder {  
+		color: $colour;  
+	}
+}
+
+
+@mixin image-replacement {
+	text-indent: -99999px;
+	display: block;
+}
+
+@mixin ir {
+	@include image-replacement;
+}
+
+@mixin keyframes($name) {
+    @-webkit-keyframes #{$name} { @content; }
+    @-moz-keyframes #{$name} { @content; }
+    @keyframes #{$name} { @content; }
+}
+
