@@ -61,6 +61,7 @@ input, textarea {
     @include text-shadow(rgba(0,0,0,0.9) -1px 1px 1px);
     color: #fff;
     font-family: $main-font;
+    margin-bottom: rhythm();
 }
 
 .btn {
@@ -84,12 +85,12 @@ input, textarea {
 
 
 @include keyframes(slidetounlock) {
-  0% {
-    background-position: -100px 0;
-  }
-  100% {
-    background-position: 350px 0;
-  }
+0% {
+  background-position: -100px 0;
+}
+100% {
+  background-position: 350px 0;
+}
 }
 
 

@@ -52,14 +52,14 @@
 .box {
 	@include box-shadow(inset 0 0 10px 8px rgba($grey, .9));
 	@include box-sizing(border-box);
-	padding: rhythm(3) 2em;
+	padding: rhythm(2) 2em;
     background-color: rgba($white, 0.5);
 	border: $black 1px solid;
 
 }
 
 #set-username {
-	height: 120px;
+	height: 95px;
 	input {
 		width: 100%;
 		height: 45px;
@@ -75,6 +75,16 @@
 
 	.cig {
 		float: left;
+		cursor: pointer;
+		@include transition-property(all);
+		@include transition-duration(300ms);
+		@include transition-timing-function(ease-in-out);
+
+		&:hover {
+			@include box-shadow(0 0 100px rgba(white, .8));
+			@include border-radius(100px);
+			background: rgba(white, .35);
+		}
 	}
 
 	#cig1 {
