@@ -75,13 +75,33 @@
 
 	.cig {
 		float: left;
-		margin-right: 10px;
+	}
+
+	#cig1 {
+		margin-left: -20px;
+
+	}
+	#cig2 {
+		margin: 0 30px 0 -20px;
+
 	}
 
 	img {
-		height: 130px;
+		height: 110px;
 
 	}
+}
+
+#set-avatar {
+	.btn {
+		width: 120px;
+		float: left;
+
+		&:last-child {
+			float: right;
+		}
+	}
+
 }
 
 

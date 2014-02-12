@@ -57,7 +57,6 @@ input, textarea {
 	font-family: $main-font;
 }
 
-
 .titles {
     @include text-shadow(rgba(0,0,0,0.9) -1px 1px 1px);
     color: #fff;
@@ -72,17 +71,15 @@ input, textarea {
     color: $grey;
     display: block;
     position: relative;
-    @include background-size(300%);
-    @include background-image(linear-gradient(left, $grey 0, white 90%));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
--webkit-animation: slidetounlock 2s 4s infinite linear;
-  -moz-background-clip: text;
-  -moz-text-fill-color: transparent linear;
-  -moz-animation: slidetounlock 2ms infinite linear;
-  // thanks to Chris Coyier for the tutorial on css-tricks
-
-
+    background-position: -100px;
+    @include background-size(450px);
+    @include background-image(linear-gradient(left top, $grey 0, $white .5, $grey .55, $grey 1));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -webkit-animation: slidetounlock 2.5s 2s infinite linear;
+    -moz-background-clip: text;
+    -moz-text-fill-color: transparent linear;
+    -moz-animation: slidetounlock 2ms infinite linear;
 }
 
 
@@ -91,7 +88,7 @@ input, textarea {
     background-position: -100px 0;
   }
   100% {
-    background-position: 200px 0;
+    background-position: 350px 0;
   }
 }
 
