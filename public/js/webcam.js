@@ -2,48 +2,99 @@
 /*devel: true */
 /*global $, jQuery, sockets, App, getUserMedia, ccv, cascade */
 
-/*! getUserMedia demo - v1.0
-* for use with https://github.com/addyosmani/getUserMedia.js
-* Copyright (c) 2012 addyosmani; Licensed MIT */
-
 'use strict';
-
 var App = {
 
-	face: false,
-	stopped: false,
-	stream: null,
+	face	: false,
+	stopped	: false,
+	stream	: null,
+	cam		: null,
+	canvas	: null,
+	ctx		: null,
+	width	: 466,
+	height	: 350,
 
-	init: function () {
-		if ( !!this.options ) {
-			this.pos = 0;
-			this.cam = null;
-			this.filter_on = false;
-			this.filter_id = 0;
-			this.canvas = document.getElementById("canvas");
-			this.ctx = this.canvas.getContext("2d");
-			this.img = new Image();
-			this.ctx.clearRect(0, 0, 600, 420);
-			this.image = this.ctx.getImageData(0, 0, 600, 420);
 
-			// Initialize getUserMedia with options
-			getUserMedia(this.options, this.success, this.deviceError);
+	options: {
+		audio		: false,
+		video 		: true,
+		el			: 'webcam',
+		extern		: null,
+		append 		: true,
+		width 		: 466,
+		height 		: 350,
+		mode		: 'callback',
+		swffile		: 'js/fallback/jscam_canvas_only.swf',
+		quality		: 25,
+		context		: '',
+		effect		: null,
+		noFallback	: false,
+		debug		: null,
+		onTick		: null,
+		onLoad		: null,
 
-			// Initialize webcam options for fallback
-			window.webcam = this.options;
+		onCapture: function () {
+			window.webcam.save();
+		},
 
-		} else {
-			window.alert('No options were supplied to the shim!');
+		onSave: function (data) {
+			App.flashOnSave(data);
+		}
+	},
+
+	flashOnSave: function(data) {
+		var col = data.split(';'),
+			img = App.image,
+			tmp = null,
+			w = this.width,
+			h = this.height,
+			pos = 0,
+			i;
+
+		for (i = 0; i < w; i++) {
+			tmp = parseInt(col[i], 10);
+			img.data[pos] = (tmp >> 16) & 0xff;
+			img.data[pos + 1] = (tmp >> 8) & 0xff;
+			img.data[pos + 2] = tmp & 0xff;
+			img.data[pos + 3] = 0xff;
+			App.pos += 4;
 		}
 
-		App.options.videoEl.addEventListener('canplay', function(){
-			App.options.videoEl.removeEventListener('canplay');
-			App.avatarSelection();
-		});
+		if (pos >= 4 * w * h) {
+			App.ctx.putImageData(img, 0, 0);
+			pos = 0;
+		}
+
+	},
+
+
+	init: function () {
+		this.canvas = document.getElementById('canvas');
+		this.ctx = this.canvas.getContext('2d');
+		this.ctx.clearRect(0, 0, this.width, this.height);
+		this.image = this.ctx.getImageData(0, 0, this.width, this.height);
+
+		// Initialize getUserMedia with options
+		getUserMedia(this.options, this.success, this.deviceError);
+
+		// Initialize webcam options for fallback
+		window.webcam = this.options;
+
+		if (App.options.videoEl) {
+			App.options.videoEl.addEventListener('canplay', App.avatarSelection());
+			//App.options.videoEl.removeEventListener('canplay', App.avatarSelection());
+
+		}
+
+		//$(document).on('click', 'body', function(){
+			//App.avatarSelection();
+			//console.log(1234);
+		//});
 
 		var $avatarBtn = $('#make-avatar');
 		$avatarBtn.click(function(){
 			App.makeAvatar();
+			return false;
 		});
 
 		// avatar creation and intro page
@@ -55,68 +106,19 @@ var App = {
 		});
 	},
 
-	options: {
-		"audio": false,
-		"video": true,
-		el: "webcam",
-
-		extern: null,
-		append: true,
-
-		width: 600,
-		height: 420,
-
-		mode: "save",
-		// callback | save | stream
-		swffile: "js/fallback/jscam_canvas_only.swf",
-		quality: 25,
-		context: "",
-		effect: null,
-
-		debug: null,
-
-		// flash fallback options
-		onCapture: function () {
-			window.webcam.save();
-		},
-		onTick: null,
-		onSave: function (data) {
-
-			var col = data.split(";"),
-				img = App.image,
-				tmp = null,
-				w = this.width,
-				h = this.height,
-				i;
-
-			for (i = 0; i < w; i++) {
-				tmp = parseInt(col[i], 10);
-				img.data[App.pos] = (tmp >> 16) & 0xff;
-				img.data[App.pos + 1] = (tmp >> 8) & 0xff;
-				img.data[App.pos + 2] = tmp & 0xff;
-				img.data[App.pos + 3] = 0xff;
-				App.pos += 4;
-			}
-
-			if (App.pos >= 4 * w * h) {
-				App.ctx.putImageData(img, 0, 0);
-				App.pos = 0;
-			}
-
-		},
-		onLoad: null
-	},
 
 	success: function (stream) {
+		App.stream = stream;
 
+		console.log(stream);
 		if (App.options.context === 'webrtc') {
 			var video = App.options.videoEl;
 
-			if ((window.MediaStream !== undefined && window.MediaStream !== null) && stream instanceof window.MediaStream) {
+			if (window.MediaStream !== undefined && window.MediaStream !== null && stream instanceof window.MediaStream) {
 
-				if (video.mozSrcObject !== undefined) { //FF18a
+				if (video.mozSrcObject !== undefined) {
 					video.mozSrcObject = stream;
-				} else { //FF16a, 17a
+				} else {
 					video.src = stream;
 				}
 
@@ -127,17 +129,16 @@ var App = {
 			var vendorURL = window.URL || window.webkitURL;
 			video.src = vendorURL ? vendorURL.createObjectURL(stream) : stream;
 
-
 			video.onerror = function () {
-				stream.stop();
+				App.stream.stop();
 				window.streamError();
 			};
 
 		} else {
-			window.webcam.capture();
+			App.avatarSelection();
+			//flash
 		}
 
-		App.stream = stream;
 	},
 
 	deviceError: function (error) {
@@ -159,9 +160,8 @@ var App = {
 			App.canvas.height = video.videoHeight;
 			App.canvas.getContext('2d').drawImage(video, 0, 0);
 		} else if(App.options.context === 'flash'){
-			window.webcam.capture();
+			video = window.webcam.capture();
 		}
-
 
 
 		var cw = 466;
@@ -176,10 +176,10 @@ var App = {
 	draw: function (v,canvas,ctx,w,h) {
 		ctx.drawImage(v,0,0,w,h);
 		var comp = ccv.detect_objects({
-			"canvas": canvas,
-			"cascade": cascade,
-			"interval": 1,
-			"min_neighbors": 0
+			'canvas': canvas,
+			'cascade': cascade,
+			'interval': 1,
+			'min_neighbors': 0
 		});
 		var sc = comp[0];
 		if (comp[0]) {
@@ -190,6 +190,11 @@ var App = {
 		}
 	},
 
+	chooseAvatar: function(){
+		var canvas = document.getElementById('canvas2');
+		console.log(12000);
+		return canvas.toDataURL('image/jpeg');
+	},
 
 	makeAvatar: function(){
 		var canvas = document.getElementById('canvas');
@@ -204,10 +209,7 @@ var App = {
 		}
 	},
 
-	chooseAvatar: function(){
-		var canvas = document.getElementById('canvas2');
-		return canvas.toDataURL('image/jpeg');
-	}
+
 };
 
 App.glasses = new Image();

@@ -102,7 +102,7 @@
 
 #set-avatar {
   height: 458px;
-  position: relative;
+  //position: relative;
 
 	.btn {
 		width: 150px;
@@ -119,8 +119,11 @@
 
 
 #webcam {
-	width: 300px;
+	width: 500px;
 	overflow: hidden;
+	position: absolute;
+	z-index: 1000;
+	left: 0;
 	display: none;
 }
 
