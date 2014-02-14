@@ -66,22 +66,18 @@ input, textarea {
 
 .btn {
     width: 100px;
-    @include adjust-font-size-to(34px);
+    @include adjust-font-size-to(28px);
     font-family: $main-font;
 	border: 0;
     color: $grey;
     display: block;
     position: relative;
     background-position: -100px;
-    @include background-size(450px);
-    @include background-image(linear-gradient(left top, $grey 0, $white .5, $grey .55, $grey 1));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    -webkit-animation: slidetounlock 2.5s 2s infinite linear;
-    -moz-background-clip: text;
-    -moz-text-fill-color: transparent linear;
-    -moz-animation: slidetounlock 2ms infinite linear;
-}
+    
+  background: -webkit-gradient(linear,left top,right top,color-stop(0, #F1EDE8),color-stop(0.4, white),color-stop(0.5, white),color-stop(0.6,#F1EDE8),color-stop(1, #F1EDE8)); 
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-animation: slidetounlock 7s infinite linear;}
 
 
 @include keyframes(slidetounlock) {
