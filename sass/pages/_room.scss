@@ -41,12 +41,21 @@
 	border: 5px solid #172;
 	padding: 1em;
 	box-sizing: border-box;
+    color: #000;
+
+    textarea {
+        border: 1px solid #172;
+        width: 100%;
+        margin-top: rhythm(2);
+    }
 }
 
 #pvt-chat-list {
 	list-style-type: none;
 	text-align: left;
-	border: 1px solid #172;
+    border: 1px solid #172;
+    height: 200px;
+    overflow: auto;
 }
 
 

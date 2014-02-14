@@ -183,7 +183,7 @@ var App = {
 		});
 		var sc = comp[0];
 		if (comp[0]) {
-			ctx.drawImage(App.glasses, sc.x+sc.width/10, sc.y+sc.height/1.1, sc.width/1.2, sc.height/1.3);
+			ctx.drawImage(App.glasses, sc.x+sc.width/7, sc.y+sc.height/1.05, sc.width/1.45, sc.height/1.3);
 			App.face = true;
 		} else {
 			App.face = false;
