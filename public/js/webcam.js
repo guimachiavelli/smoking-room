@@ -178,12 +178,12 @@ var App = {
 		var comp = ccv.detect_objects({
 			'canvas': canvas,
 			'cascade': cascade,
-			'interval': 1,
-			'min_neighbors': 0
+			'interval': 5,
+			'min_neighbors': 1
 		});
 		var sc = comp[0];
 		if (comp[0]) {
-			ctx.drawImage(App.glasses, sc.x+5, sc.y+sc.height/1.1, sc.width/1.2, sc.height/1.1);
+			ctx.drawImage(App.glasses, sc.x+sc.width/10, sc.y+sc.height/1.1, sc.width/1.2, sc.height/1.3);
 			App.face = true;
 		} else {
 			App.face = false;
@@ -192,7 +192,6 @@ var App = {
 
 	chooseAvatar: function(){
 		var canvas = document.getElementById('canvas2');
-		console.log(12000);
 		return canvas.toDataURL('image/jpeg');
 	},
 
@@ -204,7 +203,7 @@ var App = {
 
 		if (App.face === true) {
 			// Grab the pixel data from the backing canvas
-			var idata = ctx.getImageData(135,0, 290, 350);
+			var idata = ctx.getImageData(135,0, 300, 350);
 			ctx2.putImageData(idata, 0, 0);
 		}
 	},
