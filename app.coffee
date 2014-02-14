@@ -62,6 +62,7 @@ io.sockets.on 'connection', (socket) ->
 	# when a user picks a cigarette
 	# emit it to all users
 	socket.on 'user move', (data) ->
+		if data.username not of users then return
 		users[data.username].set 'pos', data.new_pos
 		public_users = model.updatePublicUserList users
 
@@ -74,20 +75,24 @@ io.sockets.on 'connection', (socket) ->
 
 	# pvt chat request
 	socket.on 'send chat request', (data) ->
+		if data.to not of users then return
 		users[data.to].emit 'incoming chat request', data
 
 	# pvt chat request
 	socket.on 'refuse chat request', (data) ->
+		if data.to not of users then return
 		users[data.to].emit 'chat request refused', data
 
 	# accepted pvt chat
 	socket.on 'accept chat request', (data) ->
+		if data.to not of users then return
 		users[data.from].set 'chatting_with', data.to
 		users[data.to].set 'chatting_with', data.from
 		users[data.to].emit 'chat request accepted', data
 
 
 	socket.on 'close chat', (data) ->
+		if data.to not of users then return
 		users[data.from].set 'chatting_with', null
 		users[data.to].set 'chatting_with', null
 		users[data.to].emit 'close chat', data
@@ -96,6 +101,10 @@ io.sockets.on 'connection', (socket) ->
 
 	# chatting
 	socket.on 'message', (data) ->
+		if data.to not of users 
+			users[data.from].set 'chatting_with', null
+			users[data.from].emit 'close chat'
+			return
 		users[data.to].emit 'message', {from: data.from, to: data.to, msg: data.msg }
 
 

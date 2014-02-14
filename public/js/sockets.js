@@ -47,7 +47,7 @@ var sockets = {
 		sockets.refuse_request();
 
 		$(document).on('click', '.user', function(){
-			if (sockets.user_socket.to !== null) { return; }
+			if ($('#pvt-chat').length > 0) { return; }
 			var to = $(this).attr('id');
 			sockets.send_chat_request(to, sockets.user_socket.name);
 		});
@@ -107,9 +107,11 @@ var sockets = {
 
 
 	chat_request_window: function(data) {
-		if ($('#pvt-request').length < 1) {
+		if ($('#pvt-request').length < 1 && ($('#pvt-chat').length < 1)) {
 			var request_window = templates.chat_request(data.from);
 			$('#room').append(request_window);
+		} else {
+			sockets.socket.emit('refuse chat request', data);
 		}
 	},
 
