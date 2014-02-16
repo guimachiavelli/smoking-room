@@ -73,6 +73,7 @@ input, textarea {
     display: block;
     position: relative;
     background-position: -100px;
+    @include translate3d(0);
     
   background: -webkit-gradient(linear,left top,right top,color-stop(0, #F1EDE8),color-stop(0.4, white),color-stop(0.5, white),color-stop(0.6,#F1EDE8),color-stop(1, #F1EDE8)); 
   -webkit-background-clip: text;

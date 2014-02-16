@@ -2,18 +2,57 @@
 	width: 100%;
 	height: 100%;
 	min-height: 800px;
-	background: #000 url(../img/intro-bg.jpg) no-repeat center 20%;
 	overflow: hidden;
 	margin: 0;
 	position: absolute;
 	z-index: 10;
-	@include background-size(cover);
+}
+
+.leaves {
+	position: absolute;
+	display: block;
+	top: 0;
+	bottom: 0;
+	width: 30%;
+	z-index: 1;
+
+	&.right {
+		right:0;
+		background: transparent url(../img/leaves-right.png) no-repeat right top;
+		@include background-size(contain);
+
+	}
+
+	&.left {
+		left: 0;
+		background: transparent url(../img/leaves-left.png) no-repeat left top;
+		@include background-size(contain);
+
+
+	}
+
+
 }
 
 #intro-wrap {
 	width: 740px;
 	margin: 0 auto;
+	position: relative;
+	z-index: 11;
+
 }
+
+#overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	background-color: rgba(#fff, .4);
+	z-index: 2;
+	display: block;
+}
+
 
 .site-title {
     @extend .titles;
@@ -28,20 +67,15 @@
 
 .module-title {
 	@extend .titles;
-	@include adjust-font-size-to(28px, 3.5);
+	@include adjust-font-size-to(26px, 3);
 	font-weight: 200;
 	text-align: center;
-
 }
-
-
-
 
 .module {
 	width: 350px;
 	float: left;
 	margin-right: 40px;
-	overflow: hidden;
 
 	&:last-child {
 		margin: 0;
@@ -49,7 +83,7 @@
 }
 
 .box {
-	@include box-shadow(inset 0 0 10px 8px rgba($grey, .9));
+	@include box-shadow(0 0 10px 1px rgba($black, .5));
 	@include box-sizing(border-box);
 	padding: rhythm(2) 2em;
     background-color: rgba($white, 0.5);
@@ -63,9 +97,14 @@
 		width: 100%;
 		height: 45px;
 		border: 1px solid #000;
-		@include adjust-font-size-to(24px);
+		@include adjust-font-size-to(20px);
 		text-align: center;
+		&:focus {
+			@include placeholder(#fff);
+		}
 	}
+
+
 }
 
 #set-cig {
@@ -75,6 +114,7 @@
 	.cig {
 		float: left;
 		cursor: pointer;
+		margin-right: 10px;
 		@include transition-property(all);
 		@include transition-duration(300ms);
 		@include transition-timing-function(ease-in-out);
@@ -87,25 +127,34 @@
 	}
 
 	#cig1 {
-		margin-left: -20px;
+		margin-right: 20px;
 
 	}
 	#cig2 {
-		margin: 0 30px 0 -20px;
+	  margin: 0;
+
+	}
+
+	#cig3 {
+	  margin-right: 0;
+	  position: relative;
+	  left: 15px;
 
 	}
 
 	img {
-		height: 110px;
+		height: 160px;
 	}
 }
 
 #set-avatar {
   height: 458px;
   position: relative;
+  width: 300px;
 
 	.btn {
-		width: 150px;
+		@include adjust-font-size-to(26px);
+		width: 110px;
 		float: left;
 		margin-top: 20px;
 
@@ -113,7 +162,13 @@
 		  float: right;
 		  text-align: right;
 		}
+
+		&.hidden {
+			display: none;
+		}
 	}
+
+
 
 }
 
@@ -124,20 +179,26 @@
 	position: absolute;
 	z-index: 1000;
 	left: 0;
-	display: none;
+	height: 0;
 }
 
-#canvas-container {
+#buffer-container {
 	width:100%;
 	overflow:hidden;
+
 }
 
-#canvas-container2 {
+#avatar-container {
   position: absolute;
   top: rhythm(2);
 }
 
-#canvas {
+#buffer {
 	margin-left: -45%;
+}
+
+#controls {
+	margin-top: rhythm(-2);
+
 }
 

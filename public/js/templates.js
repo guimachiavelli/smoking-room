@@ -17,17 +17,17 @@ var templates = {
 
 
 	refresh_user_list: function(data){
-		var user, the_user, item;
+		var user, the_user, smoke;
 		$('#user-list').empty();
 		for (user in data) {
 			if (data.hasOwnProperty(user)) {
 				the_user = data[user];
 				if (sockets.user_socket.name === the_user.name) {
-					item = templates.user_list_item(the_user, 'current-user');
+					templates.user_list_item(the_user, 'current-user');
 				} else {
-					item = templates.user_list_item(the_user);
+					templates.user_list_item(the_user);
 				}
-				$('#user-list').append(item);
+				smoke = new Smoke(the_user.name);
 			}
 		}
 	},
@@ -40,8 +40,6 @@ var templates = {
 			chat += '	<a id="close-chat-btn" href="#">close</a>';
 			chat += '	<a id="smoke-btn" href="#">send smoke shape</a>';
 			chat += '</form>';
-
-		window.makeSmokeWindow();
 
 		return chat;
 	},
@@ -57,7 +55,10 @@ var templates = {
 
 		var item = '<li id="' + id + '" style="' + styles + '" class="' + classes + '">';
 			item += '	<img src="'+ user.avatar +'" />';
+			item += '	<canvas class="smoke" id="' + id + '"></canvas>';
 			item += '</li>';
+
+			$('#user-list').append(item);
 
 		return item;
 	},

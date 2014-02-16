@@ -24,6 +24,38 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+var Field = function(dens, u, v, width, height, rowSize) {
+	this.dens = dens;
+	this.u = u;
+	this.v = v;
+	this.width = width;
+	this.height = height;
+	this.rowSize = rowSize;
+};
+
+Field.prototype.setDensity = function(x, y, d) {
+	this.dens[(x + 1) + (y + 1) * this.rowSize] = d;
+};
+
+Field.prototype.getDensity =  function(x, y) {
+	return this.dens[(x + 1) + (y + 1) * this.rowSize];
+};
+
+Field.prototype.setVelocity = function(x, y, xv, yv) {
+	this.u[(x + 1) + (y + 1) * this.rowSize] = xv;
+	this.v[(x + 1) + (y + 1) * this.rowSize] = yv;
+};
+
+Field.prototype.getXVelocity = function(x, y) {
+	return this.u[(x + 1) + (y + 1) * this.rowSize];
+};
+
+Field.prototype.getYVelocity = function(x, y) {
+	return this.v[(x + 1) + (y + 1) * this.rowSize];
+};
+
+
+
 function FluidField(canvas) {
 
     var iterations = 30;
@@ -60,7 +92,7 @@ function FluidField(canvas) {
         queryUI(dens_prev, u_prev, v_prev);
         vel_step(u, v, u_prev, v_prev, dt);
         dens_step(dens, dens_prev, u, v, dt);
-        displayFunc(new Field(dens, u, v));
+        displayFunc(new Field(dens, u, v, width, height, rowSize));
     }
 
     this.setDisplayFunction = function(func) {
@@ -80,33 +112,11 @@ function FluidField(canvas) {
 
     var uiCallback = function(d,u,v) {};
 
-    function Field(dens, u, v) {
-        // Just exposing the fields here rather than using accessors is a measurable win during display (maybe 5%)
-        // but makes the code ugly.
-        this.setDensity = function(x, y, d) {
-             dens[(x + 1) + (y + 1) * rowSize] = d;
-        }
-        this.getDensity = function(x, y) {
-             return dens[(x + 1) + (y + 1) * rowSize];
-        }
-        this.setVelocity = function(x, y, xv, yv) {
-             u[(x + 1) + (y + 1) * rowSize] = xv;
-             v[(x + 1) + (y + 1) * rowSize] = yv;
-        }
-        this.getXVelocity = function(x, y) {
-             return u[(x + 1) + (y + 1) * rowSize];
-        }
-        this.getYVelocity = function(x, y) {
-             return v[(x + 1) + (y + 1) * rowSize];
-        }
-        this.width = function() { return width; }
-        this.height = function() { return height; }
-    }
 
     function queryUI(d, u, v) {
         for (var i = 0; i < size; i++)
             u[i] = v[i] = d[i] = 0.0;
-        uiCallback(new Field(d, u, v));
+        uiCallback(new Field(d, u, v, width, height, rowSize));
     }
 
 
@@ -373,20 +383,20 @@ if (this.CanvasRenderingContext2D && !CanvasRenderingContext2D.createImageData) 
 
     function prepareBuffer(field) {
         canvas = canvas || document.getElementById("smoke-window");
-        if (buffer && buffer.width == field.width() && buffer.height == field.height())
+        if (buffer && buffer.width == field.width && buffer.height == field.height)
             return;
         buffer = document.createElement("canvas");
-        buffer.width = field.width();
-        buffer.height = field.height();
+        buffer.width = field.width;
+        buffer.height = field.height;
         var context = buffer.getContext("2d");
         try {
-            bufferData = context.createImageData(field.width(), field.height());
+            bufferData = context.createImageData(field.width, field.height);
         } catch(e) {
             return null;
         }
         if (!bufferData)
             return null;
-        var max = field.width() * field.height() * 4;
+        var max = field.width * field.height * 4;
         for (var i=3; i<max; i+=4) {
             bufferData.data[i] = 255;
 		}
@@ -400,8 +410,8 @@ if (this.CanvasRenderingContext2D && !CanvasRenderingContext2D.createImageData) 
     function displayDensity(field) {
         prepareBuffer(field);
         var context = canvas.getContext("2d");
-        var width = field.width();
-        var height = field.height();
+        var width = field.width;
+        var height = field.height;
 
         if (bufferData) {
             var data = bufferData.data;
@@ -447,15 +457,15 @@ if (this.CanvasRenderingContext2D && !CanvasRenderingContext2D.createImageData) 
         var context = canvas.getContext("2d");
         context.save();
         context.lineWidth=1;
-        var wScale = canvas.width / field.width();
-        var hScale = canvas.height / field.height();
+        var wScale = canvas.width / field.width;
+        var hScale = canvas.height / field.height;
         context.fillStyle="#fff";
         context.fillRect(0, 0, canvas.width, canvas.height);
         context.strokeStyle = "rgb(0,0,255)";
         var vectorScale = 10;
         context.beginPath();
-        for (var x = 0; x < field.width(); x++) {
-            for (var y = 0; y < field.height(); y++) {
+        for (var x = 0; x < field.width; x++) {
+            for (var y = 0; y < field.height; y++) {
                 context.moveTo(x * wScale + 0.5 * wScale, y * hScale + 0.5 * hScale);
                 context.lineTo((x + 0.5 + vectorScale * field.getXVelocity(x, y)) * wScale,
                                (y + 0.5 + vectorScale * field.getYVelocity(x, y)) * hScale);

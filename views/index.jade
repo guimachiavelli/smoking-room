@@ -5,43 +5,46 @@ html
 		link(rel='stylesheet' href='css/smoking-main.css')
 
 	body
-		div.container
 
-			section#intro
-				div#intro-wrap
-					h1.site-title Welcome to <br> The e-smoking room
+		section#intro
+			b.leaves.right
+			b.leaves.left
+			div#intro-wrap
+				h1.site-title Welcome to <br> The e-smoking room
 
-					div.module#selection
-						p.module-title Enter your name,<br> choose an e-cig <br> and start vaping
+				div.module#selection
+					p.module-title Enter your name, choose<br> an e-cig and start vaping
 
-						div#set-username.box
-							input(type='text' placeholder='What\'s your name?')#username
-						div#set-cig.box
-							h2.module-title Which cigarette?
-							ul#cig-list.list
-								li.cig.selected#cig1
-									img(src='img/cig1.png')
-								li.cig#cig2
-									img(src='img/cig2.png')
-								li.cig#cig3
-									img(src='img/cig3.png')
+					div#set-username.box
+						input(type='text' placeholder='What\'s your name?')#username
+					div#set-cig.box
+						h2.module-title Which cigarette?
+						ul#cig-list.list
+							li.cig.selected#cig1
+								img(src='img/cig1.png')
+							li.cig#cig2
+								img(src='img/cig2.png')
+							li.cig#cig3
+								img(src='img/cig3.png')
 
-					div#set-avatar.module.box
-						div#webcam
+				div#set-avatar.module.box
+					div#webcam
 
-						div#canvas-container
-							canvas#canvas(width='466' height='350')
-						div#canvas-container2
-							canvas#canvas2(width='300' height='350')
+					div#buffer-container
+						canvas#buffer(width='466' height='350')
 
+					div#avatar-container
+						canvas#avatar(width='260' height='350')
+
+					div#controls
 						a#make-avatar.btn(href='#') Snap
-						a#ready-go.btn(href='#') I'm&nbsp;ready
+						a#try-again.btn.hidden(href='#') Re&#x2011;Snap
+						a#ready-go.btn.hidden(href='#') Ready
 
-			section#room
-				ul#user-list
+		section#room.blur
+			ul#user-list
 
-			canvas#smoke-window(width='512' height='512' style='position: absolute; right: 0; top:0; z-index: 1; width: 512px; height: 512px')
-
+		
 		script(src='//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js')
 		script(src='socket.io/socket.io.js')
 		script(src='components/getUserMedia.js/lib/getUserMedia.js')

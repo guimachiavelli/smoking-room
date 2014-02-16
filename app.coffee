@@ -113,7 +113,7 @@ io.sockets.on 'connection', (socket) ->
 
 	# on disconnect, remove user from our user object
 	socket.on 'disconnect', () ->
-		socket.get 'chatting_with', (err, data)-> 
+		socket.get 'chatting_with', (err, data)->
 			if not data? then return
 			users[data].emit 'close chat'
 			users[data].set 'chatting_with', null

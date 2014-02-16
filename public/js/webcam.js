@@ -69,7 +69,7 @@ var App = {
 
 
 	init: function () {
-		this.canvas = document.getElementById('canvas');
+		this.canvas = document.getElementById('buffer');
 		this.ctx = this.canvas.getContext('2d');
 		this.ctx.clearRect(0, 0, this.width, this.height);
 		this.image = this.ctx.getImageData(0, 0, this.width, this.height);
@@ -80,12 +80,6 @@ var App = {
 		// Initialize webcam options for fallback
 		window.webcam = this.options;
 
-		if (App.options.videoEl) {
-			App.options.videoEl.addEventListener('canplay', App.avatarSelection());
-			//App.options.videoEl.removeEventListener('canplay', App.avatarSelection());
-
-		}
-
 		//$(document).on('click', 'body', function(){
 			//App.avatarSelection();
 			//console.log(1234);
@@ -94,6 +88,17 @@ var App = {
 		var $avatarBtn = $('#make-avatar');
 		$avatarBtn.click(function(){
 			App.makeAvatar();
+			$('#avatar').show();
+
+			$(this).addClass('hidden');
+			$(this).siblings('.hidden').removeClass('hidden');
+			return false;
+		});
+
+		$(document).on('click', '#try-again', function() {
+			$('#avatar').hide();
+			$(this).addClass('hidden');
+			$('#make-avatar').removeClass('hidden');
 			return false;
 		});
 
@@ -104,13 +109,20 @@ var App = {
 			$(this).addClass('selected');
 			App.glasses.src = 'img/' + cig_type + '.png';
 		});
+
+			if (App.options.videoEl) {
+				App.options.videoEl.addEventListener('canplay', App.avatarSelection());
+				//App.options.videoEl.removeEventListener('canplay', App.avatarSelection());
+
+			}
+
+
 	},
 
 
 	success: function (stream) {
 		App.stream = stream;
 
-		console.log(stream);
 		if (App.options.context === 'webrtc') {
 			var video = App.options.videoEl;
 
@@ -126,6 +138,8 @@ var App = {
 
 			}
 
+
+
 			var vendorURL = window.URL || window.webkitURL;
 			video.src = vendorURL ? vendorURL.createObjectURL(stream) : stream;
 
@@ -133,6 +147,8 @@ var App = {
 				App.stream.stop();
 				window.streamError();
 			};
+
+
 
 		} else {
 			App.avatarSelection();
@@ -147,7 +163,7 @@ var App = {
 
 
 	avatarSelection: function () {
-		var canvas = document.getElementById('canvas'),
+		var canvas = document.getElementById('buffer'),
 			ctx = canvas.getContext('2d'),
 			video;
 		if (!App.stopped) {
@@ -191,20 +207,20 @@ var App = {
 	},
 
 	chooseAvatar: function(){
-		var canvas = document.getElementById('canvas2');
+		var canvas = document.getElementById('avatar');
 		return canvas.toDataURL('image/jpeg');
 	},
 
 	makeAvatar: function(){
-		var canvas = document.getElementById('canvas');
-		var ctx = canvas.getContext('2d');
-		var canvas2 = document.getElementById('canvas2');
-		var ctx2 = canvas2.getContext('2d');
+		var buffer = document.getElementById('buffer');
+		var buffer_ctx = buffer.getContext('2d');
+		var avatar = document.getElementById('avatar');
+		var avatar_ctx = avatar.getContext('2d');
 
 		if (App.face === true) {
 			// Grab the pixel data from the backing canvas
-			var idata = ctx.getImageData(135,0, 300, 350);
-			ctx2.putImageData(idata, 0, 0);
+			var idata = buffer_ctx.getImageData(135,0, 260, 350);
+			avatar_ctx.putImageData(idata, 0, 0);
 		}
 	},
 

@@ -9,6 +9,10 @@ $(document).ready(function(){
 
 	App.init();
 
+	$('#room').click(function(){
+		templates.smoke_window(sockets.user_socket.name);
+	});
+
 	var $readyBtn = $('#ready-go');
 	$readyBtn.click(function(){
 		var avatar = App.chooseAvatar(),
@@ -29,14 +33,15 @@ $(document).ready(function(){
 		App.stream.stop();
 		App.stopped = true;
 		sockets.socket.emit('user enter', data);
-		$('#intro-wrap').fadeOut(1500, function(){
-			$('#intro').animate({
-				'top': 3000
-			}, 2000, function() {
-				$('#intro').remove();
-			});
-		});
-		$('#canvas').remove();
+		$('#intro').animate(
+			{'bottom': -1000},
+			1500,
+			function(){
+				$('#room').removeClass('blur');
+				$('#intro').height(0).width(0);
+			}
+		);
+		$('#buffer').remove();
 		sockets.user_socket.name = username;
 	});
 
