@@ -39,7 +39,7 @@ var sockets = {
 		});
 
 		sockets.socket.on('chat request refused', function(){
-			$('#pvt-request').remove();
+			$('.chat-request').remove();
 		});
 
 		sockets.send_message();
@@ -73,11 +73,11 @@ var sockets = {
 	accept_request: function() {
 		$(document).on('click', '#yes', function(e){
 			e.preventDefault();
-			sockets.user_socket.to = $(this).parents('#pvt-request').data('from');
+			sockets.user_socket.to = $(this).parents('.chat-request').data('from');
 			var data = {to: sockets.user_socket.to, from: sockets.user_socket.name};
 			var local_data = {to: sockets.user_socket.name, from: sockets.user_socket.to};
 			console.log('accept chat from ' + data.to + ' to ' + data.from);
-			$('#pvt-request').remove();
+			$('.chat-request').remove();
 			sockets.start_chat(local_data);
 			sockets.accept_chat_request(sockets.user_socket.to, sockets.user_socket.name);
 		});
@@ -86,14 +86,14 @@ var sockets = {
 	refuse_request: function() {
 		$(document).on('click', '#no', function(e){
 			e.preventDefault();
-			$('#pvt-request').remove();
-			sockets.refuse_chat_request($(this).parents('#pvt-request').data('from'), sockets.user_socket.name);
+			$('.chat-request').remove();
+			sockets.refuse_chat_request($(this).parents('.chat-request').data('from'), sockets.user_socket.name);
 		});
 	},
 
 
 	chat_request_window: function(data) {
-		if ($('#pvt-request').length < 1 && ($('.chat-window').length < 1)) {
+		if ($('.chat-request').length < 1 && ($('.chat-window').length < 1)) {
 			var request_window = templates.chat_request(data.from);
 			$('#room').append(request_window);
 		} else {
