@@ -42,10 +42,18 @@ var templates = {
 
 
 	refresh_user_list: function(data){
-		var user, the_user, smoke;
+		var user, the_user, smoke, $active_users, active_users = [], control_id, new_users = [];
+
+		$active_users = $('.user');
+		$active_users.each(function(){
+			active_users.push('#' + $(this).attr('id'));
+		});
+
 		for (user in data) {
 			if (data.hasOwnProperty(user)) {
 				the_user = data[user];
+				new_users.push('#user-' + the_user.name);
+
 
 				if ($('#user-'+the_user.name).length > 0) {
 					$('#user-'+the_user.name).css({
@@ -58,9 +66,8 @@ var templates = {
 				if (sockets.user_socket.name === the_user.name) {
 					templates.user_list_item(the_user, 'current-user');
 					smoke = new Smoke(the_user.name);
-
 					$(document).on('click', '#heart', function(e){
-						console.log(123);
+						sockets.socket.emit('smoke shape', {from: sockets.user_socket.name});
 						e.preventDefault();
 						smoke.heart();
 						setTimeout(function() {
@@ -68,12 +75,23 @@ var templates = {
 						}, 3000);
 					});
 
+
+
 				} else {
 					templates.user_list_item(the_user);
 					sockets.smokers[the_user.name] = new Smoke(the_user.name);
 				}
 			}
 		}
+
+
+
+		$.each(active_users, function(i){
+			if ($.inArray(active_users[i], new_users) < 0){
+				console.log(active_users[i] + ' does not exist in ' + new_users);
+				$(active_users[i]).remove();
+			}
+		});
 	},
 
 

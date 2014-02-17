@@ -50,16 +50,12 @@ var sockets = {
 		$(document).on('click', '.user', function(){
 			if ($('.chat-window').length > 0 || $(this).hasClass('current-user')) { return; }
 			var to = $(this).attr('id');
+			to = to.substr(5);
 			sockets.send_chat_request(to, sockets.user_socket.name);
 		});
 
-		$(document).on('click', '#smoke-btn', function(){
-			templates.smoke_window();
-			sockets.socket.emit('smoke shape');
-		});
-
-		sockets.socket.on('smoke shape', function(){
-			templates.smoke_window();
+		sockets.socket.on('smoke shape', function(data){
+			sockets.smokers[data.from].heart();
 		});
 
 	},
@@ -77,7 +73,6 @@ var sockets = {
 			sockets.user_socket.to = $(this).parents('.chat-request').data('from');
 			var data = {to: sockets.user_socket.to, from: sockets.user_socket.name};
 			var local_data = {to: sockets.user_socket.name, from: sockets.user_socket.to};
-			console.log('accept chat from ' + data.to + ' to ' + data.from);
 			$('.chat-request').remove();
 			sockets.start_chat(local_data);
 			sockets.accept_chat_request(sockets.user_socket.to, sockets.user_socket.name);

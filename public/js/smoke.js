@@ -60,7 +60,7 @@ var FluidField = function(canvas_id) {
 
     this.iterations = 30;
 
-    var dt = 0.1;
+    var dt = 0.15;
     var dens;
     var dens_prev;
     var u;
@@ -74,8 +74,6 @@ var FluidField = function(canvas_id) {
 
 
 	this.canvas_id = canvas_id;
-
-	console.log(canvas_id);
 
     this.reset = reset;
 
@@ -395,7 +393,7 @@ FluidField.prototype.displayDensity = function (field) {
                         data[4*(y * height + x)] = r;
 						data[4*(y * height + x) + 1] =  g;
                         data[4*(y * height + x) + 2] =  b;
-                        data[4*(y * height + x) + 3] =  field.getDensity(x, y) * 15 / 3;
+                        data[4*(y * height + x) + 3] =  field.getDensity(x, y) * 15 / 4;
 					}
                 }
             }

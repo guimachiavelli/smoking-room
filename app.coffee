@@ -108,8 +108,9 @@ io.sockets.on 'connection', (socket) ->
 		users[data.to].emit 'message', {from: data.from, to: data.to, msg: data.msg }
 
 
-	socket.on 'smoke shape', () ->
-		socket.broadcast.emit 'smoke shape'
+	socket.on 'smoke shape', (data) ->
+		console.log data
+		socket.broadcast.emit 'smoke shape', data
 
 	# on disconnect, remove user from our user object
 	socket.on 'disconnect', () ->

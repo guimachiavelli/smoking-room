@@ -213,14 +213,12 @@ var App = {
 		var ch = 350;
 		App.canvas.width = cw;
 		App.canvas.height = ch;
-		App.throttle(App.draw(video,App.canvas,App.ctx,cw,ch), 2000);
-
-
+		App.draw(video,App.canvas,App.ctx,cw,ch);
 
 	},
 
 
-draw: function (v,canvas,ctx,w,h) {
+	draw: function (v,canvas,ctx,w,h) {
 		ctx.drawImage(v,0,0,w,h);
 
 		if(!App.timestamp) {
