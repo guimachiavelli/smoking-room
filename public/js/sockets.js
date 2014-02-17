@@ -8,6 +8,7 @@ var sockets = {
 		name: null,
 		to: null
 	},
+	smokers: {},
 
 	init: function() {
 		// setting up sockets

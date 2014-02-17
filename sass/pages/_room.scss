@@ -16,6 +16,9 @@
 }
 
 .user {
+    width: 260px;
+    height: 350px;
+    overflow: hidden;
     @include box-shadow(0 0 18px 8px rgba($black, .7));
 	position: absolute;
 	z-index: 2;
@@ -30,8 +33,11 @@
 
     .smoke{
         position: absolute;
-        width: 260px;
+        width: 350px;
         height: 350px;
+        top: 0;
+        left: -45px;
+        z-index: 5;
     }
 }
 

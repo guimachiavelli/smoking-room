@@ -33,7 +33,7 @@ var templates = {
 
 
 	add_chat_window: function(data) {
-		if ($('#pvt-request').length < 1) {
+		if ($('.chat-request').length < 1) {
 			var request_window = templates.chat_request(data.from);
 			$('#room').append(request_window);
 		}
@@ -43,16 +43,35 @@ var templates = {
 
 	refresh_user_list: function(data){
 		var user, the_user, smoke;
-		$('#user-list').empty();
 		for (user in data) {
 			if (data.hasOwnProperty(user)) {
 				the_user = data[user];
+
+				if ($('#user-'+the_user.name).length > 0) {
+					$('#user-'+the_user.name).css({
+						'left' 	: the_user.pos[0],
+						'top' 	: the_user.pos[1]
+					});
+					continue;
+				}
+
 				if (sockets.user_socket.name === the_user.name) {
 					templates.user_list_item(the_user, 'current-user');
+					smoke = new Smoke(the_user.name);
+
+					$(document).on('click', '#heart', function(e){
+						console.log(123);
+						e.preventDefault();
+						smoke.heart();
+						setTimeout(function() {
+							smoke.reset();
+						}, 3000);
+					});
+
 				} else {
 					templates.user_list_item(the_user);
+					sockets.smokers[the_user.name] = new Smoke(the_user.name);
 				}
-				//smoke = new Smoke(the_user.name);
 			}
 		}
 	},
@@ -67,9 +86,9 @@ var templates = {
 
 		classes = 'user ' + classes;
 
-		var item = '<li id="' + id + '" style="' + styles + '" class="' + classes + '">';
+		var item = '<li id="user-' + id + '" style="' + styles + '" class="' + classes + '">';
 			item += '	<img src="'+ user.avatar +'" />';
-			item += '	<canvas class="smoke" id="' + id + '"></canvas>';
+			item += '	<canvas width="175" height="175" class="smoke" id="' + id + '"></canvas>';
 			item += '</li>';
 
 			$('#user-list').append(item);

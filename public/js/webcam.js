@@ -10,6 +10,7 @@ var App = {
 	stream	: null,
 	cam		: null,
 	canvas	: null,
+	cam_canvas: null,
 	ctx		: null,
 	width	: 466,
 	height	: 350,
@@ -163,9 +164,7 @@ var App = {
 
 
 	avatarSelection: function () {
-		var canvas = document.getElementById('buffer'),
-			ctx = canvas.getContext('2d'),
-			video;
+		var	video;
 		if (!App.stopped) {
 			window.requestAnimationFrame(App.avatarSelection);
 		}
@@ -182,10 +181,10 @@ var App = {
 
 		var cw = 466;
 		var ch = 350;
-		canvas.width = cw;
-		canvas.height = ch;
+		App.canvas.width = cw;
+		App.canvas.height = ch;
 
-		App.draw(video,canvas,ctx,cw,ch);
+		App.draw(video,App.canvas,App.ctx,cw,ch);
 
 	},
 

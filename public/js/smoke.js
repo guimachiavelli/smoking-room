@@ -75,6 +75,8 @@ var FluidField = function(canvas_id) {
 
 	this.canvas_id = canvas_id;
 
+	console.log(canvas_id);
+
     this.reset = reset;
 
 
@@ -103,7 +105,7 @@ var FluidField = function(canvas_id) {
         return false;
     }
 
-    this.setResolution(256, 256);
+    this.setResolution(175, 175);
 
 
     this.update = function () {

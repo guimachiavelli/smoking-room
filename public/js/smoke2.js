@@ -52,10 +52,10 @@ var Smoke = function(canvas_id) {
 		omy = my = 260;
 		iter = 0;
 		shape = [];
-		makeLine([250, 260], 100, shape);
-		makeLine2([350, 260], 100, shape);
-		makeLine3([350, 360], 100, shape);
-		makeLine4([250, 360], 100, shape);
+		makeLine([50, 60], 100, shape);
+		makeLine2([150, 60], 100, shape);
+		makeLine3([150, 160], 100, shape);
+		makeLine4([50, 160], 100, shape);
 
 		shape_int = setInterval(function(){
 			if (iter < shape.length) {
@@ -64,9 +64,15 @@ var Smoke = function(canvas_id) {
 				my = shape[iter][1];
 				iter++;
 			}
-		}, 10)
+		}, 10);
 
 	}
+
+	this.reset = function() {
+		clearInterval(shape_int);
+		sources = [];
+		field.reset();
+	};
 
 
 

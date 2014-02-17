@@ -47,6 +47,9 @@ $(document).ready(function(){
 
 
 	$('#room').click(function(e){
+		if(e.target !== this) return;
+		e.preventDefault();
+		e.stopPropagation();
 		var $avatar = $('.current-user'),
 			m_x = e.clientX - 150,
 			m_y = e.clientY - 210;
@@ -71,7 +74,6 @@ $(document).ready(function(){
 			$(this).text('Hide');
 		}
 	});
-
 
 
 
