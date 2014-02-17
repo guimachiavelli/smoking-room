@@ -6,6 +6,7 @@
 	margin: 0;
 	position: absolute;
 	z-index: 10;
+	background: rgba($black, 0.3)
 }
 
 .leaves {
@@ -20,15 +21,12 @@
 		right:0;
 		background: transparent url(../img/leaves-right.png) no-repeat right top;
 		@include background-size(contain);
-
 	}
 
 	&.left {
 		left: 0;
 		background: transparent url(../img/leaves-left.png) no-repeat left top;
 		@include background-size(contain);
-
-
 	}
 
 
@@ -114,7 +112,6 @@
 	.cig {
 		float: left;
 		cursor: pointer;
-		margin-right: 10px;
 		@include transition-property(all);
 		@include transition-duration(300ms);
 		@include transition-timing-function(ease-in-out);
@@ -127,18 +124,18 @@
 	}
 
 	#cig1 {
-		margin-right: 20px;
+		margin-left: -60px;
 
 	}
 	#cig2 {
-	  margin: 0;
+		margin-left: -80px;
 
 	}
 
 	#cig3 {
-	  margin-right: 0;
+	  margin-left: -20px;
 	  position: relative;
-	  left: 15px;
+	  left: 10px;
 
 	}
 
@@ -150,7 +147,7 @@
 #set-avatar {
   height: 458px;
   position: relative;
-  width: 300px;
+  width: 310px;
 
 	.btn {
 		@include adjust-font-size-to(26px);

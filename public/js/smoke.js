@@ -56,10 +56,10 @@ Field.prototype.getYVelocity = function(x, y) {
 
 
 
-function FluidField(canvas) {
+var FluidField = function(canvas_id) {
 
-    var iterations = 30;
-    var visc = 5;
+    this.iterations = 30;
+
     var dt = 0.1;
     var dens;
     var dens_prev;
@@ -71,15 +71,33 @@ function FluidField(canvas) {
     var height;
     var rowSize;
     var size;
-    var displayFunc;
+
+
+	this.canvas_id = canvas_id;
 
     this.reset = reset;
+
+
+    function reset() {
+        rowSize = width + 2;
+        size = (width+2)*(height+2);
+        dens = [size];
+        dens_prev = [size];
+        u = [size];
+        u_prev = [size];
+        v = [size];
+        v_prev = [size];
+        for (var i = 0; i < size; i++) {
+            dens_prev[i] = u_prev[i] = v_prev[i] = dens[i] = u[i] = v[i] = 0;
+		}
+    }
+
     this.setResolution = function (hRes, wRes) {
         var res = wRes * hRes;
         if (res > 0 && res < 1000000 && (wRes != width || hRes != height)) {
             width = wRes;
             height = hRes;
-            reset();
+            this.reset();
             return true;
         }
         return false;
@@ -92,19 +110,9 @@ function FluidField(canvas) {
         queryUI(dens_prev, u_prev, v_prev);
         vel_step(u, v, u_prev, v_prev, dt);
         dens_step(dens, dens_prev, u, v, dt);
-        displayFunc(new Field(dens, u, v, width, height, rowSize));
+        this.displayDensity(new Field(dens, u, v, width, height, rowSize));
     }
 
-    this.setDisplayFunction = function(func) {
-        displayFunc = func;
-    }
-
-    this.iterations = function() { return iterations; }
-
-    this.setIterations = function(iters) {
-        if (iters > 0 && iters <= 100)
-           iterations = iters;
-    }
 
     this.setUICallback = function(callback) {
         uiCallback = callback;
@@ -114,24 +122,10 @@ function FluidField(canvas) {
 
 
     function queryUI(d, u, v) {
-        for (var i = 0; i < size; i++)
-            u[i] = v[i] = d[i] = 0.0;
-        uiCallback(new Field(d, u, v, width, height, rowSize));
-    }
-
-
-    function reset() {
-        rowSize = width + 2;
-        size = (width+2)*(height+2);
-        dens = new Array(size);
-        dens_prev = new Array(size);
-        u = new Array(size);
-        u_prev = new Array(size);
-        v = new Array(size);
-        v_prev = new Array(size);
         for (var i = 0; i < size; i++) {
-            dens_prev[i] = u_prev[i] = v_prev[i] = dens[i] = u[i] = v[i] = 0;
+            u[i] = v[i] = d[i] = 0.0;
 		}
+        uiCallback(new Field(d, u, v, width, height, rowSize));
     }
 
 
@@ -180,6 +174,7 @@ function FluidField(canvas) {
     }
 
     function lin_solve(b, x, x0, a, c) {
+		var iterations = 30;
         if (a === 0 && c === 1) {
             for (var j=1 ; j<=height; j++) {
                 var currentRow = j * rowSize;
@@ -192,7 +187,7 @@ function FluidField(canvas) {
             set_bnd(b, x);
         } else {
             var invC = 1 / c;
-            for (var k=0 ; k<iterations; k++) {
+            for (var k=0 ; k < iterations; k++) {
                 for (var j=1 ; j<=height; j++) {
                     var lastRow = (j - 1) * rowSize;
                     var currentRow = j * rowSize;
@@ -207,12 +202,18 @@ function FluidField(canvas) {
         }
     }
 
-    function diffuse(b, x, x0, dt) {
+    function diffuse(b, x, x0) {
         var a = 0;
         lin_solve(b, x, x0, a, 1 + 4*a);
     }
+    function diffuse2(x, x0, y, y0) {
+        var a = 0;
+        lin_solve2(x, x0, y, y0, a, 1 + 4 * a);
+    }
+
 
     function lin_solve2(x, x0, y, y0, a, c) {
+		var iterations = 30;
         if (a === 0 && c === 1) {
             for (var j=1 ; j <= height; j++) {
                 var currentRow = j * rowSize;
@@ -227,7 +228,7 @@ function FluidField(canvas) {
             set_bnd(2, y);
         } else {
             var invC = 1/c;
-            for (var k=0 ; k<iterations; k++) {
+            for (var k=0 ; k< iterations; k++) {
                 for (var j=1 ; j <= height; j++) {
                     var lastRow = (j - 1) * rowSize;
                     var currentRow = j * rowSize;
@@ -246,10 +247,6 @@ function FluidField(canvas) {
         }
     }
 
-    function diffuse2(x, x0, y, y0, dt) {
-        var a = 0;
-        lin_solve2(x, x0, y, y0, a, 1 + 4 * a);
-    }
 
     function advect(b, d, d0, u, v, dt) {
         var Wdt0 = dt * width;
@@ -344,71 +341,30 @@ function FluidField(canvas) {
 
 }
 
-
-/**
- * Copyright (c) 2009 Oliver Hunt <http://nerget.com>
- *
- * Permission is hereby granted, free of charge, to any person
- * obtaining a copy of this software and associated documentation
- * files (the "Software"), to deal in the Software without
- * restriction, including without limitation the rights to use,
- * copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the
- * Software is furnished to do so, subject to the following
- * conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
- * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
- * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
- * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- * OTHER DEALINGS IN THE SOFTWARE.
- */
-
-if (this.CanvasRenderingContext2D && !CanvasRenderingContext2D.createImageData) {
-    CanvasRenderingContext2D.prototype.createImageData = function (w,h) {
-        return this.getImageData(0,0,w,h);
-    }
+FluidField.prototype.reset = function() {
+	this.rowSize = this.width + 2;
+	this.size = (this.width+2)*(this.height+2);
+	this.dens = [this.size];
+	this.dens_prev = [this.size];
+	this.u = [this.size];
+	this.u_prev = [this.size];
+	this.v = [this.size];
+	this.v_prev = [this.size];
+	for (var i = 0; i < size; i++) {
+		dens_prev[i] = u_prev[i] = v_prev[i] = dens[i] = u[i] = v[i] = 0;
+	}
 }
-(function () {
-    var buffer;
-    var bufferData;
-    var canvas;
-    var clampData = false;
 
-    function prepareBuffer(field) {
-        canvas = canvas || document.getElementById("smoke-window");
-        if (buffer && buffer.width == field.width && buffer.height == field.height)
-            return;
-        buffer = document.createElement("canvas");
-        buffer.width = field.width;
-        buffer.height = field.height;
-        var context = buffer.getContext("2d");
-        try {
-            bufferData = context.createImageData(field.width, field.height);
-        } catch(e) {
-            return null;
-        }
-        if (!bufferData)
-            return null;
-        var max = field.width * field.height * 4;
-        for (var i=3; i<max; i+=4) {
-            bufferData.data[i] = 255;
-		}
-        bufferData.data[0] = 256;
 
-        if (bufferData.data[0] > 255)
-            clampData = true;
-        bufferData.data[0] = 0;
-    }
 
-    function displayDensity(field) {
-        prepareBuffer(field);
+
+
+
+
+
+FluidField.prototype.displayDensity = function (field) {
+        prepareBuffer(field, this.canvas_id);
+		var canvas = document.getElementById(this.canvas_id);
         var context = canvas.getContext("2d");
         var width = field.width;
         var height = field.height;
@@ -453,41 +409,42 @@ if (this.CanvasRenderingContext2D && !CanvasRenderingContext2D.createImageData) 
         }
     }
 
-    function displayVelocity(field) {
-        var context = canvas.getContext("2d");
-        context.save();
-        context.lineWidth=1;
-        var wScale = canvas.width / field.width;
-        var hScale = canvas.height / field.height;
-        context.fillStyle="#fff";
-        context.fillRect(0, 0, canvas.width, canvas.height);
-        context.strokeStyle = "rgb(0,0,255)";
-        var vectorScale = 10;
-        context.beginPath();
-        for (var x = 0; x < field.width; x++) {
-            for (var y = 0; y < field.height; y++) {
-                context.moveTo(x * wScale + 0.5 * wScale, y * hScale + 0.5 * hScale);
-                context.lineTo((x + 0.5 + vectorScale * field.getXVelocity(x, y)) * wScale,
-                               (y + 0.5 + vectorScale * field.getYVelocity(x, y)) * hScale);
-            }
-        }
-        context.stroke();
-        context.restore();
-    }
 
-    var showVectors = false;
-    toggleDisplayFunction = function(canvas) {
-        if (showVectors) {
-            showVectors = false;
-            canvas.width = displaySize;
-            canvas.height = displaySize;
-            return displayVelocity;
-        }
-        showVectors = true;
-        canvas.width = fieldRes;
-        canvas.height = fieldRes;
-        return displayDensity;
-    }
-})();
 
+
+if (this.CanvasRenderingContext2D && !CanvasRenderingContext2D.createImageData) {
+    CanvasRenderingContext2D.prototype.createImageData = function (w,h) {
+        return this.getImageData(0,0,w,h);
+    }
+}
+    var buffer;
+    var bufferData;
+    var canvas;
+    var clampData = false;
+
+    function prepareBuffer(field, canvas_id) {
+        canvas = canvas || document.getElementById(canvas_id);
+        if (buffer && buffer.width == field.width && buffer.height == field.height)
+            return;
+        buffer = document.createElement("canvas");
+        buffer.width = field.width;
+        buffer.height = field.height;
+        var context = buffer.getContext("2d");
+        try {
+            bufferData = context.createImageData(field.width, field.height);
+        } catch(e) {
+            return null;
+        }
+        if (!bufferData)
+            return null;
+        var max = field.width * field.height * 4;
+        for (var i=3; i<max; i+=4) {
+            bufferData.data[i] = 255;
+		}
+        bufferData.data[0] = 256;
+
+        if (bufferData.data[0] > 255)
+            clampData = true;
+        bufferData.data[0] = 0;
+    }
 

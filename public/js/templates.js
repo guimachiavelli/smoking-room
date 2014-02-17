@@ -5,8 +5,32 @@
 var templates = {
 
 	add_message: function(data){
-		$('#pvt-chat-list').append('<li>'+ data.from + ': ' + data.msg + '</li>');
+		var user_type = 'other-user';
+		if (data.from === sockets.user_socket.name) {
+			user_type = 'current-user';
+		}
+		$('.chat-window[data-to='+sockets.user_socket.to+']').find('.chat-messages').append('<li class="chat-message '+user_type+'">' + data.msg + '</li>');
+		var objDiv = $(".chat-messages")[0];
+		objDiv.scrollTop = objDiv.scrollHeight;
 	},
+
+	chat_window: function(to){
+		var chat  = '<div class="chat-window box" data-to="'+to+'">';
+			chat += '	<header class="chat-options">';
+			chat += '		<h1 class="chat-name">' + to + '</h1>';
+			chat += '		<a class="chat-hide">Hide</a>';
+			chat += '		<a class="chat-close">Close</a>';
+			chat += '	</header>';
+			chat += '	<ul class="chat-messages"></ul>';
+			chat += '	<form class="chat-form">';
+			chat += '		<textarea class="chat-send-message"></textarea>';
+			chat += '	</form>';
+			chat += '</div>';
+
+		return chat;
+	},
+
+
 
 	add_chat_window: function(data) {
 		if ($('#pvt-request').length < 1) {
@@ -14,6 +38,7 @@ var templates = {
 			$('#room').append(request_window);
 		}
 	},
+
 
 
 	refresh_user_list: function(data){
@@ -27,22 +52,11 @@ var templates = {
 				} else {
 					templates.user_list_item(the_user);
 				}
-				smoke = new Smoke(the_user.name);
+				//smoke = new Smoke(the_user.name);
 			}
 		}
 	},
 
-	chat_window: function(to){
-		var chat  = '<form id="pvt-chat" data-to="'+to+'">';
-			chat += '	<ul id="pvt-chat-list"></ul>';
-			chat += '	<textarea id="send-chat"></textarea>';
-			chat += '	<button id="send-chat-btn">send</button>';
-			chat += '	<a id="close-chat-btn" href="#">close</a>';
-			chat += '	<a id="smoke-btn" href="#">send smoke shape</a>';
-			chat += '</form>';
-
-		return chat;
-	},
 
 	user_list_item: function(user, classes) {
 		if (!classes) {
@@ -67,17 +81,17 @@ var templates = {
 		if (!name) {
 			return false;
 		}
-		var request  = '<div id="pvt-request" data-from="'+name+'">';
+		var request  = '<div class="chat-request" data-from="'+name+'">';
 			request +=		'<p>' + name + ' says hi. do you want to talk?</p>';
-			request +=		'<button id="yes">yes</button>';
-			request +=		'<button id="no">no</button>';
+			request +=		'<a href="#" id="yes">Yes</a>';
+			request +=		'<a href="#" id="no">No</a>';
 			request += '</div>';
 
 		return request;
 	},
 
 	smoke_window: function(){
-		window.heart();
+		//indow.heart();
 	}
 
 };

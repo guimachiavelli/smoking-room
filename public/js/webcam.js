@@ -194,7 +194,7 @@ var App = {
 		var comp = ccv.detect_objects({
 			'canvas': canvas,
 			'cascade': cascade,
-			'interval': 5,
+			'interval': 15,
 			'min_neighbors': 1
 		});
 		var sc = comp[0];
@@ -219,7 +219,7 @@ var App = {
 
 		if (App.face === true) {
 			// Grab the pixel data from the backing canvas
-			var idata = buffer_ctx.getImageData(135,0, 260, 350);
+			var idata = buffer_ctx.getImageData(117,0, 260, 350);
 			avatar_ctx.putImageData(idata, 0, 0);
 		}
 	},

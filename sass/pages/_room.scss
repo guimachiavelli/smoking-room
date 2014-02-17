@@ -10,53 +10,149 @@
     @include transition-duration(500ms);
     &.blur {
       -webkit-filter: blur(10px);
+      -moz-filter: blur(10px);
       filter: blur(10px);
     }
 }
 
-#user-list li {
+.user {
+    @include box-shadow(0 0 18px 8px rgba($black, .7));
 	position: absolute;
 	z-index: 2;
-	cursor: pointer;
-	-webkit-transition-property: all;
-	-webkit-transition-duration: 200ms;
+    cursor: pointer;
+    line-height: 0;
+    @include transition-property(all);
+    @include transition-duration(200ms);
+
+    &.current-user {
+	    cursor: default;
+    }
+
+    .smoke{
+        position: absolute;
+        width: 260px;
+        height: 350px;
+    }
 }
 
-#user-list .current-user {
-	cursor: default;
-}
 
-#pvt-request {
-	width: 350px;
+.chat-request {
+	width: 280px;
 	position: absolute;
 	z-index: 3;
 	left: 50%;
 	margin-left: -175px;
 	top: 100px;
 	text-align: center;
-	background: #172;
-	border: 5px solid #fff;
-	padding: 1em;	box-sizing: border-box;
+	background: $white;
+	border: 1px solid $black;
+    padding: rhythm() 1em;
+    box-sizing: border-box;
+    color: $black;
+
+    p, a {
+        @include adjust-font-size-to(14px);
+    }
+
+    p {
+        margin-bottom: rhythm();
+    }
+
+    a {
+        cursor: pointer;
+        display: inline-block;
+        margin-right: 2em;
+        font-weight: 800;
+    }
 }
 
-#pvt-chat {
-	width: 350px;
-	position: absolute;
-	left: 50%;
-	z-index: 3;
-	margin-left: -175px;
-	top: 100px;
-	text-align: center;
-	background: #fff;
-	border: 5px solid #172;
-	padding: 1em;
-	box-sizing: border-box;
-    color: #000;
+.smoke-signs {
+    position: fixed;
+    width: 10%;
+    min-height: 200px;
+    bottom: rhythm();
+    right: rhythm();
+    z-index: 12;
+    text-align: center;
+}
 
-    textarea {
-        border: 1px solid #172;
+.chat-window {
+    position: fixed;
+    bottom: rhythm();
+    left: rhythm();
+    z-index: 11;
+    width: 28%;
+    height: 250px;
+    padding: rhythm(2) 1.5em;
+
+    &.second-window { left: 30%; }
+
+    &.third-window { left: 59%; }
+
+    &.hidden {
+        height: 20px;
+        padding-bottom: 0;
+        overflow: hidden;
+    }
+
+    .chat-options {
         width: 100%;
-        margin-top: rhythm(2);
+        margin-left: -1.5em;
+        color: $black;
+        position: absolute;
+        top: 0;
+        background: $white;
+        border-bottom: 1px solid $black;
+        text-align: center;
+
+        .chat-name {
+            @include adjust-font-size-to(14px);
+            font-weight: 800;
+        }
+        a {
+            @include adjust-font-size-to(14px);
+            position: absolute;
+            top: 0;
+        }
+
+        .chat-hide {
+            left: 1em;
+        }
+
+        .chat-close {
+            right: 1em;
+        }
+    }
+
+    .chat-messages {
+      margin: rhythm() 0;
+      height: 120px;
+      overflow: auto;
+    }
+
+    .chat-message {
+        width: 70%;
+        background: #d8d6d6;
+        color: $black;
+        clear: both;
+        padding: rhythm();
+        margin: rhythm() 0;
+        @include adjust-font-size-to(12px);
+
+        &.current-user {
+          float: right;
+          background: #65a285;
+          color: #fff;
+          @include smooth;
+        }
+    }
+
+    .chat-send-message {
+        height: 68px;
+        border: 1px solid $grey;
+        padding: rhythm();
+        width: 100%;
+        @include box-sizing(border-box);
     }
 }
 

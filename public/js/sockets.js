@@ -35,7 +35,7 @@ var sockets = {
 
 		sockets.socket.on('close chat', function(){
 			sockets.user_socket.to = null;
-			$('#pvt-chat').remove();
+			$('.chat-window').remove();
 		});
 
 		sockets.socket.on('chat request refused', function(){
@@ -47,7 +47,7 @@ var sockets = {
 		sockets.refuse_request();
 
 		$(document).on('click', '.user', function(){
-			if ($('#pvt-chat').length > 0) { return; }
+			if ($('.chat-window').length > 0 || $(this).hasClass('current-user')) { return; }
 			var to = $(this).attr('id');
 			sockets.send_chat_request(to, sockets.user_socket.name);
 		});
@@ -63,23 +63,7 @@ var sockets = {
 
 	},
 
-	start_chat: function(data) {
-		if ($('#pvt_chat').length < 1) {
-			var pvt_chat = templates.chat_window(data.from);
-			$('#room').append(pvt_chat);
-		}
-	},
 
-	close_chat: function() {
-		$(document).on('click', '#close-chat-btn', function(e){
-			e.preventDefault();
-			var data = {from: sockets.user_socket.name, to: sockets.user_socket.to};
-			$('#pvt-chat-list').append('<li><em>'+ sockets.user_socket.name + ' disconnected</em></li>');
-			$('#pvt-chat').remove();
-			sockets.socket.emit('close chat', data);
-			sockets.user_socket.to = null;
-		});
-	},
 
 	send_chat_request: function(to, from) {
 		var data = {'to': to, 'from': from};
@@ -91,8 +75,10 @@ var sockets = {
 			e.preventDefault();
 			sockets.user_socket.to = $(this).parents('#pvt-request').data('from');
 			var data = {to: sockets.user_socket.to, from: sockets.user_socket.name};
+			var local_data = {to: sockets.user_socket.name, from: sockets.user_socket.to};
+			console.log('accept chat from ' + data.to + ' to ' + data.from);
 			$('#pvt-request').remove();
-			sockets.start_chat(data);
+			sockets.start_chat(local_data);
 			sockets.accept_chat_request(sockets.user_socket.to, sockets.user_socket.name);
 		});
 	},
@@ -107,13 +93,21 @@ var sockets = {
 
 
 	chat_request_window: function(data) {
-		if ($('#pvt-request').length < 1 && ($('#pvt-chat').length < 1)) {
+		if ($('#pvt-request').length < 1 && ($('.chat-window').length < 1)) {
 			var request_window = templates.chat_request(data.from);
 			$('#room').append(request_window);
 		} else {
 			sockets.socket.emit('refuse chat request', data);
 		}
 	},
+
+	start_chat: function(data) {
+		if ($('.chat-window').length < 1) {
+			var pvt_chat = templates.chat_window(data.from);
+			$('#room').append(pvt_chat);
+		}
+	},
+
 
 	accept_chat_request: function(to, from) {
 		var data = {'to':to, 'from': from };
@@ -131,24 +125,41 @@ var sockets = {
 		sockets.user_socket.to = data.from;
 	},
 
+
+
 	send_message: function() {
-		$(document).on('click', '#send-chat-btn', function(e){
-			e.preventDefault();
+		$(document).on('keyup', '.chat-send-message', function(e){
+			if (e.keyCode === 13) {
+				var msg = $(this).val();
+				//var to = $(this).parents('.chat-window').data('to');
+				$(this).val('');
 
-			var msg = $('#send-chat').val();
-			$('#send-chat').val('');
+				var msg_data = {from: sockets.user_socket.name, to: sockets.user_socket.to, msg: msg};
 
-			var msg_data = {from: sockets.user_socket.name, to: sockets.user_socket.to, msg: msg};
+				console.log(msg_data);
 
-			templates.add_message(msg_data);
+				templates.add_message(msg_data);
 
-			sockets.socket.emit('message', msg_data);
+				sockets.socket.emit('message', msg_data);
 
-			return false;
+				return false;
+			}
 		});
 
 		sockets.close_chat();
 	},
+
+	close_chat: function() {
+		$(document).on('click', '.chat-close', function(e){
+			e.preventDefault();
+			var data = {from: sockets.user_socket.name, to: sockets.user_socket.to};
+			$('#pvt-chat-list').append('<li><em>'+ sockets.user_socket.name + ' disconnected</em></li>');
+			$('.chat-window').remove();
+			sockets.socket.emit('close chat', data);
+			sockets.user_socket.to = null;
+		});
+	},
+
 
 
 };

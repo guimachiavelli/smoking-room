@@ -63,4 +63,16 @@ $(document).ready(function(){
 
 
 
+	$(document).on('click', '.chat-hide', function(){
+		$(this).parents('.chat-window').toggleClass('hidden');
+		if ($(this).text() === 'Hide') {
+			$(this).text('Show');
+		} else {
+			$(this).text('Hide');
+		}
+	});
+
+
+
+
 });
