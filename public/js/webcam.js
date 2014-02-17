@@ -14,6 +14,7 @@ var App = {
 	ctx		: null,
 	width	: 466,
 	height	: 350,
+	sc: null,
 
 
 	options: {
@@ -42,6 +43,37 @@ var App = {
 			App.flashOnSave(data);
 		}
 	},
+
+  throttle: function(func, wait, options) {
+    var context, args, result;
+    var timeout = null;
+    var previous = 0;
+    options || (options = {});
+    var later = function() {
+      previous = options.leading === false ? 0 : _.now();
+      timeout = null;
+      result = func.apply(context, args);
+      context = args = null;
+    };
+    return function() {
+      var now = _.now();
+      if (!previous && options.leading === false) previous = now;
+      var remaining = wait - (now - previous);
+      context = this;
+      args = arguments;
+      if (remaining <= 0) {
+        clearTimeout(timeout);
+        timeout = null;
+        previous = now;
+        result = func.apply(context, args);
+        context = args = null;
+      } else if (!timeout && options.trailing !== false) {
+        timeout = setTimeout(later, remaining);
+      }
+      return result;
+    };
+  },
+
 
 	flashOnSave: function(data) {
 		var col = data.split(';'),
@@ -139,8 +171,6 @@ var App = {
 
 			}
 
-
-
 			var vendorURL = window.URL || window.webkitURL;
 			video.src = vendorURL ? vendorURL.createObjectURL(stream) : stream;
 
@@ -183,27 +213,42 @@ var App = {
 		var ch = 350;
 		App.canvas.width = cw;
 		App.canvas.height = ch;
+		App.throttle(App.draw(video,App.canvas,App.ctx,cw,ch), 2000);
 
-		App.draw(video,App.canvas,App.ctx,cw,ch);
+
 
 	},
 
-	draw: function (v,canvas,ctx,w,h) {
+
+draw: function (v,canvas,ctx,w,h) {
 		ctx.drawImage(v,0,0,w,h);
-		var comp = ccv.detect_objects({
+
+		if(!App.timestamp) {
+			App.timestamp = Date.now();
+		}
+
+		if(Date.now() - App.timestamp > 750) {
+			App.timestamp = Date.now();
+			var comp = ccv.detect_objects({
 			'canvas': canvas,
 			'cascade': cascade,
-			'interval': 15,
+			'interval': 4,
 			'min_neighbors': 1
-		});
-		var sc = comp[0];
-		if (comp[0]) {
-			ctx.drawImage(App.glasses, sc.x+sc.width/7, sc.y+sc.height/1.05, sc.width/1.45, sc.height/1.3);
+			});
+
+			App.sc = comp[0];
+		}
+
+		if (App.sc) {
+			ctx.drawImage(App.glasses, App.sc.x+App.sc.width/7, App.sc.y+App.sc.height/1.05, App.sc.width/1.45, App.sc.height/1.3);
 			App.face = true;
 		} else {
 			App.face = false;
 		}
+
+
 	},
+
 
 	chooseAvatar: function(){
 		var canvas = document.getElementById('avatar');
