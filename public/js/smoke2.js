@@ -18,44 +18,82 @@ var Smoke = function(canvas_id) {
 
 	makeSmokeWindow(canvas_id);
 
-	function makeLine(start, len, arr) {
-		var i;
+	function makeLine(start, len, axis, dir) {
+		var i, arr = [];
+
 		for (i = 0; i < len; i+=2) {
-			arr.push([start[0]+i, start[1]])
+			if (axis === 'x') {
+				if (dir === '-') {
+					arr.push([start[0]+i, start[1]])
+				} else {
+					arr.push([start[0]-i, start[1]])
+				}
+			} else if (axis === 'y') {
+				if (dir === '-') {
+					arr.push([start[0], start[1]+i])
+				} else {
+					arr.push([start[0], start[1]-i])
+				}
+			}
 		}
+
+		return arr;
+
 	}
 
-	function makeLine2(start, len, arr) {
-		var i;
-		for (i = 0; i < len; i+=2) {
-			arr.push([start[0], start[1]+i])
+	function circle(centerX, centerY, radius) {
+
+		// an array to save your points
+		var points=[], degree;
+
+		for(degree = 0; degree < 360; degree++){
+			var radians = degree * Math.PI/180;
+			var x = centerX + radius * Math.cos(radians);
+			var y = centerY + radius * Math.sin(radians);
+			points.push([x, y]);
 		}
+
+		return points;
+
 	}
 
-	function makeLine3(start, len, arr) {
-		var i;
-		for (i = 0; i < len; i+=2) {
-			arr.push([start[0]-i, start[1]])
-		}
-	}
 
-	function makeLine4(start, len, arr) {
-		var i;
-		for (i = 0; i < len; i+=2) {
-			arr.push([start[0], start[1]-i])
-		}
-	}
 
 	this.heart = function() {
+		var temp, temp2, temp3, temp4, temp5;
 		mouseIsDown = true;
-		omx = mx = 250;
-		omy = my = 260;
+		omx = mx = 70;
+		omy = my = 80;
 		iter = 0;
-		shape = [];
-		makeLine([50, 60], 100, shape);
-		makeLine2([150, 60], 100, shape);
-		makeLine3([150, 160], 100, shape);
-		makeLine4([50, 160], 100, shape);
+		shape = [[omx, omy]];
+		temp = makeLine([100, 80], 100, 'y', '-');
+		temp2 = makeLine([100, 180], 50, 'x', '-');
+		temp3 = circle(210, 125, 50);
+		temp4 = makeLine([280, 80], 100, 'y', '-');
+		temp5 = makeLine([280, 180], 50, 'x', '-');
+
+		while (temp.length) {
+			shape.push(temp.shift());
+		}
+
+		while (temp2.length) {
+			shape.push(temp2.shift());
+		}
+
+		while (temp3.length) {
+			shape.push(temp3.shift());
+		}
+
+		while (temp4.length) {
+			shape.push(temp4.shift());
+		}
+
+		while (temp5.length) {
+			shape.push(temp5.shift());
+		}
+
+
+
 
 		shape_int = setInterval(function(){
 			if (iter < shape.length) {
@@ -65,8 +103,9 @@ var Smoke = function(canvas_id) {
 				iter++;
 			}
 		}, 10);
-
 	}
+
+
 
 	this.reset = function() {
 		clearInterval(shape_int);

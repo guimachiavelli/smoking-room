@@ -56,6 +56,10 @@ var sockets = {
 
 		sockets.socket.on('smoke shape', function(data){
 			sockets.smokers[data.from].heart();
+			setTimeout(function() {
+				sockets.smokers[data.from].reset();
+			}, 20000);
+
 		});
 
 	},

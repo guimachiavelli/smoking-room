@@ -72,7 +72,7 @@ var templates = {
 						smoke.heart();
 						setTimeout(function() {
 							smoke.reset();
-						}, 3000);
+						}, 20000);
 					});
 
 
