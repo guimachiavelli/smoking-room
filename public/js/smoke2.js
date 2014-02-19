@@ -1,5 +1,5 @@
 var Smoke = function(canvas_id) {
-
+	shape_int = null;
 	var frames = 0;
 	var source = 10;
 	var sources = [];
@@ -103,9 +103,51 @@ var Smoke = function(canvas_id) {
 				iter++;
 			}
 		}, 10);
-	}
+	};
 
 
+	this.start = function() {
+		mouseIsDown = true;
+		omx = mx = 70;
+		omy = my = 80;
+		var _this = this;
+
+
+		var temp = makeLine([0, 50], Math.random() * 100, 'y', '+'), shape2 = [], i = 0,
+			temp2 = makeLine([0, 350], Math.random() * 100, 'y', '-'), shape2 = [], i = 0,
+			temp3 = circle(455, Math.random() * 20 + 15, 10);
+
+		while (temp.length) {
+			shape2.push(temp.shift());
+		}
+
+		while (temp2.length) {
+			shape2.push(temp2.shift());
+		}
+
+		while (temp3.length) {
+			shape2.push(temp3.shift());
+		}
+
+
+
+
+		setInterval(function(){
+			if (i < shape2.length) {
+				sources.push([mx, my]);
+				mx = shape2[i][0];
+				my = shape2[i][1];
+				i++;
+			}
+		}, 10);
+
+		setTimeout(function(){
+
+			_this.reset();
+			_this.start();
+		}, 30000);
+
+	};
 
 	this.reset = function() {
 		clearInterval(shape_int);

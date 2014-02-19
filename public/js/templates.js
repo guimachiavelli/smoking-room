@@ -11,7 +11,7 @@ var templates = {
 			user_type = 'current-user';
 		}
 		$('.chat-window[data-to='+data.to+']').find('.chat-messages').append('<li class="chat-message '+user_type+'">' + data.msg + '</li>');
-		var objDiv = $(".chat-messages")[0];
+		var objDiv = $('.chat-window[data-to='+data.to+']').find('.chat-messages')[0];
 		objDiv.scrollTop = objDiv.scrollHeight;
 	},
 
@@ -67,13 +67,11 @@ var templates = {
 				if (sockets.user_socket.name === the_user.name) {
 					templates.user_list_item(the_user, 'current-user');
 					smoke = new Smoke(the_user.name);
+					smoke.start();
 					$(document).on('click', '#heart', function(e){
 						sockets.socket.emit('smoke shape', {from: sockets.user_socket.name});
 						e.preventDefault();
 						smoke.heart();
-						setTimeout(function() {
-							smoke.reset();
-						}, 20000);
 					});
 
 
