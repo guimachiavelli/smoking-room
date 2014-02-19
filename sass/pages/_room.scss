@@ -75,25 +75,40 @@
 .smoke-signs {
     position: fixed;
     width: 10%;
-    min-height: 200px;
     bottom: rhythm();
     right: rhythm();
     z-index: 12;
     text-align: center;
+
+    img {
+      width: 130%;
+      margin-left: -15%;
+    }
 }
 
-.chat-window {
+
+#chat-windows {
     position: fixed;
     bottom: rhythm();
     left: rhythm();
+    right: rhythm();
     z-index: 11;
+}
+
+.chat-window {
+    float: left;
     width: 28%;
     height: 250px;
     padding: rhythm(2) 1.5em;
+    position: relative;
+    margin-right: 2%;
 
-    &.second-window { left: 30%; }
+    .disconnected {
+        position: absolute;
+        top: 25px;
+        color: #f00;
+    }
 
-    &.third-window { left: 59%; }
 
     &.hidden {
         height: 20px;

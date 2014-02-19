@@ -24,19 +24,20 @@ var sockets = {
 		});
 
 
-		sockets.socket.on('chat request accepted', function(data){
-			sockets.chat_request_accepted(data);
-			sockets.start_chat(data);
+		sockets.socket.on('chat request accepted', function(to){
+			sockets.start_chat(to);
 		});
 
 		sockets.socket.on('message', function(data){
-			templates.add_message(data);
+			templates.add_message({from: data.to, to: data.from, msg: data.msg});
 		});
 
 
-		sockets.socket.on('close chat', function(){
-			sockets.user_socket.to = null;
-			$('.chat-window').remove();
+		sockets.socket.on('close chat', function(to){
+			$('.chat-window[data-to='+ to +']').append('<span class="disconnected">user disconnected</span');
+			setTimeout(function(){
+				$('.chat-window[data-to='+ to +']').remove();
+			}, 5000);
 		});
 
 		sockets.socket.on('chat request refused', function(){
@@ -48,7 +49,7 @@ var sockets = {
 		sockets.refuse_request();
 
 		$(document).on('click', '.user', function(){
-			if ($('.chat-window').length > 0 || $(this).hasClass('current-user')) { return; }
+			if ($('.chat-window').length > 3 || $(this).hasClass('current-user')) { return; }
 			var to = $(this).attr('id');
 			to = to.substr(5);
 			sockets.send_chat_request(to, sockets.user_socket.name);
@@ -74,12 +75,10 @@ var sockets = {
 	accept_request: function() {
 		$(document).on('click', '#yes', function(e){
 			e.preventDefault();
-			sockets.user_socket.to = $(this).parents('.chat-request').data('from');
-			var data = {to: sockets.user_socket.to, from: sockets.user_socket.name};
-			var local_data = {to: sockets.user_socket.name, from: sockets.user_socket.to};
+			var to = $(this).parents('.chat-request').data('from');
 			$('.chat-request').remove();
-			sockets.start_chat(local_data);
-			sockets.accept_chat_request(sockets.user_socket.to, sockets.user_socket.name);
+			sockets.start_chat(to);
+			sockets.accept_chat_request(to, sockets.user_socket.name);
 		});
 	},
 
@@ -93,7 +92,7 @@ var sockets = {
 
 
 	chat_request_window: function(data) {
-		if ($('.chat-request').length < 1 && ($('.chat-window').length < 1)) {
+		if ($('.chat-request').length < 4 && ($('.chat-window').length < 4)) {
 			var request_window = templates.chat_request(data.from);
 			$('#room').append(request_window);
 		} else {
@@ -101,11 +100,14 @@ var sockets = {
 		}
 	},
 
-	start_chat: function(data) {
-		if ($('.chat-window').length < 1) {
-			var pvt_chat = templates.chat_window(data.from);
-			$('#room').append(pvt_chat);
+	start_chat: function(to) {
+
+		if ($('.chat-window').length > 3) {
+			return;
 		}
+
+		var pvt_chat = templates.chat_window(to);
+		$('#chat-windows').append(pvt_chat);
 	},
 
 
@@ -121,20 +123,14 @@ var sockets = {
 	},
 
 
-	chat_request_accepted: function(data) {
-		sockets.user_socket.to = data.from;
-	},
-
-
-
 	send_message: function() {
 		$(document).on('keyup', '.chat-send-message', function(e){
 			if (e.keyCode === 13) {
 				var msg = $(this).val();
-				//var to = $(this).parents('.chat-window').data('to');
+				var to = $(this).parents('.chat-window').data('to');
 				$(this).val('');
 
-				var msg_data = {from: sockets.user_socket.name, to: sockets.user_socket.to, msg: msg};
+				var msg_data = {from: sockets.user_socket.name, to: to, msg: msg};
 
 				console.log(msg_data);
 
@@ -152,11 +148,10 @@ var sockets = {
 	close_chat: function() {
 		$(document).on('click', '.chat-close', function(e){
 			e.preventDefault();
-			var data = {from: sockets.user_socket.name, to: sockets.user_socket.to};
-			$('#pvt-chat-list').append('<li><em>'+ sockets.user_socket.name + ' disconnected</em></li>');
-			$('.chat-window').remove();
+			var to = $(this).parents('.chat-window').data('to');
+			var data = {from: sockets.user_socket.name, to: to};
+			$('.chat-window[data-to='+to+']').remove();
 			sockets.socket.emit('close chat', data);
-			sockets.user_socket.to = null;
 		});
 	},
 

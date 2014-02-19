@@ -150,8 +150,8 @@
   width: 310px;
 
 	.btn {
-		@include adjust-font-size-to(26px);
-		width: 110px;
+		@include adjust-font-size-to(24px);
+		width: 130px;
 		float: left;
 		margin-top: 20px;
 
@@ -160,12 +160,16 @@
 		  text-align: right;
 		}
 
+		&:hover {
+			color: #fff;
+			-webkit-text-fill-color: #fff;
+			@include text-shadow(rgba(0,0,0,0.9) -1px 1px 1px);
+		}
+
 		&.hidden {
 			display: none;
 		}
 	}
-
-
 
 }
 

@@ -60,7 +60,7 @@ var FluidField = function(canvas_id) {
 
     this.iterations = 30;
 
-    var dt = 0.15;
+    var dt = 0.05;
     var dens;
     var dens_prev;
     var u;
@@ -103,7 +103,7 @@ var FluidField = function(canvas_id) {
         return false;
     }
 
-    this.setResolution(175, 175);
+    this.setResolution(116, 116);
 
 
     this.update = function () {

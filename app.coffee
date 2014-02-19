@@ -54,6 +54,7 @@ io.sockets.on 'connection', (socket) ->
 		users[data.username].set 'name', data.username
 		users[data.username].set 'avatar', data.avatar
 		users[data.username].set 'pos', data.pos
+		users[data.username].set 'chatting_with', []
 
 		public_users = model.updatePublicUserList users
 
@@ -70,9 +71,6 @@ io.sockets.on 'connection', (socket) ->
 
 
 
-
-
-
 	# pvt chat request
 	socket.on 'send chat request', (data) ->
 		if data.to not of users then return
@@ -86,40 +84,35 @@ io.sockets.on 'connection', (socket) ->
 	# accepted pvt chat
 	socket.on 'accept chat request', (data) ->
 		if data.to not of users then return
-		users[data.from].set 'chatting_with', data.to
-		users[data.to].set 'chatting_with', data.from
-		users[data.to].emit 'chat request accepted', data
+		users[data.to].emit 'chat request accepted', data.from
 
 
 	socket.on 'close chat', (data) ->
 		if data.to not of users then return
-		users[data.from].set 'chatting_with', null
-		users[data.to].set 'chatting_with', null
-		users[data.to].emit 'close chat', data
+		#users[data.from].set 'chatting_with', null
+		#users[data.to].set 'chatting_with', null
+		users[data.to].emit 'close chat', data.from
 
 
 
 	# chatting
 	socket.on 'message', (data) ->
 		if data.to not of users 
-			users[data.from].set 'chatting_with', null
+			#users[data.from].set 'chatting_with', null
 			users[data.from].emit 'close chat'
 			return
 		users[data.to].emit 'message', {from: data.from, to: data.to, msg: data.msg }
 
 
 	socket.on 'smoke shape', (data) ->
-		console.log data
 		socket.broadcast.emit 'smoke shape', data
 
 	# on disconnect, remove user from our user object
 	socket.on 'disconnect', () ->
-		socket.get 'chatting_with', (err, data)->
-			if not data? then return
-			users[data].emit 'close chat'
-			users[data].set 'chatting_with', null
 
-		socket.get 'name', (err, data)-> delete users[data]
+		socket.get 'name', (err, username)->
+			socket.broadcast.emit 'close chat', username
+			delete users[username]
 
 		public_users = model.updatePublicUserList users
 

@@ -1,17 +1,16 @@
 doctype html
 html
 	head
-		title smoking room
+		title The smoking room
 		link(rel='stylesheet' href='css/smoking-main.css')
 
 	body
-
 
 		section#intro
 			b.leaves.right
 			b.leaves.left
 			div#intro-wrap
-				h1.site-title Welcome to <br> The e-smoking room
+				h1.site-title Welcome to <br> The smoking room
 
 				div.module#selection
 					p.module-title Enter your name, choose<br> an e-cig and start vaping
@@ -38,14 +37,16 @@ html
 						canvas#avatar(width='260' height='350')
 
 					div#controls
-						a#make-avatar.btn(href='#') Snap
-						a#try-again.btn.hidden(href='#') Re&#x2011;Snap
-						a#ready-go.btn.hidden(href='#') Go
+						a#make-avatar.btn(href='#') Go
+						a#try-again.btn.hidden(href='#') No, Again
+						a#ready-go.btn.hidden(href='#') Yes, ready
 
 		section#room.blur
 			ul#user-list
 
-			div.smoke-signs
+			div#chat-windows
+
+			div.smoke-signs.box
 				a#heart(href='#')
 					img(src='img/heart-btn.png' alt='send a heart')
 				a#lol(href='#')

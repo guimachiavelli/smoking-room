@@ -59,8 +59,6 @@ $(document).ready(function(){
 			'top'	: m_y
 		});
 
-		console.log(sockets.user_socket);
-
 		sockets.socket.emit('user move', { username: sockets.user_socket.name, new_pos: [m_x, m_y]});
 	});
 

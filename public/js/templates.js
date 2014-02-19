@@ -5,11 +5,12 @@
 var templates = {
 
 	add_message: function(data){
+		console.log(data);
 		var user_type = 'other-user';
 		if (data.from === sockets.user_socket.name) {
 			user_type = 'current-user';
 		}
-		$('.chat-window[data-to='+sockets.user_socket.to+']').find('.chat-messages').append('<li class="chat-message '+user_type+'">' + data.msg + '</li>');
+		$('.chat-window[data-to='+data.to+']').find('.chat-messages').append('<li class="chat-message '+user_type+'">' + data.msg + '</li>');
 		var objDiv = $(".chat-messages")[0];
 		objDiv.scrollTop = objDiv.scrollHeight;
 	},
@@ -35,7 +36,7 @@ var templates = {
 	add_chat_window: function(data) {
 		if ($('.chat-request').length < 1) {
 			var request_window = templates.chat_request(data.from);
-			$('#room').append(request_window);
+			$('#chat-windows').append(request_window);
 		}
 	},
 
@@ -106,7 +107,7 @@ var templates = {
 
 		var item = '<li id="user-' + id + '" style="' + styles + '" class="' + classes + '">';
 			item += '	<img src="'+ user.avatar +'" />';
-			item += '	<canvas width="175" height="175" class="smoke" id="' + id + '"></canvas>';
+			item += '	<canvas width="116" height="116" class="smoke" id="' + id + '"></canvas>';
 			item += '</li>';
 
 			$('#user-list').append(item);
