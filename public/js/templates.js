@@ -75,6 +75,7 @@ var templates = {
 				} else {
 					templates.user_list_item(the_user);
 					sockets.smokers[the_user.name] = new Smoke(the_user.name);
+					sockets.smokers[the_user.name].start();
 				}
 			}
 		}

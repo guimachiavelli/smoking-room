@@ -113,7 +113,7 @@ var Smoke = function(canvas_id) {
 		var _this = this;
 
 
-		var temp = makeLine([0, 50], Math.random() * 100, 'y', '+'), shape2 = [], i = 0,
+		var temp = makeLine([50, 150], Math.random() * 100, 'y', '+'), shape2 = [], i = 0,
 			temp2 = makeLine([0, 350], Math.random() * 100, 'y', '-'), shape2 = [], i = 0,
 			temp3 = circle(455, Math.random() * 20 + 15, 10);
 
