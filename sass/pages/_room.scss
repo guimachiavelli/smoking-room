@@ -177,13 +177,46 @@
     }
 }
 
-#pvt-chat-list {
-	list-style-type: none;
-	text-align: left;
-    border: 1px solid #172;
-    height: 200px;
-    overflow: auto;
-}
+#credits {
+    width: 260px;
+    min-height: 24px;
+    padding: rhythm() 1em 0 1em;
+    right: 1em;
+    top: rhythm();
+    color: $black;
+    position: fixed;
+    z-index: 100;
+    @include adjust-font-size-to(13px);
 
+    .pv {
+        margin-left: -1em;
+        padding-left: 1em;
+        border-bottom: 1px solid $black;
+        display: block;
+        width: 100%;
+        position: absolute;
+        top: 3px;
+        padding-bottom: 0;
+        @include box-sizing(border-box);
+
+        &:after {
+            content: ' ▿';
+        }
+
+    }
+
+    #collabs {
+        height: 0;
+        overflow: hidden;
+        padding: 0;
+        @include transition-property(height);
+        @include transition-duration(200ms);
+
+        &.show {
+            margin-top: rhythm(1.5);
+            height: 80px;
+        }
+    }
+}
 
 

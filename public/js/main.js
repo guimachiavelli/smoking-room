@@ -5,9 +5,6 @@
 $(document).ready(function(){
 	'use strict';
 
-	sockets.init();
-
-	App.init();
 
 	$('#room').click(function(){
 		templates.smoke_window(sockets.user_socket.name);
@@ -71,6 +68,19 @@ $(document).ready(function(){
 		} else {
 			$(this).text('Hide');
 		}
+	});
+
+	$(document).on('click', '.pv', function(){
+		$(this).siblings('#collabs').toggleClass('show');
+	});
+
+	$(document).on('click', '#enter', function(){
+		$('#welcome').fadeOut(400, function(){
+			$('#setup').fadeIn(400, function(){
+				sockets.init();
+				App.init();
+			});
+		});
 	});
 
 
