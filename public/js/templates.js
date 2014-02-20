@@ -55,7 +55,6 @@ var templates = {
 				the_user = data[user];
 				new_users.push('#user-' + the_user.name);
 
-
 				if ($('#user-'+the_user.name).length > 0) {
 					$('#user-'+the_user.name).css({
 						'left' 	: the_user.pos[0],
@@ -73,9 +72,6 @@ var templates = {
 						e.preventDefault();
 						smoke.heart();
 					});
-
-
-
 				} else {
 					templates.user_list_item(the_user);
 					sockets.smokers[the_user.name] = new Smoke(the_user.name);
@@ -106,6 +102,7 @@ var templates = {
 		var item = '<li id="user-' + id + '" style="' + styles + '" class="' + classes + '">';
 			item += '	<img src="'+ user.avatar +'" />';
 			item += '	<canvas width="116" height="116" class="smoke" id="' + id + '"></canvas>';
+			item += '	<h2>'+ id +'</h2>';
 			item += '</li>';
 
 			$('#user-list').append(item);
@@ -125,6 +122,16 @@ var templates = {
 
 		return request;
 	},
+
+
+	chat_request_sent: function(){
+		var request  = '<div class="chat-request-sent chat-request">';
+			request +=		'<p>You said hi to this user.</p>';
+			request += '</div>';
+
+		return request;
+	},
+
 
 	smoke_window: function(){
 		//indow.heart();

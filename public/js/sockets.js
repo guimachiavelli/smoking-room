@@ -53,6 +53,11 @@ var sockets = {
 			var to = $(this).attr('id');
 			to = to.substr(5);
 			sockets.send_chat_request(to, sockets.user_socket.name);
+			var request = templates.chat_request_sent();
+			$('#room').append(request);
+			setTimeout(function(){
+				$('.chat-request-sent').remove();
+			}, 3000);
 		});
 
 		sockets.socket.on('smoke shape', function(data){
