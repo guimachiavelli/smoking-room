@@ -18,6 +18,10 @@ var sockets = {
 			templates.refresh_user_list(data);
 		});
 
+		sockets.socket.on('new name', function(data){
+			sockets.user_socket.name = data;
+		});
+
 
 		sockets.socket.on('incoming chat request', function(data){
 			sockets.chat_request_window(data);

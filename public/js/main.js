@@ -1,6 +1,13 @@
 /*jslint browser: true */
 /*devel: true */
-/*global $, jQuery, sockets, App */
+/*global $, jQuery, sockets, App, templates */
+
+function escapeHTML( string ) {
+    var pre = document.createElement('pre');
+    var text = document.createTextNode( string );
+    pre.appendChild(text);
+    return pre.innerHTML;
+}
 
 $(document).ready(function(){
 	'use strict';
@@ -18,7 +25,7 @@ $(document).ready(function(){
 			y = Math.random() * (window.innerHeight - 420);
 		var data = {
 			'avatar' : avatar,
-			'username' : username,
+			'username' : escapeHTML(username),
 			'pos' : [x,y]
 		};
 
@@ -39,7 +46,6 @@ $(document).ready(function(){
 				$('#buffer').remove();
 			}
 		);
-		sockets.user_socket.name = username;
 	});
 
 
@@ -96,7 +102,10 @@ $(document).ready(function(){
 	}
 
 	setTimeout(function(){
-		$('#facebook.box').show();
-	}, 180000)
+		$('#facebook.box').css({
+			'left' 	: Math.random() * ($(window).width() - 200),
+			'top'	: Math.random() * ($(window).height() - 300)
+		}).show();
+	}, 120000);
 
 });

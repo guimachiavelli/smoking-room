@@ -223,8 +223,8 @@
         padding-bottom: 0;
         @include box-sizing(border-box);
 
-        &:after {
-            content: ' ▿';
+        &:before {
+            content: '▿ ';
         }
     }
 

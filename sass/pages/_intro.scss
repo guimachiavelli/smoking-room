@@ -61,6 +61,7 @@
 		display: block;
 		text-align: center;
 		color: #fff;
+		font-weight: 200;
 
 		&:hover {
 			@include text-shadow(rgba(0,0,0,0.9) -1px 1px 1px);
@@ -84,7 +85,6 @@
 
 	&.sub {
 	  @include adjust-font-size-to(30px);
-
 	}
 }
 
@@ -227,7 +227,6 @@
 
 #controls {
 	margin-top: rhythm(-2);
-
 }
 
 
@@ -240,9 +239,10 @@
 	text-align: center;
 	width: 120px;
 	display: none;
+	background: #fff;
 
 	a {
-	  color: $white;
+	  color: $black;
 	}
 
 	.hidden {

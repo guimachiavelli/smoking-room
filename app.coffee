@@ -19,6 +19,8 @@ server = http.createServer app
 server = server.listen port
 ####
 
+validator = require 'validator'
+
 # attach socket to server
 io = require('socket.io').listen server
 
@@ -29,6 +31,19 @@ model = require './lib/models.coffee'
 
 users = {}
 public_users = []
+
+makeRandName = () ->
+	return 'anon' + Math.floor(Math.random() * 1000)
+
+
+validate = (name)->
+	new_name = validator.blacklist(name, '# . , ! @ … \' $ & ; &amp; % * ( ) " ^ ')
+	if new_name == '' 
+		new_name = makeRandName()
+	console.log new_name
+	return new_name
+
+
 
 ## server configs
 app.configure () ->
@@ -50,13 +65,19 @@ io.sockets.on 'connection', (socket) ->
 	
 	# on user connection, add it to the users object
 	socket.on 'user enter', (data) ->
-		users[data.username] = socket
-		users[data.username].set 'name', data.username
-		users[data.username].set 'avatar', data.avatar
-		users[data.username].set 'pos', data.pos
-		users[data.username].set 'chatting_with', []
+		name = validate data.username
+		
+		if users[name]? then name = makeRandName()
+
+		users[name] = socket
+		users[name].set 'name', name
+		users[name].set 'avatar', data.avatar
+		users[name].set 'pos', data.pos
+		users[name].set 'chatting_with', []
 
 		public_users = model.updatePublicUserList users
+
+		users[name].emit 'new name', name
 
 		io.sockets.emit 'user list update', public_users
 

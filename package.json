@@ -16,8 +16,9 @@
     "express": "~3.4.7",
     "socket.io": "~0.9.16",
     "grunt-coffeelint": "0.0.8",
-	"coffee-script": "1.6.3",
-	"bower": "1.2.8"
+    "coffee-script": "1.6.3",
+    "bower": "1.2.8",
+    "validator": "^3.2.1"
   },
   "scripts": {
     "postinstall": "./node_modules/bower/bin/bower install"
