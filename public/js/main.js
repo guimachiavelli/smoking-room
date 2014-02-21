@@ -29,7 +29,7 @@ $(document).ready(function(){
 			'pos' : [x,y]
 		};
 
-		if (!avatar || !username) {
+		if (!avatar || !username || App.face === null) {
 			window.alert('fill in your username and take a selfie, plz');
 			return false;
 		}

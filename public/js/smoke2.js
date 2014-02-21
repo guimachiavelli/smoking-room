@@ -216,8 +216,6 @@ var Smoke = function(canvas_id) {
 			}
 		}, 10);
 
-
-
 	}
 
 	this.reset = function() {

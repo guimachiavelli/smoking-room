@@ -111,7 +111,7 @@ var templates = {
 
 		var item = '<li id="user-' + id + '" style="' + styles + '" class="' + classes + '">';
 			item += '	<img src="'+ user.avatar +'" />';
-			item += '	<canvas width="116" height="116" class="smoke" id="' + id + '"></canvas>';
+			item += '	<canvas width="90" height="90" class="smoke" id="' + id + '"></canvas>';
 			item += '	<h2>'+ id +'</h2>';
 			item += '</li>';
 

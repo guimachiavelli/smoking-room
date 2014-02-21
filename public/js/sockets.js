@@ -84,6 +84,7 @@ var sockets = {
 	accept_request: function() {
 		$(document).on('click', '#yes', function(e){
 			e.preventDefault();
+
 			var to = $(this).parents('.chat-request').data('from');
 			$('.chat-request').remove();
 			sockets.start_chat(to);

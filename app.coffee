@@ -37,7 +37,7 @@ makeRandName = () ->
 
 
 validate = (name)->
-	new_name = validator.blacklist(name, '# . , ! @ … \' $ & ; &amp; % * ( ) " ^ ')
+	new_name = validator.blacklist(name, '# . , ! @ … \' $ & ; % * ( ) " ^ ')
 	if new_name == '' 
 		new_name = makeRandName()
 	console.log new_name

@@ -121,6 +121,11 @@ var App = {
 		var $avatarBtn = $('#make-avatar');
 		$avatarBtn.click(function(){
 			App.makeAvatar();
+			if (App.face === false) {
+				console.log(123)
+				return ;
+			}
+
 			$('#avatar').show();
 
 			$(this).addClass('hidden');
@@ -249,8 +254,9 @@ var App = {
 
 
 	chooseAvatar: function(){
+		if (App.face !== true) return null
 		var canvas = document.getElementById('avatar');
-		return canvas.toDataURL('image/jpeg');
+		return App.canvas.toDataURL('image/jpeg');
 	},
 
 	makeAvatar: function(){
