@@ -29,7 +29,7 @@ var sockets = {
 		});
 
 		sockets.socket.on('message', function(data){
-			templates.add_message({from: data.to, to: data.from, msg: data.msg});
+			templates.add_message({from: data.from, to: data.to, msg: data.msg});
 		});
 
 
@@ -136,8 +136,6 @@ var sockets = {
 				$(this).val('');
 
 				var msg_data = {from: sockets.user_socket.name, to: to, msg: msg};
-
-				console.log(msg_data);
 
 				templates.add_message(msg_data);
 

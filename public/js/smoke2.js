@@ -34,7 +34,18 @@ var Smoke = function(canvas_id) {
 				} else {
 					arr.push([start[0], start[1]-i])
 				}
+			} else if (axis === 'both') {
+				if (dir === '-') {
+					arr.push([start[0]+i, start[1]+i])
+				} else if (dir === '+ -'){
+					arr.push([start[0]-i, start[1]+i])
+				} else if (dir === '- +'){
+					arr.push([start[0]+i, start[1]-i])
+				} else if (dir === '+'){
+					arr.push([start[0]-i, start[1]-i])
+				}
 			}
+
 		}
 
 		return arr;
@@ -57,9 +68,26 @@ var Smoke = function(canvas_id) {
 
 	}
 
+	function halfcircle(centerX, centerY, radius) {
+
+		// an array to save your points
+		var points=[], degree;
+
+		for(degree = 0; degree < 180; degree++){
+			var radians = degree * Math.PI/-180;
+			var x = centerX + radius * Math.cos(radians);
+			var y = centerY + radius * Math.sin(radians);
+			points.push([x, y]);
+		}
+
+		return points;
+
+	}
 
 
-	this.heart = function() {
+
+
+	this.lol = function() {
 		var temp, temp2, temp3, temp4, temp5;
 		mouseIsDown = true;
 		omx = mx = 70;
@@ -114,7 +142,7 @@ var Smoke = function(canvas_id) {
 
 
 		var temp = makeLine([50, 150], Math.random() * 100, 'y', '+'), shape2 = [], i = 0,
-			temp2 = makeLine([0, 350], Math.random() * 100, 'y', '-'), shape2 = [], i = 0,
+			temp2 = makeLine([0, 350], Math.random() * 100, 'y', '-'),
 			temp3 = circle(455, Math.random() * 20 + 15, 10);
 
 		while (temp.length) {
@@ -148,6 +176,49 @@ var Smoke = function(canvas_id) {
 		}, 30000);
 
 	};
+
+	this.heart = function() {
+
+		mouseIsDown = true;
+		omx = mx = 70;
+		omy = my = 80;
+		var _this = this;
+
+
+		var temp = makeLine([220, 250], 100, 'both', '+'), shape2 = [], i = 0,
+			temp4 = halfcircle(170, 150, 50),
+			temp3 = halfcircle(270, 150, 50),
+			temp2 = makeLine([220, 250], 100, 'both', '- +');
+
+
+		while (temp.length) {
+			shape2.push(temp.shift());
+		}
+
+		while (temp2.length) {
+			shape2.push(temp2.shift());
+		}
+
+		while (temp3.length) {
+			shape2.push(temp3.shift());
+		}
+
+		while (temp4.length) {
+			shape2.push(temp4.shift());
+		}
+
+		setInterval(function(){
+			if (i < shape2.length) {
+				sources.push([mx, my]);
+				mx = shape2[i][0];
+				my = shape2[i][1];
+				i++;
+			}
+		}, 10);
+
+
+
+	}
 
 	this.reset = function() {
 		clearInterval(shape_int);

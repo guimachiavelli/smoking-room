@@ -36,9 +36,9 @@ $(document).ready(function(){
 			function(){
 				$('#room').removeClass('blur');
 				$('#intro').height(0).width(0);
+				$('#buffer').remove();
 			}
 		);
-		$('#buffer').remove();
 		sockets.user_socket.name = username;
 	});
 
@@ -83,6 +83,10 @@ $(document).ready(function(){
 		});
 	});
 
+	navigator.getUserMedia_ = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
 
+	if (!navigator.getUserMedia_) {
+		$('#setup').html('<h2 class="no-camera site-title sub">Please use Chrome, Firefox or Opera</h2>');
+	}
 
 });

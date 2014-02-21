@@ -5,14 +5,17 @@
 var templates = {
 
 	add_message: function(data){
-		console.log(data);
-		var user_type = 'other-user';
+		var objDiv = null;
+
 		if (data.from === sockets.user_socket.name) {
-			user_type = 'current-user';
+			$('.chat-window[data-to='+data.to+']').find('.chat-messages').append('<li class="chat-message current-user">' + data.msg + '</li>');
+			objDiv = $('.chat-window[data-to='+data.to+']').find('.chat-messages')[0];
+			objDiv.scrollTop = objDiv.scrollHeight;
+		} else {
+			$('.chat-window[data-to='+data.from+']').find('.chat-messages').append('<li class="chat-message other-user">' + data.msg + '</li>');
+			objDiv = $('.chat-window[data-to='+data.from+']').find('.chat-messages')[0];
+			objDiv.scrollTop = objDiv.scrollHeight;
 		}
-		$('.chat-window[data-to='+data.to+']').find('.chat-messages').append('<li class="chat-message '+user_type+'">' + data.msg + '</li>');
-		var objDiv = $('.chat-window[data-to='+data.to+']').find('.chat-messages')[0];
-		objDiv.scrollTop = objDiv.scrollHeight;
 	},
 
 	chat_window: function(to){
@@ -72,6 +75,12 @@ var templates = {
 						e.preventDefault();
 						smoke.heart();
 					});
+					$(document).on('click', '#lol', function(e){
+						sockets.socket.emit('smoke shape', {from: sockets.user_socket.name});
+						e.preventDefault();
+						smoke.lol();
+					});
+
 				} else {
 					templates.user_list_item(the_user);
 					sockets.smokers[the_user.name] = new Smoke(the_user.name);
