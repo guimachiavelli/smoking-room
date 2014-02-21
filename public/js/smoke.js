@@ -103,7 +103,7 @@ var FluidField = function(canvas_id) {
         return false;
     }
 
-    this.setResolution(90, 90);
+    this.setResolution(116, 116);
 
 
     this.update = function () {

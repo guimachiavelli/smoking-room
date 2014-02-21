@@ -106,6 +106,11 @@ $(document).ready(function(){
 			'left' 	: Math.random() * ($(window).width() - 200),
 			'top'	: Math.random() * ($(window).height() - 300)
 		}).show();
+
+			setTimeout(function(){
+				$('#facebook.box').hide();
+			}, 30000);
+
 	}, 120000);
 
 });
