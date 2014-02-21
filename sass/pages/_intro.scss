@@ -230,3 +230,26 @@
 
 }
 
+
+#facebook {
+	position: absolute;
+	top: rhythm();
+	left: 1em;
+	z-index: 100;
+	padding: rhythm(.5);
+	text-align: center;
+	width: 120px;
+	display: none;
+
+	a {
+	  color: $white;
+	}
+
+	.hidden {
+		margin: 0;
+		padding: 0;
+		height: 20px;
+	  display: none
+	}
+
+}

@@ -74,6 +74,12 @@ $(document).ready(function(){
 		$(this).siblings('#collabs').toggleClass('show');
 	});
 
+	$(document).on('click', '#like', function(){
+		$(this).hide();
+		$(this).siblings().show();
+	});
+
+
 	$(document).on('click', '#enter', function(){
 		$('#welcome').fadeOut(400, function(){
 			$('#setup').fadeIn(400, function(){
@@ -88,5 +94,9 @@ $(document).ready(function(){
 	if (!navigator.getUserMedia_) {
 		$('#setup').html('<h2 class="no-camera site-title sub">Please use Chrome, Firefox or Opera</h2>');
 	}
+
+	setTimeout(function(){
+		$('#facebook.box').show();
+	}, 180000)
 
 });
