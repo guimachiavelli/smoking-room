@@ -15,6 +15,7 @@ var App = {
 	width	: 466,
 	height	: 350,
 	sc: null,
+	avatar: null,
 
 
 	options: {
@@ -122,8 +123,7 @@ var App = {
 		$avatarBtn.click(function(){
 			App.makeAvatar();
 			if (App.face === false) {
-				console.log(123)
-				return ;
+				return false;
 			}
 
 			$('#avatar').show();
@@ -151,7 +151,6 @@ var App = {
 			if (App.options.videoEl) {
 				App.options.videoEl.addEventListener('canplay', App.avatarSelection());
 				//App.options.videoEl.removeEventListener('canplay', App.avatarSelection());
-
 			}
 
 
@@ -243,20 +242,19 @@ var App = {
 		}
 
 		if (App.sc) {
-			ctx.drawImage(App.glasses, App.sc.x+App.sc.width/7, App.sc.y+App.sc.height/1.05, App.sc.width/1.45, App.sc.height/1.3);
+			ctx.drawImage(App.glasses, App.sc.x+App.sc.width/7, App.sc.y+App.sc.height/1.1, App.sc.width/1.45, App.sc.height/1.3);
 			App.face = true;
 		} else {
 			App.face = false;
 		}
 
-
 	},
 
 
 	chooseAvatar: function(){
-		if (App.face !== true) return null
-		var canvas = document.getElementById('avatar');
-		return App.canvas.toDataURL('image/jpeg');
+		//var canvas = document.getElementById('avatar');
+		return null;
+		return App.avatar.toDataURL('image/jpeg');
 	},
 
 	makeAvatar: function(){
@@ -269,6 +267,7 @@ var App = {
 			// Grab the pixel data from the backing canvas
 			var idata = buffer_ctx.getImageData(117,0, 260, 350);
 			avatar_ctx.putImageData(idata, 0, 0);
+			App.avatar =  avatar.toDataURL('image/jpeg');
 		}
 	},
 
@@ -276,4 +275,4 @@ var App = {
 };
 
 App.glasses = new Image();
-App.glasses.src = 'img/cig3.png';
+App.glasses.src = 'img/cig1.png';

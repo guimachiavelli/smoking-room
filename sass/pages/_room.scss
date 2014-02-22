@@ -51,7 +51,7 @@ html {
     }
 
     img {
-        margin-left: -100px
+        //margin-left: -100px
 
     }
 
@@ -123,6 +123,7 @@ html {
     left: rhythm();
     right: rhythm();
     z-index: 11;
+    pointer-events:none;
 }
 
 .chat-window {
@@ -132,6 +133,7 @@ html {
     padding: rhythm(2) 1.5em;
     position: relative;
     margin-right: 2%;
+    pointer-events: auto;
 
     .disconnected {
         position: absolute;

@@ -19,7 +19,7 @@ $(document).ready(function(){
 
 	var $readyBtn = $('#ready-go');
 	$readyBtn.click(function(){
-		var avatar = App.chooseAvatar(),
+		var avatar = App.avatar,
 			username = $('#username').val(),
 			x = Math.random() * 1000,
 			y = Math.random() * (window.innerHeight - 420);
@@ -29,7 +29,9 @@ $(document).ready(function(){
 			'pos' : [x,y]
 		};
 
-		if (!avatar || !username || App.face === null) {
+		console.log(avatar);
+
+		if (!avatar || !username === null) {
 			window.alert('fill in your username and take a selfie, plz');
 			return false;
 		}
