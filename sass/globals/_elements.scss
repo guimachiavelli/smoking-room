@@ -69,16 +69,13 @@ input, textarea {
     @include adjust-font-size-to(28px);
     font-family: $main-font;
 	border: 0;
-    color: $grey;
+    color: #333;
     display: block;
     position: relative;
-    background-position: -100px;
-    @include translate3d(0);
-    
-  background: -webkit-gradient(linear,left top,right top,color-stop(0, #ddd),color-stop(0.4, white),color-stop(0.5, white),color-stop(0.6,#ddd),color-stop(1, #ddd)); 
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  -webkit-animation: slidetounlock 7s infinite linear;
+
+	&:hover {
+		color: #7f6afe;
+	}
 }
 
 

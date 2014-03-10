@@ -135,7 +135,7 @@ var App = {
 
 		$(document).on('click', '#try-again', function() {
 			$('#avatar').hide();
-			$(this).addClass('hidden');
+			$(this).addClass('hidden').siblings().addClass('hidden');
 			$('#make-avatar').removeClass('hidden');
 			return false;
 		});

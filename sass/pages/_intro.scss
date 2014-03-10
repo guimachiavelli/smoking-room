@@ -188,24 +188,13 @@
 		}
 
 		&:hover {
-			color: #fff;
-			-webkit-text-fill-color: #fff;
-			@include text-shadow(rgba(0,0,0,0.9) -1px 1px 1px);
+			color: #7f6afe;
 		}
 
 		&.hidden {
 			display: none;
 		}
 	}
-
-	#make-avatar {
-		color: #aaa;
-		-webkit-background-clip: border-box;
-		-webkit-text-fill-color: #333;
-		-webkit-animation: none;
-		background: none;
-	}
-
 }
 
 
@@ -223,15 +212,13 @@
 	overflow:hidden;
 	border: 1px solid #000;
 	line-height: 0;
-
 }
 
 #avatar-container {
-  position: absolute;
-  top: rhythm(2);
+	position: absolute;
+	top: rhythm(2);
 	border: 1px solid #000;
 	line-height: 0;
-
 }
 
 #avatar {
@@ -244,7 +231,12 @@
 }
 
 #controls {
-	margin-top: rhythm(-2);
+	/*margin-top: rhythm(-2);*/
+
+	#make-avatar {
+		width: 100%;
+		text-align: center;
+	}
 }
 
 
