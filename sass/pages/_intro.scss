@@ -229,8 +229,13 @@
   top: rhythm(2);
 }
 
+#avatar {
+	@include scale(-1,1);
+}
+
 #buffer {
 	margin-left: -45%;
+	@include scale(-1,1);
 }
 
 #controls {
@@ -257,7 +262,7 @@
 		margin: 0;
 		padding: 0;
 		height: 20px;
-	  display: none
+		display: none
 	}
 
 }

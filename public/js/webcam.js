@@ -265,7 +265,7 @@ var App = {
 
 		if (App.face === true) {
 			// Grab the pixel data from the backing canvas
-			var idata = buffer_ctx.getImageData(117,0, 260, 350);
+			var idata = buffer_ctx.getImageData(89,0, 260, 350);
 			avatar_ctx.putImageData(idata, 0, 0);
 			App.avatar =  avatar.toDataURL('image/jpeg');
 		}

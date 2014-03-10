@@ -51,6 +51,8 @@ html {
     }
 
     img {
+
+		@include scale(-1,1);
         //margin-left: -100px
 
     }
