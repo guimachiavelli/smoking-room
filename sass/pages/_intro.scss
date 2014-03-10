@@ -221,12 +221,17 @@
 #buffer-container {
 	width:100%;
 	overflow:hidden;
+	border: 1px solid #000;
+	line-height: 0;
 
 }
 
 #avatar-container {
   position: absolute;
   top: rhythm(2);
+	border: 1px solid #000;
+	line-height: 0;
+
 }
 
 #avatar {
