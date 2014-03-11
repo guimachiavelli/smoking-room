@@ -88,4 +88,28 @@ input, textarea {
 }
 }
 
+@include keyframes(shake) {
+    0% { @include translate(3px, 2px); }
+    50% { @include translate(-3px, -2px); }
+    100% { @include translate(0, 5px); }
 
+}
+
+.shake {
+	@include translate3d(0);
+    animation-name: shake; 
+    animation-duration: 50ms; 
+    animation-iteration-count: infinite; 
+    animation-timing-function: linear;
+ 
+    -moz-animation-name: shake; 
+    -moz-animation-duration: 150ms; 
+    -moz-animation-iteration-count: 2; 
+    -moz-animation-timing-function: linear;
+ 
+    -webkit-animation-name: shake;
+	-webkit-animation-direction: alternate;
+    -webkit-animation-duration: 150ms;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
+}

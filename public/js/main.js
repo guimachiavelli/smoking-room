@@ -12,7 +12,6 @@ function escapeHTML( string ) {
 $(document).ready(function(){
 	'use strict';
 
-
 	$('#room').click(function(){
 		templates.smoke_window(sockets.user_socket.name);
 	});
@@ -29,8 +28,6 @@ $(document).ready(function(){
 			'pos' : [x,y]
 		};
 
-		console.log(avatar);
-
 		if (!avatar || !username === null) {
 			window.alert('fill in your username and take a selfie, plz');
 			return false;
@@ -46,9 +43,22 @@ $(document).ready(function(){
 				$('#room').removeClass('blur');
 				$('#intro').height(0).width(0);
 				$('#buffer').remove();
+				$('.smoke-signs').addClass('shake');
 			}
 		);
+
+		$(document).on('mouseover', '.smoke-signs', function(){
+			console.log(123);
+			$(this).removeClass('shake');
+			$('#smoke-alert').show();
+
+			setTimeout(function() {
+				$('#smoke-alert').remove();
+			}, 5000);
+		});
+
 	});
+
 
 
 	$('#room').click(function(e){

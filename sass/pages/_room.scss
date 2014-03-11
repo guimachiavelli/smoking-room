@@ -105,15 +105,16 @@ html {
 }
 
 .smoke-signs {
+	width: 128px;
     position: fixed;
-    width: 10%;
+    height: 250px;
     bottom: rhythm();
     right: rhythm();
     z-index: 12;
     text-align: center;
 
     img {
-      width: 130%;
+      
       margin-left: -15%;
     }
 }

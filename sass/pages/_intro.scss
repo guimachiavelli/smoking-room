@@ -240,7 +240,7 @@
 }
 
 
-#facebook {
+#facebook, #smoke-alert {
 	position: absolute;
 	top: rhythm();
 	left: 1em;
@@ -250,6 +250,7 @@
 	width: 120px;
 	display: none;
 	background: #fff;
+	color: $black;
 
 	a {
 	  color: $black;
@@ -262,4 +263,10 @@
 		display: none
 	}
 
+}
+
+#smoke-alert {
+	right: 150px;
+	left: auto;
+	top: 80%;
 }
