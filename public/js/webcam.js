@@ -19,87 +19,21 @@ var App = {
 
 
 	options: {
-		audio		: false,
+		// audio		: false,
 		video 		: true,
 		el			: 'webcam',
-		extern		: null,
-		append 		: true,
-		width 		: 466,
-		height 		: 350,
-		mode		: 'callback',
-		swffile		: 'js/fallback/jscam_canvas_only.swf',
-		quality		: 25,
-		context		: '',
-		effect		: null,
-		noFallback	: false,
-		debug		: null,
-		onTick		: null,
-		onLoad		: null,
+		// extern		: null,
+		// append 		: true,
+		// width 		: 466,
+		// height 		: 350,
+		// mode		: 'callback',
+		// swffile		: 'js/fallback/jscam_canvas_only.swf',
+		noFallback	: true,
 
-		onCapture: function () {
-			window.webcam.save();
-		},
 
-		onSave: function (data) {
-			App.flashOnSave(data);
-		}
 	},
 
-  throttle: function(func, wait, options) {
-    var context, args, result;
-    var timeout = null;
-    var previous = 0;
-    options || (options = {});
-    var later = function() {
-      previous = options.leading === false ? 0 : _.now();
-      timeout = null;
-      result = func.apply(context, args);
-      context = args = null;
-    };
-    return function() {
-      var now = _.now();
-      if (!previous && options.leading === false) previous = now;
-      var remaining = wait - (now - previous);
-      context = this;
-      args = arguments;
-      if (remaining <= 0) {
-        clearTimeout(timeout);
-        timeout = null;
-        previous = now;
-        result = func.apply(context, args);
-        context = args = null;
-      } else if (!timeout && options.trailing !== false) {
-        timeout = setTimeout(later, remaining);
-      }
-      return result;
-    };
-  },
 
-
-	flashOnSave: function(data) {
-		var col = data.split(';'),
-			img = App.image,
-			tmp = null,
-			w = this.width,
-			h = this.height,
-			pos = 0,
-			i;
-
-		for (i = 0; i < w; i++) {
-			tmp = parseInt(col[i], 10);
-			img.data[pos] = (tmp >> 16) & 0xff;
-			img.data[pos + 1] = (tmp >> 8) & 0xff;
-			img.data[pos + 2] = tmp & 0xff;
-			img.data[pos + 3] = 0xff;
-			App.pos += 4;
-		}
-
-		if (pos >= 4 * w * h) {
-			App.ctx.putImageData(img, 0, 0);
-			pos = 0;
-		}
-
-	},
 
 
 	init: function () {
@@ -111,8 +45,6 @@ var App = {
 		// Initialize getUserMedia with options
 		getUserMedia(this.options, this.success, this.deviceError);
 
-		// Initialize webcam options for fallback
-		window.webcam = this.options;
 
 		//$(document).on('click', 'body', function(){
 			//App.avatarSelection();
@@ -232,10 +164,10 @@ var App = {
 		if(Date.now() - App.timestamp > 750) {
 			App.timestamp = Date.now();
 			var comp = ccv.detect_objects({
-			'canvas': canvas,
-			'cascade': cascade,
-			'interval': 4,
-			'min_neighbors': 1
+				'canvas': canvas,
+				'cascade': cascade,
+				'interval': 4,
+				'min_neighbors': 1
 			});
 
 			App.sc = comp[0];
@@ -248,13 +180,6 @@ var App = {
 			App.face = false;
 		}
 
-	},
-
-
-	chooseAvatar: function(){
-		//var canvas = document.getElementById('avatar');
-		return null;
-		return App.avatar.toDataURL('image/jpeg');
 	},
 
 	makeAvatar: function(){

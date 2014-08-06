@@ -6,8 +6,6 @@
   },
   "private": true,
   "dependencies": {
-    "mocha": "1.12.0",
-    "sinon": "~1.7.3",
     "grunt": "~0.4.1",
     "grunt-contrib-coffee": "~0.7.0",
     "grunt-contrib-watch": "~0.5.1",
@@ -15,7 +13,6 @@
     "jade": "~1.0.0",
     "express": "~3.4.7",
     "socket.io": "~0.9.16",
-    "grunt-coffeelint": "0.0.8",
     "coffee-script": "1.6.3",
     "bower": "1.2.8",
     "validator": "^3.2.1"

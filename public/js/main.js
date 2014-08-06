@@ -1,10 +1,6 @@
-/*jslint browser: true */
-/*devel: true */
-/*global $, jQuery, sockets, App, templates */
-
 function escapeHTML( string ) {
     var pre = document.createElement('pre');
-    var text = document.createTextNode( string );
+    var text = document.createTextNode(string);
     pre.appendChild(text);
     return pre.innerHTML;
 }
@@ -12,11 +8,13 @@ function escapeHTML( string ) {
 $(document).ready(function(){
 	'use strict';
 
+    // intro code
 	$('#room').click(function(){
 		templates.smoke_window(sockets.user_socket.name);
 	});
 
 	var $readyBtn = $('#ready-go');
+
 	$readyBtn.click(function(){
 		var avatar = App.avatar,
 			username = $('#username').val(),
@@ -47,19 +45,17 @@ $(document).ready(function(){
 			}
 		);
 
-		$(document).on('mouseover', '.smoke-signs', function(){
-			console.log(123);
-			$(this).removeClass('shake');
-			$('#smoke-alert').show();
-
-			setTimeout(function() {
-				$('#smoke-alert').remove();
-			}, 5000);
-		});
-
 	});
 
 
+	$(document).on('mouseover', '.smoke-signs', function(){
+		$(this).removeClass('shake');
+		$('#smoke-alert').show();
+
+		setTimeout(function() {
+			$('#smoke-alert').remove();
+		}, 5000);
+	});
 
 	$('#room').click(function(e){
 		if(e.target !== this) return;
