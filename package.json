@@ -6,10 +6,6 @@
   },
   "private": true,
   "dependencies": {
-    "grunt": "~0.4.1",
-    "grunt-contrib-coffee": "~0.7.0",
-    "grunt-contrib-watch": "~0.5.1",
-    "grunt-mocha-cli": "~1.0.6",
     "jade": "~1.0.0",
     "express": "~3.4.7",
     "socket.io": "~0.9.16",
@@ -19,5 +15,12 @@
   },
   "scripts": {
     "postinstall": "./node_modules/bower/bin/bower install"
+  },
+  "devDependencies": {
+    "browserify": "^5.9.1",
+    "gulp": "^3.8.7",
+    "gulp-compass": "^1.2.0",
+    "gulp-plumber": "^0.6.3",
+    "vinyl-source-stream": "^0.1.1"
   }
 }
