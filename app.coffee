@@ -52,7 +52,7 @@ app.configure () ->
 	# setting up jade templating engine
 	app.engine 'jade', jade.__express
 	app.set 'view engine', 'jade'
-	app.set 'views', __dirname + '/views'
+	app.set 'views', __dirname + '/src/views'
 	app.set 'view options', {layout: false}
 	app.use express.static(__dirname + '/public')
 
