@@ -6,21 +6,19 @@
   },
   "private": true,
   "dependencies": {
-    "jade": "~1.0.0",
-    "express": "~3.4.7",
-    "socket.io": "~0.9.16",
     "coffee-script": "1.6.3",
-    "bower": "1.2.8",
+    "express": "~3.4.7",
+    "jade": "~1.0.0",
+    "jquery": "^2.1.1",
+    "socket.io": "~0.9.16",
     "validator": "^3.2.1"
-  },
-  "scripts": {
-    "postinstall": "./node_modules/bower/bin/bower install"
   },
   "devDependencies": {
     "browserify": "^5.9.1",
     "gulp": "^3.8.7",
     "gulp-compass": "^1.2.0",
     "gulp-plumber": "^0.6.3",
+    "gutil": "^1.4.3",
     "vinyl-source-stream": "^0.1.1"
   }
 }

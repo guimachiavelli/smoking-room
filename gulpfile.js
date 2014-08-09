@@ -4,6 +4,7 @@
 	var gulp = require('gulp'),
 		source = require('vinyl-source-stream'),
 		plumber = require('gulp-plumber'),
+		gutil = require('gutil'),
 		compass = require('gulp-compass'),
 		browserify = require('browserify');
 
@@ -16,7 +17,6 @@
 			.pipe(compass({
 				css: 'public/css',
 				sass: 'src/sass',
-				sourcemap: true,
 				style: 'nested',
 				comments: false
 			}))
@@ -24,17 +24,19 @@
 	});
 
 	gulp.task('browserify', function() {
-		var bundleSource = browserify('./src/main.js').bundle();
+		var bundleSource = browserify('./src/js/main.js')
+			.require('jquery')
+			.bundle();
 
 		bundleSource
-			.on('error', console.log)
+			.on('error', gutil.log)
 			.pipe(plumber())
-			.pipe(source('main.js'))
+			.pipe(source('bundle.js'))
 			.pipe(gulp.dest('public/js'));
 	});
 
 	gulp.task('develop', function() {
-		gulp.watch(['src/components/*.jsx', 'src/js/*.js'], ['react']);
+		gulp.watch(['src/js/*.js'], ['browserify']);
 	});
 
 }());
