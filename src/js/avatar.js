@@ -12,6 +12,9 @@
 			return;
 		}
 
+		this.video = this.$el.append('<video>').find('video');
+		this.video.on('canplay', $.proxy(this.playStream, this));
+
 		this.ctx = this.canvas[0].getContext('2d');
 
 		this.ctx.clearRect(0, 0, this.width, this.height);
@@ -37,6 +40,7 @@
 	Avatar.prototype.setupWebcam = function(stream) {
 		this.getUserMedia(this.webcamCallback, this.onWebcamError);
 
+
 	};
 
 	Avatar.prototype.setupFallback = function(stream) {
@@ -44,8 +48,6 @@
 	};
 
 	Avatar.prototype.webcamCallback = function(stream) {
-
-		this.video = this.$el.append('<video>').find('video');
 		this.stream = stream;
 
 		if (window.MediaStream !== undefined &&
@@ -57,28 +59,29 @@
 				this.video.mozSrcObject = stream;
 			} else {
 				this.video.src = stream;
-
-
 			}
 
 			return this.video.play();
-
 		}
 
 		var vendorURL = window.URL || window.webkitURL;
 		this.video.attr('src', vendorURL ? vendorURL.createObjectURL(stream) : stream);
 		this.video.attr('autoplay', true);
 
-		//this.video.onerror = function () {
-			//App.stream.stop();
-			//window.streamError();
-		//};
-
 	};
 
 	Avatar.prototype.onWebcamError = function(err) {
 		console.log(err);
 	};
+
+	Avatar.prototype.playStream = function() {
+		console.log(this);
+
+		window.requestAnimationFrame($.proxy(this.playStream, this));
+
+		this.ctx.drawImage(this.video[0], 0, 0);
+
+	}
 
 
 	module.exports = Avatar;

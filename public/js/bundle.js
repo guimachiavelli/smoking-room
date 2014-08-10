@@ -18,18 +18,6 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
 	setup = new Intro($('#enter'), context);
 
 
-	$(document).ready(function(){
-		avatarCreator = new Avatar(
-			$('#webcam'),
-			$('#buffer'),
-			466,
-			350,
-			context
-		);
-	});
-
-
-
 }());
 
 },{"./avatar":2,"./getContext":3,"./intro":4,"./smoke":5,"jquery":undefined}],2:[function(require,module,exports){
@@ -46,6 +34,9 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
 		if (!this.context) {
 			return;
 		}
+
+		this.video = this.$el.append('<video>').find('video');
+		this.video.on('canplay', $.proxy(this.playStream, this));
 
 		this.ctx = this.canvas[0].getContext('2d');
 
@@ -72,6 +63,7 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
 	Avatar.prototype.setupWebcam = function(stream) {
 		this.getUserMedia(this.webcamCallback, this.onWebcamError);
 
+
 	};
 
 	Avatar.prototype.setupFallback = function(stream) {
@@ -79,8 +71,6 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
 	};
 
 	Avatar.prototype.webcamCallback = function(stream) {
-
-		this.video = this.$el.append('<video>').find('video');
 		this.stream = stream;
 
 		if (window.MediaStream !== undefined &&
@@ -92,28 +82,29 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
 				this.video.mozSrcObject = stream;
 			} else {
 				this.video.src = stream;
-
-
 			}
 
 			return this.video.play();
-
 		}
 
 		var vendorURL = window.URL || window.webkitURL;
 		this.video.attr('src', vendorURL ? vendorURL.createObjectURL(stream) : stream);
 		this.video.attr('autoplay', true);
 
-		//this.video.onerror = function () {
-			//App.stream.stop();
-			//window.streamError();
-		//};
-
 	};
 
 	Avatar.prototype.onWebcamError = function(err) {
 		console.log(err);
 	};
+
+	Avatar.prototype.playStream = function() {
+		console.log(this);
+
+		window.requestAnimationFrame($.proxy(this.playStream, this));
+
+		this.ctx.drawImage(this.video[0], 0, 0);
+
+	}
 
 
 	module.exports = Avatar;
@@ -158,13 +149,14 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
 (function(){
 	'use strict';
 
-	var $ = require('jquery');
+	var $ = require('jquery'),
+		Avatar = require('./avatar');
 
 	var Intro = function($el, context) {
 		this.$el = $el;
 		this.context = context;
 
-		this.$el.on('click', this.enter);
+		this.$el.on('click', $.proxy(this.enter, this));
 
 		if (this.context === false) {
 			this.notSupported();
@@ -174,8 +166,20 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
 	};
 
 	Intro.prototype.enter = function() {
+		var self = this;
 		$('#welcome').fadeOut(400, function(){
-			$('#setup').fadeIn(400);
+			$('#setup').fadeIn(400, function(){
+				if (self.context === 'webrtc') {
+					var avatarCreator = new Avatar(
+						$('#webcam'),
+						$('#buffer'),
+						466,
+						350,
+						self.context
+					);
+				}
+				console.log(self);
+			});
 		});
 	};
 
@@ -225,7 +229,7 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
 
 }());
 
-},{"jquery":undefined}],5:[function(require,module,exports){
+},{"./avatar":2,"jquery":undefined}],5:[function(require,module,exports){
 // Based on http://www.dgp.toronto.edu/people/stam/reality/Research/pdf/GDC03.pdf
 /**
  * Copyright (c) 2009 Oliver Hunt <http://nerget.com>

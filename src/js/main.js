@@ -17,16 +17,4 @@
 	setup = new Intro($('#enter'), context);
 
 
-	$(document).ready(function(){
-		avatarCreator = new Avatar(
-			$('#webcam'),
-			$('#buffer'),
-			466,
-			350,
-			context
-		);
-	});
-
-
-
 }());

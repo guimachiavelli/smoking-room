@@ -1,13 +1,14 @@
 (function(){
 	'use strict';
 
-	var $ = require('jquery');
+	var $ = require('jquery'),
+		Avatar = require('./avatar');
 
 	var Intro = function($el, context) {
 		this.$el = $el;
 		this.context = context;
 
-		this.$el.on('click', this.enter);
+		this.$el.on('click', $.proxy(this.enter, this));
 
 		if (this.context === false) {
 			this.notSupported();
@@ -17,8 +18,20 @@
 	};
 
 	Intro.prototype.enter = function() {
+		var self = this;
 		$('#welcome').fadeOut(400, function(){
-			$('#setup').fadeIn(400);
+			$('#setup').fadeIn(400, function(){
+				if (self.context === 'webrtc') {
+					var avatarCreator = new Avatar(
+						$('#webcam'),
+						$('#buffer'),
+						466,
+						350,
+						self.context
+					);
+				}
+				console.log(self);
+			});
 		});
 	};
 
