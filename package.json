@@ -15,10 +15,30 @@
   },
   "devDependencies": {
     "browserify": "^5.9.1",
+    "browserify-shim": "^3.6.0",
     "gulp": "^3.8.7",
     "gulp-compass": "^1.2.0",
     "gulp-plumber": "^0.6.3",
     "gutil": "^1.4.3",
+    "napa": "^0.4.1",
     "vinyl-source-stream": "^0.1.1"
+  },
+  "browserify" : {
+	  "transform" : ["browserify-shim", "workerify"]
+  },
+  "browser" : {
+	"ccv" : "./node_modules/ccv/ccv.js",
+	"face-detect" : "./node_modules/face-detect/face.js"
+  },
+  "browserify-shim" : {
+	  "ccv" : "ccv",
+	  "face-detect" : "cascade"
+  },
+  "scripts" : {
+	"install" : "napa"
+  },
+  "napa" : {
+	  "ccv" : "https://raw.githubusercontent.com/liuliu/ccv/unstable/js/ccv.js",
+	  "face-detect" : "https://raw.githubusercontent.com/liuliu/ccv/unstable/js/face.js"
   }
 }

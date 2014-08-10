@@ -1,6 +1,11 @@
 (function(){
 	'use strict';
 
+	var $ = require('jquery'),
+		face = require('face-detect'),
+		ccv = require('ccv');
+
+
 	var Avatar = function($el, $canvas, width, height, context) {
 		this.$el = $el;
 		this.canvas = $canvas;
@@ -11,6 +16,8 @@
 		if (!this.context) {
 			return;
 		}
+
+		this.updateCigarette();
 
 		this.video = this.$el.append('<video>').find('video');
 		this.video.on('canplay', $.proxy(this.playStream, this));
@@ -28,6 +35,11 @@
 			this.setupFallback();
 		}
 
+	};
+
+	Avatar.prototype.updateCigarette = function(cigarette) {
+		this.cigarette = new Image();
+		this.cigarette.src = cigarette ? cigarette : 'img/cig1.png';
 	};
 
 	Avatar.prototype.getUserMedia = function(successCallback, errorCallback) {
@@ -55,13 +67,13 @@
 			stream instanceof window.MediaStream
 		) {
 
-			if (this.video.mozSrcObject !== undefined) {
-				this.video.mozSrcObject = stream;
+			if (this.video[0].mozSrcObject !== undefined) {
+				this.video[0].mozSrcObject = stream;
 			} else {
-				this.video.src = stream;
+				this.video[0].src = stream;
 			}
 
-			return this.video.play();
+			return this.video[0].play();
 		}
 
 		var vendorURL = window.URL || window.webkitURL;
@@ -75,13 +87,46 @@
 	};
 
 	Avatar.prototype.playStream = function() {
-		console.log(this);
-
 		window.requestAnimationFrame($.proxy(this.playStream, this));
 
+
+		this.drawCigarette();
+
+	};
+
+	Avatar.prototype.drawCigarette = function() {
 		this.ctx.drawImage(this.video[0], 0, 0);
 
-	}
+		if(!this.timestamp) {
+			this.timestamp = Date.now();
+		}
+
+		if(Date.now() - this.timestamp > 750) {
+			this.timestamp = Date.now();
+			var comp = ccv.detect_objects({
+				'canvas': this.canvas[0],
+				'cascade': face,
+				'interval': 4,
+				'min_neighbors': 1
+			});
+
+			this.sc = comp[0];
+			console.log(face);
+		}
+
+
+		if (this.sc) {
+			this.ctx.drawImage(this.cigarette,
+							   this.sc.x + this.sc.width/7,
+							   this.sc.y + this.sc.height/1.1,
+							   this.sc.width/1.45,
+							   this.sc.height/1.3);
+			this.hasFace = true;
+		} else {
+			this.hasFace = false;
+		}
+
+	};
 
 
 	module.exports = Avatar;

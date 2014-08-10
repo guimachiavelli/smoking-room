@@ -30,7 +30,6 @@
 						self.context
 					);
 				}
-				console.log(self);
 			});
 		});
 	};

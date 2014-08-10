@@ -472,7 +472,7 @@ input, textarea {
   transform: scale(-1, 1); }
 
 #buffer {
-  margin-left: -45%;
+  /*margin-left: -45%;*/
   -moz-transform: scale(-1, 1);
   -ms-transform: scale(-1, 1);
   -webkit-transform: scale(-1, 1);
