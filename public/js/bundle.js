@@ -537,6 +537,8 @@ var cascade = {"count" : 16, "width" : 24, "height" : 24, "stage_classifier" : [
 			this.setupFallback();
 		}
 
+		$('#make-avatar').on('click', $.proxy(this.makeAvatar, this));
+
 	};
 
 	Avatar.prototype.updateCigarette = function(cigarette) {
@@ -553,8 +555,6 @@ var cascade = {"count" : 16, "width" : 24, "height" : 24, "stage_classifier" : [
 
 	Avatar.prototype.setupWebcam = function(stream) {
 		this.getUserMedia(this.webcamCallback, this.onWebcamError);
-
-
 	};
 
 	Avatar.prototype.setupFallback = function(stream) {
@@ -589,6 +589,7 @@ var cascade = {"count" : 16, "width" : 24, "height" : 24, "stage_classifier" : [
 	};
 
 	Avatar.prototype.playStream = function() {
+		if (this.stopped === true) return;
 		window.requestAnimationFrame($.proxy(this.playStream, this));
 
 
@@ -603,19 +604,17 @@ var cascade = {"count" : 16, "width" : 24, "height" : 24, "stage_classifier" : [
 			this.timestamp = Date.now();
 		}
 
-		if(Date.now() - this.timestamp > 750) {
+		if(Date.now() - this.timestamp > 1000) {
 			this.timestamp = Date.now();
 			var comp = ccv.detect_objects({
 				'canvas': this.canvas[0],
 				'cascade': face,
-				'interval': 4,
-				'min_neighbors': 1
+				'interval': 3,
+				'min_neighbors': 2
 			});
 
 			this.sc = comp[0];
-			console.log(face);
 		}
-
 
 		if (this.sc) {
 			this.ctx.drawImage(this.cigarette,
@@ -629,6 +628,25 @@ var cascade = {"count" : 16, "width" : 24, "height" : 24, "stage_classifier" : [
 		}
 
 	};
+
+	Avatar.prototype.makeAvatar = function() {
+		var avatar = document.getElementById('avatar');
+		var avatar_ctx = avatar.getContext('2d');
+
+		if (this.hasFace === true) {
+			console.log('test');
+			// Grab the pixel data from the backing canvas
+			var idata = this.ctx.getImageData(130,0, 260, 350);
+			avatar_ctx.putImageData(idata, 0, 0);
+			this.avatar =  avatar.toDataURL('image/jpeg');
+			this.stop();
+		}
+	};
+
+	Avatar.prototype.stop = function() {
+		this.stopped = true;
+		this.stream.stop();
+	}
 
 
 	module.exports = Avatar;

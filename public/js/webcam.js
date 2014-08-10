@@ -161,7 +161,7 @@ var App = {
 			App.timestamp = Date.now();
 		}
 
-		if(Date.now() - App.timestamp > 750) {
+		if(Date.now() - App.timestamp > 1000) {
 			App.timestamp = Date.now();
 			var comp = ccv.detect_objects({
 				'canvas': canvas,
