@@ -13,7 +13,6 @@
 @import 'globals/reset';
 @import 'globals/mixins';
 @import 'globals/grid';
-@import 'globals/colors';
 
 
 //******************************
@@ -26,15 +25,6 @@
 @import 'globals/elements';
 
 
-//******************************
-//
-// page sections used
-// throughout the site
-//
-//******************************
-@import 'partials/header';
-@import 'partials/sidebar';
-
 
 //******************************
 //
@@ -46,35 +36,3 @@
 
 
 
-
-//******************************
-//
-// javascript/no-javascript configs
-//
-//******************************
-@import 'js/js';
-
-
-//******************************
-//
-// responsive 
-//
-//******************************
-//@import 'devices/responsive';
-
-
-//******************************
-//
-// javascript plugins 
-//
-//******************************
-
-
-
-//******************************
-//
-// to beat old ie's into 
-// submission
-//
-//******************************
-//@import 'cross-browser/ie9';

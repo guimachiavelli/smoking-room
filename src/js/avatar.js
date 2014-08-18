@@ -8,7 +8,7 @@
 
 	var Avatar = function($el, $canvas, $avatar, width, height, context) {
 		this.$el = $el;
-		this.$canvas = $canvas;
+		this.$streamCanvas = $canvas;
 		this.$avatarCanvas = $avatar;
 		this.width = width;
 		this.height = height;
@@ -19,12 +19,13 @@
 		}
 
 		this.$makeButton = $('#make-avatar');
+		this.$tryAgainButton = $('#try-again');
 		this.updateCigarette();
 
 		this.video = this.$el.append('<video>').find('video');
 		this.video.on('canplay', $.proxy(this.playStream, this));
 
-		this.ctx = this.$canvas[0].getContext('2d');
+		this.ctx = this.$streamCanvas[0].getContext('2d');
 		this.avatarCtx = this.$avatarCanvas[0].getContext('2d');
 
 		this.ctx.clearRect(0, 0, this.width, this.height);
@@ -39,6 +40,7 @@
 		}
 
 		this.$makeButton.on('click', $.proxy(this.makeAvatar, this));
+		this.$tryAgainButton.on('click', $.proxy(this.tryAgain, this));
 
 	};
 
@@ -106,7 +108,7 @@
 		if(Date.now() - this.timestamp > 1000) {
 			this.timestamp = Date.now();
 			var comp = ccv.detect_objects({
-				'canvas': this.$canvas[0],
+				'canvas': this.$streamCanvas[0],
 				'cascade': face,
 				'interval': 3,
 				'min_neighbors': 2
@@ -137,25 +139,29 @@
 			this.avatar = avatar.toDataURL('image/jpeg');
 			this.stop();
 
+			this.$avatarCanvas.removeClass('hidden');
 			this.$makeButton.addClass('hidden');
 			this.$makeButton.siblings('.hidden').removeClass('hidden');
 		}
 	};
 
 	Avatar.prototype.tryAgain = function() {
-
-		$(document).on('click', '#try-again', function() {
-			$('#avatar').hide();
-			$(this).addClass('hidden').siblings().addClass('hidden');
-			$('#make-avatar').removeClass('hidden');
-			return false;
-		});
+		this.$avatarCanvas.addClass('hidden');
+		this.$tryAgainButton.addClass('hidden').siblings().addClass('hidden');
+		this.$makeButton.removeClass('hidden');
+		this.startAgain();
+		return false;
 	}
 
+	Avatar.prototype.startAgain = function() {
+		this.stopped = false;
+		this.$streamCanvas.removeClass('hidden');
+		this.playStream();
+	};
 
 	Avatar.prototype.stop = function() {
 		this.stopped = true;
-		this.stream.stop();
+		this.$streamCanvas.addClass('hidden');
 	};
 
 
