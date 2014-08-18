@@ -25,6 +25,7 @@
 					var avatarCreator = new Avatar(
 						$('#webcam'),
 						$('#buffer'),
+						$('#avatar'),
 						466,
 						350,
 						self.context

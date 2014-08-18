@@ -6,9 +6,10 @@
 		ccv = require('ccv');
 
 
-	var Avatar = function($el, $canvas, width, height, context) {
+	var Avatar = function($el, $canvas, $avatar, width, height, context) {
 		this.$el = $el;
-		this.canvas = $canvas;
+		this.$canvas = $canvas;
+		this.$avatarCanvas = $avatar;
 		this.width = width;
 		this.height = height;
 		this.context = context;
@@ -17,15 +18,17 @@
 			return;
 		}
 
+		this.$makeButton = $('#make-avatar');
 		this.updateCigarette();
 
 		this.video = this.$el.append('<video>').find('video');
 		this.video.on('canplay', $.proxy(this.playStream, this));
 
-		this.ctx = this.canvas[0].getContext('2d');
+		this.ctx = this.$canvas[0].getContext('2d');
+		this.avatarCtx = this.$avatarCanvas[0].getContext('2d');
 
 		this.ctx.clearRect(0, 0, this.width, this.height);
-		this.image = this.ctx.getImageData(0, 0, this.width, this.height);
+		//this.image = this.ctx.getImageData(0, 0, this.width, this.height);
 
 		if (this.context === 'webrtc') {
 			this.setupWebcam();
@@ -35,7 +38,7 @@
 			this.setupFallback();
 		}
 
-		$('#make-avatar').on('click', $.proxy(this.makeAvatar, this));
+		this.$makeButton.on('click', $.proxy(this.makeAvatar, this));
 
 	};
 
@@ -88,11 +91,9 @@
 
 	Avatar.prototype.playStream = function() {
 		if (this.stopped === true) return;
+
 		window.requestAnimationFrame($.proxy(this.playStream, this));
-
-
 		this.drawCigarette();
-
 	};
 
 	Avatar.prototype.drawCigarette = function() {
@@ -105,7 +106,7 @@
 		if(Date.now() - this.timestamp > 1000) {
 			this.timestamp = Date.now();
 			var comp = ccv.detect_objects({
-				'canvas': this.canvas[0],
+				'canvas': this.$canvas[0],
 				'cascade': face,
 				'interval': 3,
 				'min_neighbors': 2
@@ -127,24 +128,35 @@
 
 	};
 
-	Avatar.prototype.makeAvatar = function() {
-		var avatar = document.getElementById('avatar');
-		var avatar_ctx = avatar.getContext('2d');
+	Avatar.prototype.makeAvatar = function(e) {
+		e.preventDefault();
 
 		if (this.hasFace === true) {
-			console.log('test');
-			// Grab the pixel data from the backing canvas
-			var idata = this.ctx.getImageData(130,0, 260, 350);
-			avatar_ctx.putImageData(idata, 0, 0);
-			this.avatar =  avatar.toDataURL('image/jpeg');
+			var idata = this.ctx.getImageData(206,0, 260, 350);
+			this.avatarCtx.putImageData(idata, 0, 0);
+			this.avatar = avatar.toDataURL('image/jpeg');
 			this.stop();
+
+			this.$makeButton.addClass('hidden');
+			this.$makeButton.siblings('.hidden').removeClass('hidden');
 		}
 	};
+
+	Avatar.prototype.tryAgain = function() {
+
+		$(document).on('click', '#try-again', function() {
+			$('#avatar').hide();
+			$(this).addClass('hidden').siblings().addClass('hidden');
+			$('#make-avatar').removeClass('hidden');
+			return false;
+		});
+	}
+
 
 	Avatar.prototype.stop = function() {
 		this.stopped = true;
 		this.stream.stop();
-	}
+	};
 
 
 	module.exports = Avatar;

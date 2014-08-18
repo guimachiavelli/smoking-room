@@ -3,15 +3,13 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
 	'use strict';
 
 	var Smoke = require('./smoke'),
-		Avatar = require('./avatar'),
 		Intro = require('./intro'),
 		getContext = require('./getContext'),
 		$ = require('jquery');
 
 
 	var context,
-		setup,
-		avatarCreator;
+		setup;
 
 	context = getContext();
 
@@ -20,7 +18,7 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
 
 }());
 
-},{"./avatar":4,"./getContext":5,"./intro":6,"./smoke":7,"jquery":undefined}],2:[function(require,module,exports){
+},{"./getContext":5,"./intro":6,"./smoke":7,"jquery":undefined}],2:[function(require,module,exports){
 (function (global){
 ;__browserify_shim_require__=require;(function browserifyShim(module, exports, require, define, browserify_shim__define__module__export__) {
 if (parallable === undefined) {
@@ -508,9 +506,10 @@ var cascade = {"count" : 16, "width" : 24, "height" : 24, "stage_classifier" : [
 		ccv = require('ccv');
 
 
-	var Avatar = function($el, $canvas, width, height, context) {
+	var Avatar = function($el, $canvas, $avatar, width, height, context) {
 		this.$el = $el;
-		this.canvas = $canvas;
+		this.$canvas = $canvas;
+		this.$avatarCanvas = $avatar;
 		this.width = width;
 		this.height = height;
 		this.context = context;
@@ -519,15 +518,17 @@ var cascade = {"count" : 16, "width" : 24, "height" : 24, "stage_classifier" : [
 			return;
 		}
 
+		this.$makeButton = $('#make-avatar');
 		this.updateCigarette();
 
 		this.video = this.$el.append('<video>').find('video');
 		this.video.on('canplay', $.proxy(this.playStream, this));
 
-		this.ctx = this.canvas[0].getContext('2d');
+		this.ctx = this.$canvas[0].getContext('2d');
+		this.avatarCtx = this.$avatarCanvas[0].getContext('2d');
 
 		this.ctx.clearRect(0, 0, this.width, this.height);
-		this.image = this.ctx.getImageData(0, 0, this.width, this.height);
+		//this.image = this.ctx.getImageData(0, 0, this.width, this.height);
 
 		if (this.context === 'webrtc') {
 			this.setupWebcam();
@@ -537,7 +538,7 @@ var cascade = {"count" : 16, "width" : 24, "height" : 24, "stage_classifier" : [
 			this.setupFallback();
 		}
 
-		$('#make-avatar').on('click', $.proxy(this.makeAvatar, this));
+		this.$makeButton.on('click', $.proxy(this.makeAvatar, this));
 
 	};
 
@@ -590,11 +591,9 @@ var cascade = {"count" : 16, "width" : 24, "height" : 24, "stage_classifier" : [
 
 	Avatar.prototype.playStream = function() {
 		if (this.stopped === true) return;
+
 		window.requestAnimationFrame($.proxy(this.playStream, this));
-
-
 		this.drawCigarette();
-
 	};
 
 	Avatar.prototype.drawCigarette = function() {
@@ -607,7 +606,7 @@ var cascade = {"count" : 16, "width" : 24, "height" : 24, "stage_classifier" : [
 		if(Date.now() - this.timestamp > 1000) {
 			this.timestamp = Date.now();
 			var comp = ccv.detect_objects({
-				'canvas': this.canvas[0],
+				'canvas': this.$canvas[0],
 				'cascade': face,
 				'interval': 3,
 				'min_neighbors': 2
@@ -629,24 +628,35 @@ var cascade = {"count" : 16, "width" : 24, "height" : 24, "stage_classifier" : [
 
 	};
 
-	Avatar.prototype.makeAvatar = function() {
-		var avatar = document.getElementById('avatar');
-		var avatar_ctx = avatar.getContext('2d');
+	Avatar.prototype.makeAvatar = function(e) {
+		e.preventDefault();
 
 		if (this.hasFace === true) {
-			console.log('test');
-			// Grab the pixel data from the backing canvas
-			var idata = this.ctx.getImageData(130,0, 260, 350);
-			avatar_ctx.putImageData(idata, 0, 0);
-			this.avatar =  avatar.toDataURL('image/jpeg');
+			var idata = this.ctx.getImageData(206,0, 260, 350);
+			this.avatarCtx.putImageData(idata, 0, 0);
+			this.avatar = avatar.toDataURL('image/jpeg');
 			this.stop();
+
+			this.$makeButton.addClass('hidden');
+			this.$makeButton.siblings('.hidden').removeClass('hidden');
 		}
 	};
+
+	Avatar.prototype.tryAgain = function() {
+
+		$(document).on('click', '#try-again', function() {
+			$('#avatar').hide();
+			$(this).addClass('hidden').siblings().addClass('hidden');
+			$('#make-avatar').removeClass('hidden');
+			return false;
+		});
+	}
+
 
 	Avatar.prototype.stop = function() {
 		this.stopped = true;
 		this.stream.stop();
-	}
+	};
 
 
 	module.exports = Avatar;
@@ -715,6 +725,7 @@ var cascade = {"count" : 16, "width" : 24, "height" : 24, "stage_classifier" : [
 					var avatarCreator = new Avatar(
 						$('#webcam'),
 						$('#buffer'),
+						$('#avatar'),
 						466,
 						350,
 						self.context
