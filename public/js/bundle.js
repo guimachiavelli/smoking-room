@@ -19,8 +19,6 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
 	setup = new Intro($('#enter'), context, socket);
 
 
-
-
 }());
 
 },{"./getContext":6,"./intro":7,"./smoke":8,"./sockets":9,"jquery":undefined}],2:[function(require,module,exports){
@@ -4564,7 +4562,6 @@ if (typeof define === "function" && define.amd) {
 
 		return data;
 
-
 	};
 
 
@@ -4572,7 +4569,7 @@ if (typeof define === "function" && define.amd) {
 
 }());
 
-},{"./utils":10,"ccv":2,"face-detect":3,"jquery":undefined}],6:[function(require,module,exports){
+},{"./utils":11,"ccv":2,"face-detect":3,"jquery":undefined}],6:[function(require,module,exports){
 (function(){
 	'use strict';
 
@@ -4625,20 +4622,6 @@ if (typeof define === "function" && define.amd) {
 			return;
 		}
 
-
-		this.avatarCreator = new Avatar(
-			$('#webcam'),
-			$('#buffer'),
-			$('#avatar'),
-			466, 350,
-			this.context
-		);
-
-		$('#make-avatar').on('click', $.proxy(this.avatarCreator.makeAvatar, this.avatarCreator));
-		$('#try-again').on('click', $.proxy(this.avatarCreator.tryAgain, this.avatarCreator));
-		$('#ready-go').on('click', $.proxy(this.selectAvatar, this));
-
-
 	};
 
 	Intro.prototype.enter = function() {
@@ -4646,6 +4629,7 @@ if (typeof define === "function" && define.amd) {
 		$('#welcome').fadeOut(400, function(){
 			$('#setup').fadeIn(400, function(){
 				$('#buffer').removeClass('hidden');
+				self.startAvatarSelection();
 			});
 		});
 	};
@@ -4658,10 +4642,27 @@ if (typeof define === "function" && define.amd) {
 		);
 	};
 
+	Intro.prototype.startAvatarSelection = function() {
+		this.avatarCreator = new Avatar(
+			$('#webcam'),
+			$('#buffer'),
+			$('#avatar'),
+			466, 350,
+			this.context
+		);
+
+		$('#make-avatar').on('click', $.proxy(this.avatarCreator.makeAvatar, this.avatarCreator));
+		$('#try-again').on('click', $.proxy(this.avatarCreator.tryAgain, this.avatarCreator));
+		$('#ready-go').on('click', $.proxy(this.selectAvatar, this));
+	};
+
 	Intro.prototype.selectAvatar = function() {
 		var data = this.avatarCreator.selectAvatar();
+		if (data === false) {
+			return;
+		}
 		this.exit();
-		this.socket.emit('user enter', data);
+		this.socket.socket.emit('user enter', data);
 	};
 
 
@@ -5140,70 +5141,72 @@ if (this.CanvasRenderingContext2D && !CanvasRenderingContext2D.createImageData) 
 (function(){
 	'use strict';
 
-	var io = require('socket.io-client');
+	var io = require('socket.io-client'),
+		templates = require('./templates');
 
 	var Sockets = function() {
 		this.socket = io.connect();
 		this.user = {
 			name: null,
 			to: null
-		},
+		};
 		this.smokers = {};
 
 		$('#yes').on('click', this.onAcceptRequest);
 		$('#no').on('click', this.onRefuseRequest);
 		$('.chat-send-message').on('keyup', this.onSendMessage);
+		$(document).on('click', '.user', this.onSendChatRequest);
 
+		this.socket.on('new name', $.proxy(this.onNewName, this));
 		this.socket.on('user list update', this.onUserListUpdate);
-		this.socket.on('new name', this.onNewName);
 		this.socket.on('incoming chat request', this.onIncomingChatRequest);
 		this.socket.on('chat request accepted', this.onChatRequestAccepted);
 		this.socket.on('chat request refused', this.onChatRequestRefused);
 		this.socket.on('message', this.onMessage);
 		this.socket.on('close chat', this.onChatClose);
-
-
-			this.socket.on('user list update', function(data){
-				templates.refresh_user_list(data);
-			});
-
-			this.socket.on('new name', function(data){
-				sockets.user_socket.name = data;
-			});
-
-
-			this.socket.on('incoming chat request', function(data){
-				sockets.chat_request_window(data);
-			});
-
-
-			this.socket.on('chat request accepted', function(to){
-				sockets.start_chat(to);
-			});
-
-			this.socket.on('message', function(data){
-				templates.add_message({from: data.from, to: data.to, msg: data.msg});
-			});
-
-
-			this.socket.on('close chat', function(to){
-				$('.chat-window[data-to='+ to +']').append('<span class="disconnected">user disconnected</span');
-				setTimeout(function(){
-					$('.chat-window[data-to='+ to +']').remove();
-				}, 5000);
-			});
-
-			this.socket.on('chat request refused', function(){
-				$('.chat-request').remove();
-			});
-
-			$(document).on('click', '.user', this.onSendChatRequest);
-			this.socket.on('smoke shape', this.onSmokeShape);
+		this.socket.on('smoke shape', this.onSmokeShape);
 
 	};
 
+	Sockets.prototype.onUserListUpdate = function(data){
+		templates.refresh_user_list(data);
+	};
+
+	Sockets.prototype.onNewName = function(data){
+		console.log(this);
+		this.user.name = data;
+	};
+
+	Sockets.prototype.onIncomingChatRequest = function(data){
+		this.chatRequestWindow(data);
+	};
+
+	Sockets.prototype.onChatRequestRefused = function(to){
+		this.startChat(to);
+	};
+
+	Sockets.prototype.onMessage = function(data){
+		templates.add_message({
+			from: data.from,
+			to: data.to,
+			msg: data.msg
+		});
+	};
+
+	Sockets.prototype.onChatClose = function(to){
+		$('.chat-window[data-to='+ to +']')
+			.append('<span class="disconnected">user disconnected</span');
+		setTimeout(function(){
+			$('.chat-window[data-to='+ to +']').remove();
+		}, 5000);
+	};
+
+	Sockets.prototype.onChatRequestRefused = function(){
+		$('.chat-request').remove();
+	};
+
 	Sockets.prototype.onSmokeShape = function(data){
-		sockets.smokers[data.from].heart();
+		this.smokers[data.from].heart();
 		setTimeout(function() {
 			sockets.smokers[data.from].reset();
 		}, 20000);
@@ -5211,11 +5214,15 @@ if (this.CanvasRenderingContext2D && !CanvasRenderingContext2D.createImageData) 
 
 	Sockets.prototype.onSendChatRequest = function(data) {
 		if ($('.chat-window').length > 3 || $(this).hasClass('current-user')) { return; }
-		var to = $(this).attr('id');
-		to = to.substr(5);
-		sockets.send_chat_request(to, sockets.user_socket.name);
-		var request = templates.chat_request_sent();
+		var to, request;
+		to = $(this).attr('id').substr(5);
+
+		this.sendChatRequest(to, this.user.name);
+
+		request = templates.chat_request_sent();
+
 		$('#room').append(request);
+
 		setTimeout(function(){
 			$('.chat-request-sent').remove();
 		}, 3000);
@@ -5223,7 +5230,7 @@ if (this.CanvasRenderingContext2D && !CanvasRenderingContext2D.createImageData) 
 
 	Sockets.prototype.sendChatRequest = function(to, from) {
 		var data = {'to': to, 'from': from};
-		sockets.socket.emit('send chat request', data);
+		this.socket.emit('send chat request', data);
 	};
 
 	Sockets.prototype.onAcceptRequest = function(e) {
@@ -5232,7 +5239,7 @@ if (this.CanvasRenderingContext2D && !CanvasRenderingContext2D.createImageData) 
 		var to = $(this).parents('.chat-request').data('from');
 		$('.chat-request').remove();
 		this.startChat(to);
-		this.acceptChatRequest(to, sockets.user_socket.name);
+		this.acceptChatRequest(to, this.user.name);
 	};
 
 	Sockets.prototype.onRefuseRequest = function(e) {
@@ -5250,7 +5257,7 @@ if (this.CanvasRenderingContext2D && !CanvasRenderingContext2D.createImageData) 
 			var request_window = templates.chat_request(data.from);
 			$('#room').append(request_window);
 		} else {
-			sockets.socket.emit('refuse chat request', data);
+			this.socket.emit('refuse chat request', data);
 		}
 	};
 
@@ -5267,30 +5274,31 @@ if (this.CanvasRenderingContext2D && !CanvasRenderingContext2D.createImageData) 
 
 	Sockets.prototype.acceptChatRequest = function(to, from) {
 		var data = {'to':to, 'from': from };
-		sockets.socket.emit('accept chat request', data);
+		this.socket.emit('accept chat request', data);
 	};
 
 	Sockets.prototype.refuseChatRequest = function(to, from) {
 		var data = {'to':to, 'from': from };
-		sockets.socket.emit('refuse chat request', data);
-		console.log('refuse chat request sent to ' + data.to);
+		this.socket.emit('refuse chat request', data);
+		//console.log('refuse chat request sent to ' + data.to);
 	};
 
 
 	Sockets.prototype.onSendMessage = function(e) {
-			if (e.keyCode === 13) {
-				var msg = $(this).val();
-				var to = $(this).parents('.chat-window').data('to');
-				$(this).val('');
+		var msg, to, msgData;
+		if (e.keyCode === 13) {
+			msg = $(this).val();
+			to = $(this).parents('.chat-window').data('to');
+			$(this).val('');
 
-				var msg_data = {from: sockets.user_socket.name, to: to, msg: msg};
+			msgData = {from: this.user.name, to: to, msg: msg};
 
-				templates.add_message(msg_data);
+			templates.add_message(msgData);
 
-				sockets.socket.emit('message', msg_data);
+			this.socket.emit('message', msgData);
 
-				return false;
-			}
+			return false;
+		}
 
 		this.closeChat();
 	};
@@ -5299,9 +5307,9 @@ if (this.CanvasRenderingContext2D && !CanvasRenderingContext2D.createImageData) 
 		$(document).on('click', '.chat-close', function(e){
 			e.preventDefault();
 			var to = $(this).parents('.chat-window').data('to');
-			var data = {from: sockets.user_socket.name, to: to};
+			var data = {from: this.user.name, to: to};
 			$('.chat-window[data-to='+to+']').remove();
-			sockets.socket.emit('close chat', data);
+			this.socket.emit('close chat', data);
 		});
 	};
 
@@ -5309,7 +5317,157 @@ if (this.CanvasRenderingContext2D && !CanvasRenderingContext2D.createImageData) 
 
 }());
 
-},{"socket.io-client":4}],10:[function(require,module,exports){
+},{"./templates":10,"socket.io-client":4}],10:[function(require,module,exports){
+(function(){
+	'use strict';
+
+	var templates = {
+
+		add_message: function(data){
+			var objDiv = null;
+
+			if (data.from === sockets.user_socket.name) {
+				$('.chat-window[data-to='+data.to+']').find('.chat-messages').append('<li class="chat-message current-user">' + data.msg + '</li>');
+				objDiv = $('.chat-window[data-to='+data.to+']').find('.chat-messages')[0];
+				objDiv.scrollTop = objDiv.scrollHeight;
+			} else {
+				$('.chat-window[data-to='+data.from+']').find('.chat-messages').append('<li class="chat-message other-user">' + data.msg + '</li>');
+				objDiv = $('.chat-window[data-to='+data.from+']').find('.chat-messages')[0];
+				objDiv.scrollTop = objDiv.scrollHeight;
+			}
+		},
+
+		chat_window: function(to){
+			var chat  = '<div class="chat-window box" data-to="'+to+'">';
+				chat += '	<header class="chat-options">';
+				chat += '		<h1 class="chat-name">' + to + '</h1>';
+				chat += '		<a class="chat-hide">Hide</a>';
+				chat += '		<a class="chat-close">Close</a>';
+				chat += '	</header>';
+				chat += '	<ul class="chat-messages"></ul>';
+				chat += '	<form class="chat-form">';
+				chat += '		<textarea class="chat-send-message"></textarea>';
+				chat += '	</form>';
+				chat += '</div>';
+
+			return chat;
+		},
+
+
+
+		add_chat_window: function(data) {
+			if ($('.chat-request').length < 1) {
+				var request_window = templates.chat_request(data.from);
+				$('#chat-windows').append(request_window);
+			}
+		},
+
+
+
+		refresh_user_list: function(data){
+			var user, the_user, smoke, $active_users, active_users = [], control_id, new_users = [];
+
+			$active_users = $('.user');
+			$active_users.each(function(){
+				active_users.push('#' + $(this).attr('id'));
+			});
+
+			for (user in data) {
+				if (data.hasOwnProperty(user)) {
+					the_user = data[user];
+					new_users.push('#user-' + the_user.name);
+
+					if ($('#user-'+the_user.name).length > 0) {
+						$('#user-'+the_user.name).css({
+							'left' 	: the_user.pos[0],
+							'top' 	: the_user.pos[1]
+						});
+						continue;
+					}
+
+					if (sockets.user_socket.name === the_user.name) {
+						templates.user_list_item(the_user, 'current-user');
+						smoke = new Smoke(the_user.name);
+						smoke.start();
+						$(document).on('click', '#heart', function(e){
+							sockets.socket.emit('smoke shape', {from: sockets.user_socket.name});
+							e.preventDefault();
+							smoke.heart();
+						});
+						$(document).on('click', '#lol', function(e){
+							sockets.socket.emit('smoke shape', {from: sockets.user_socket.name});
+							e.preventDefault();
+							smoke.lol();
+						});
+
+					} else {
+						templates.user_list_item(the_user);
+						sockets.smokers[the_user.name] = new Smoke(the_user.name);
+						sockets.smokers[the_user.name].start();
+					}
+				}
+			}
+
+
+
+			$.each(active_users, function(i){
+				if ($.inArray(active_users[i], new_users) < 0){
+					console.log(active_users[i] + ' does not exist in ' + new_users);
+					$(active_users[i]).remove();
+				}
+			});
+		},
+
+
+		user_list_item: function(user, classes) {
+			if (!classes) {
+				classes = '';
+			}
+			var id = user.name,
+				styles = 'left:' + user.pos[0] + 'px; top:' + user.pos[1]+'px';
+
+			classes = 'user ' + classes;
+
+			var item = '<li id="user-' + id + '" style="' + styles + '" class="' + classes + '">';
+				item += '	<img src="'+ user.avatar +'" />';
+				item += '	<canvas width="90" height="90" class="smoke" id="' + id + '"></canvas>';
+				item += '	<h2>'+ id +'</h2>';
+				item += '</li>';
+
+				$('#user-list').append(item);
+
+			return item;
+		},
+
+		chat_request: function(name){
+			if (!name) {
+				return false;
+			}
+			var request  = '<div class="chat-request" data-from="'+name+'">';
+				request +=		'<p>' + name + ' says hi. do you want to talk?</p>';
+				request +=		'<a href="#" id="yes">Yes</a>';
+				request +=		'<a href="#" id="no">No</a>';
+				request += '</div>';
+
+			return request;
+		},
+
+
+		chat_request_sent: function(){
+			var request  = '<div class="chat-request-sent chat-request">';
+				request +=		'<p>You said hi to this user.</p>';
+				request += '</div>';
+
+			return request;
+		},
+
+	};
+
+	module.exports = templates;
+
+}());
+
+},{}],11:[function(require,module,exports){
 (function(){
 	'use strict';
 

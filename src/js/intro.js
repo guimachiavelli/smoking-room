@@ -16,20 +16,6 @@
 			return;
 		}
 
-
-		this.avatarCreator = new Avatar(
-			$('#webcam'),
-			$('#buffer'),
-			$('#avatar'),
-			466, 350,
-			this.context
-		);
-
-		$('#make-avatar').on('click', $.proxy(this.avatarCreator.makeAvatar, this.avatarCreator));
-		$('#try-again').on('click', $.proxy(this.avatarCreator.tryAgain, this.avatarCreator));
-		$('#ready-go').on('click', $.proxy(this.selectAvatar, this));
-
-
 	};
 
 	Intro.prototype.enter = function() {
@@ -37,6 +23,7 @@
 		$('#welcome').fadeOut(400, function(){
 			$('#setup').fadeIn(400, function(){
 				$('#buffer').removeClass('hidden');
+				self.startAvatarSelection();
 			});
 		});
 	};
@@ -49,10 +36,27 @@
 		);
 	};
 
+	Intro.prototype.startAvatarSelection = function() {
+		this.avatarCreator = new Avatar(
+			$('#webcam'),
+			$('#buffer'),
+			$('#avatar'),
+			466, 350,
+			this.context
+		);
+
+		$('#make-avatar').on('click', $.proxy(this.avatarCreator.makeAvatar, this.avatarCreator));
+		$('#try-again').on('click', $.proxy(this.avatarCreator.tryAgain, this.avatarCreator));
+		$('#ready-go').on('click', $.proxy(this.selectAvatar, this));
+	};
+
 	Intro.prototype.selectAvatar = function() {
 		var data = this.avatarCreator.selectAvatar();
+		if (data === false) {
+			return;
+		}
 		this.exit();
-		this.socket.emit('user enter', data);
+		this.socket.socket.emit('user enter', data);
 	};
 
 

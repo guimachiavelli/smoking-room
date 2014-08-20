@@ -18,6 +18,4 @@
 	setup = new Intro($('#enter'), context, socket);
 
 
-
-
 }());
