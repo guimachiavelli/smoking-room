@@ -3,8 +3,8 @@
 
 	var $ = require('jquery'),
 		face = require('face-detect'),
-		ccv = require('ccv');
-
+		ccv = require('ccv'),
+		utils = require('./utils');
 
 	var Avatar = function($el, $canvas, $avatar, width, height, context) {
 		this.$el = $el;
@@ -20,6 +20,8 @@
 
 		this.$makeButton = $('#make-avatar');
 		this.$tryAgainButton = $('#try-again');
+		this.$readyButton = $('#ready-go');
+
 		this.updateCigarette();
 
 		this.video = this.$el.append('<video>').find('video');
@@ -38,10 +40,6 @@
 		if (this.context === 'mobile') {
 			this.setupFallback();
 		}
-
-		this.$makeButton.on('click', $.proxy(this.makeAvatar, this));
-		this.$tryAgainButton.on('click', $.proxy(this.tryAgain, this));
-
 	};
 
 	Avatar.prototype.updateCigarette = function(cigarette) {
@@ -162,6 +160,32 @@
 	Avatar.prototype.stop = function() {
 		this.stopped = true;
 		this.$streamCanvas.addClass('hidden');
+	};
+
+	Avatar.prototype.selectAvatar = function() {
+		var avatarImage, username, x, y, data;
+
+		avatarImage = this.avatar;
+		username = $('#username').val();
+		x = Math.random() * 1000;
+		y = Math.random() * (window.innerHeight - 420);
+
+		if (!avatar || !username) {
+			window.alert('fill in your username and take a selfie, plz');
+			return false;
+		}
+
+		data = {
+			'avatar' : avatarImage,
+			'username' : utils.escapeHTML(username),
+			'pos' : [x,y]
+		};
+
+		this.stop();
+
+		return data;
+
+
 	};
 
 

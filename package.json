@@ -11,6 +11,7 @@
     "jade": "~1.0.0",
     "jquery": "^2.1.1",
     "socket.io": "~0.9.16",
+    "socket.io-client": "~0.9.16",
     "validator": "^3.2.1"
   },
   "devDependencies": {
