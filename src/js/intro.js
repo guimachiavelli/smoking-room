@@ -59,8 +59,6 @@
 		this.socket.socket.emit('user enter', data);
 	};
 
-
-
 	Intro.prototype.exit = function() {
 		$('#intro').animate(
 			{'bottom': -1000},

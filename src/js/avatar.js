@@ -135,7 +135,7 @@
 			var idata = this.ctx.getImageData(206,0, 260, 350);
 			this.avatarCtx.putImageData(idata, 0, 0);
 			this.avatar = avatar.toDataURL('image/jpeg');
-			this.stop();
+			this.pauseStream();
 
 			this.$avatarCanvas.removeClass('hidden');
 			this.$makeButton.addClass('hidden');
@@ -157,10 +157,16 @@
 		this.playStream();
 	};
 
-	Avatar.prototype.stop = function() {
+	Avatar.prototype.pauseStream = function() {
 		this.stopped = true;
 		this.$streamCanvas.addClass('hidden');
 	};
+
+	Avatar.prototype.stopStream = function() {
+		this.stopped = true;
+		this.$streamCanvas.remove();
+		this.stream.stop();
+	}
 
 	Avatar.prototype.selectAvatar = function() {
 		var avatarImage, username, x, y, data;
@@ -181,8 +187,7 @@
 			'pos' : [x,y]
 		};
 
-		this.stop();
-		this.stream.stop();
+		this.stopStream();
 
 		return data;
 

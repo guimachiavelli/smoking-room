@@ -18,6 +18,6 @@
 	socket = new Socket();
 
 	setup = new Intro($('#enter'), context, socket);
-	room = new Room();
+	room = new Room($('#room'), socket);
 
 }());
