@@ -1,6 +1,8 @@
 (function(){
 	'use strict';
 
+	var Smoke = require('./smoke');
+
 	var templates = {
 
 		add_message: function(data, user){
