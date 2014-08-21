@@ -4,7 +4,7 @@
 	var Smoke = require('./smoke'),
 		Intro = require('./intro'),
 		Socket = require('./sockets'),
-		getContext = require('./getContext'),
+		utils = require('./utils'),
 		$ = require('jquery');
 
 
@@ -12,7 +12,7 @@
 		setup,
 		socket;
 
-	context = getContext();
+	context = utils.getContext();
 	socket = new Socket();
 
 	setup = new Intro($('#enter'), context, socket);

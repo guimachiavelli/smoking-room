@@ -5,7 +5,7 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
 	var Smoke = require('./smoke'),
 		Intro = require('./intro'),
 		Socket = require('./sockets'),
-		getContext = require('./getContext'),
+		utils = require('./utils'),
 		$ = require('jquery');
 
 
@@ -13,7 +13,7 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
 		setup,
 		socket;
 
-	context = getContext();
+	context = utils.getContext();
 	socket = new Socket();
 
 	setup = new Intro($('#enter'), context, socket);
@@ -21,7 +21,7 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
 
 }());
 
-},{"./getContext":7,"./intro":8,"./smoke":9,"./sockets":10,"jquery":undefined}],2:[function(require,module,exports){
+},{"./intro":7,"./smoke":8,"./sockets":9,"./utils":11,"jquery":undefined}],2:[function(require,module,exports){
 (function (global){
 ;__browserify_shim_require__=require;(function browserifyShim(module, exports, require, define, browserify_shim__define__module__export__) {
 if (parallable === undefined) {
@@ -4569,7 +4569,7 @@ if (typeof define === "function" && define.amd) {
 
 }());
 
-},{"./utils":12,"ccv":2,"face-detect":3,"jquery":undefined}],6:[function(require,module,exports){
+},{"./utils":11,"ccv":2,"face-detect":3,"jquery":undefined}],6:[function(require,module,exports){
 // Based on http://www.dgp.toronto.edu/people/stam/reality/Research/pdf/GDC03.pdf
 /**
  * Copyright (c) 2009 Oliver Hunt <http://nerget.com>
@@ -5027,40 +5027,6 @@ module.exports = FluidField;
 (function(){
 	'use strict';
 
-	var context, setupGetUserMedia;
-
-	context = function() {
-		setupGetUserMedia();
-
-		if (window.navigator.getUserMedia) {
-			return 'webrtc';
-		}
-
-        if ('ontouchstart' in document.documentElement) {
-            return 'mobile';
-        }
-
-		return false;
-	};
-
-
-	setupGetUserMedia = function() {
-		window.navigator.getUserMedia = (window.navigator.getUserMedia ||
-										 window.navigator.webkitGetUserMedia ||
-										 window.navigator.mozGetUserMedia ||
-										 window.navigator.msGetUserMedia
-										);
-	};
-
-
-
-	module.exports = context;
-}());
-
-},{}],8:[function(require,module,exports){
-(function(){
-	'use strict';
-
 	var $ = require('jquery'),
 		Avatar = require('./avatar');
 
@@ -5139,7 +5105,7 @@ module.exports = FluidField;
 
 }());
 
-},{"./avatar":5,"jquery":undefined}],9:[function(require,module,exports){
+},{"./avatar":5,"jquery":undefined}],8:[function(require,module,exports){
 (function(){
 	'use strict';
 
@@ -5467,7 +5433,7 @@ module.exports = FluidField;
 
 }());
 
-},{"./fluid":6}],10:[function(require,module,exports){
+},{"./fluid":6}],9:[function(require,module,exports){
 (function(){
 	'use strict';
 
@@ -5647,7 +5613,7 @@ module.exports = FluidField;
 
 }());
 
-},{"./templates":11,"socket.io-client":4}],11:[function(require,module,exports){
+},{"./templates":10,"socket.io-client":4}],10:[function(require,module,exports){
 (function(){
 	'use strict';
 
@@ -5798,9 +5764,18 @@ module.exports = FluidField;
 
 }());
 
-},{"./smoke":9}],12:[function(require,module,exports){
+},{"./smoke":8}],11:[function(require,module,exports){
 (function(){
 	'use strict';
+
+	var setupGetUserMedia = function() {
+		window.navigator.getUserMedia = (window.navigator.getUserMedia ||
+										 window.navigator.webkitGetUserMedia ||
+										 window.navigator.mozGetUserMedia ||
+										 window.navigator.msGetUserMedia
+										);
+	};
+
 
 	var utils = {
 
@@ -5813,8 +5788,21 @@ module.exports = FluidField;
 			pre.appendChild(text);
 
 			return pre.innerHTML;
-		}
+		},
 
+		getContext: function() {
+			setupGetUserMedia();
+
+			if (window.navigator.getUserMedia) {
+				return 'webrtc';
+			}
+
+			if ('ontouchstart' in document.documentElement) {
+				return 'mobile';
+			}
+
+			return false;
+		}
 
 	};
 
