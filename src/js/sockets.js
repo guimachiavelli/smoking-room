@@ -33,7 +33,6 @@
 	};
 
 	Sockets.prototype.onNewName = function(data){
-		console.log(this);
 		this.user.name = data;
 	};
 

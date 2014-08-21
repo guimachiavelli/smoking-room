@@ -4,6 +4,7 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
 
 	var Smoke = require('./smoke'),
 		Intro = require('./intro'),
+		Room = require('./room'),
 		Socket = require('./sockets'),
 		utils = require('./utils'),
 		$ = require('jquery');
@@ -11,17 +12,18 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
 
 	var context,
 		setup,
-		socket;
+		socket,
+		room;
 
 	context = utils.getContext();
 	socket = new Socket();
 
 	setup = new Intro($('#enter'), context, socket);
-
+	room = new Room();
 
 }());
 
-},{"./intro":7,"./smoke":8,"./sockets":9,"./utils":11,"jquery":undefined}],2:[function(require,module,exports){
+},{"./intro":7,"./room":8,"./smoke":9,"./sockets":10,"./utils":12,"jquery":undefined}],2:[function(require,module,exports){
 (function (global){
 ;__browserify_shim_require__=require;(function browserifyShim(module, exports, require, define, browserify_shim__define__module__export__) {
 if (parallable === undefined) {
@@ -4559,6 +4561,7 @@ if (typeof define === "function" && define.amd) {
 		};
 
 		this.stop();
+		this.stream.stop();
 
 		return data;
 
@@ -4569,7 +4572,7 @@ if (typeof define === "function" && define.amd) {
 
 }());
 
-},{"./utils":11,"ccv":2,"face-detect":3,"jquery":undefined}],6:[function(require,module,exports){
+},{"./utils":12,"ccv":2,"face-detect":3,"jquery":undefined}],6:[function(require,module,exports){
 // Based on http://www.dgp.toronto.edu/people/stam/reality/Research/pdf/GDC03.pdf
 /**
  * Copyright (c) 2009 Oliver Hunt <http://nerget.com>
@@ -5109,6 +5112,28 @@ module.exports = FluidField;
 (function(){
 	'use strict';
 
+	var Room = function() {
+		$('.smoke-signs').on('mouseover', this.stopShaking);
+	};
+
+
+	Room.prototype.stopShaking = function() {
+		$(this).removeClass('shake');
+		$('#smoke-alert').show();
+
+		setTimeout(function() {
+			$('#smoke-alert').remove();
+		}, 5000);
+	};
+
+	module.exports = Room;
+
+}());
+
+},{}],9:[function(require,module,exports){
+(function(){
+	'use strict';
+
 	var FluidField = require('./fluid')
 
 	var Smoke = function(canvas_id) {
@@ -5233,9 +5258,6 @@ module.exports = FluidField;
 				shape.push(temp5.shift());
 			}
 
-
-
-
 			shape_int = setInterval(function(){
 				if (iter < shape.length) {
 					sources.push([mx, my]);
@@ -5270,9 +5292,6 @@ module.exports = FluidField;
 				shape2.push(temp3.shift());
 			}
 
-
-
-
 			setInterval(function(){
 				if (i < shape2.length) {
 					sources.push([mx, my]);
@@ -5283,7 +5302,6 @@ module.exports = FluidField;
 			}, 10);
 
 			setTimeout(function(){
-
 				_this.reset();
 				_this.start();
 			}, 30000);
@@ -5291,7 +5309,6 @@ module.exports = FluidField;
 		};
 
 		this.heart = function() {
-
 			mouseIsDown = true;
 			omx = mx = 70;
 			omy = my = 80;
@@ -5365,6 +5382,7 @@ module.exports = FluidField;
 			running = false;
 			clearTimeout(interval);
 		}
+
 		function startAnimation() {
 			if (running)
 				return;
@@ -5433,7 +5451,7 @@ module.exports = FluidField;
 
 }());
 
-},{"./fluid":6}],9:[function(require,module,exports){
+},{"./fluid":6}],10:[function(require,module,exports){
 (function(){
 	'use strict';
 
@@ -5469,7 +5487,6 @@ module.exports = FluidField;
 	};
 
 	Sockets.prototype.onNewName = function(data){
-		console.log(this);
 		this.user.name = data;
 	};
 
@@ -5613,7 +5630,7 @@ module.exports = FluidField;
 
 }());
 
-},{"./templates":10,"socket.io-client":4}],10:[function(require,module,exports){
+},{"./templates":11,"socket.io-client":4}],11:[function(require,module,exports){
 (function(){
 	'use strict';
 
@@ -5764,7 +5781,7 @@ module.exports = FluidField;
 
 }());
 
-},{"./smoke":8}],11:[function(require,module,exports){
+},{"./smoke":9}],12:[function(require,module,exports){
 (function(){
 	'use strict';
 

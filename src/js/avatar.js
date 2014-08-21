@@ -182,6 +182,7 @@
 		};
 
 		this.stop();
+		this.stream.stop();
 
 		return data;
 

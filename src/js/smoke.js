@@ -125,9 +125,6 @@
 				shape.push(temp5.shift());
 			}
 
-
-
-
 			shape_int = setInterval(function(){
 				if (iter < shape.length) {
 					sources.push([mx, my]);
@@ -162,9 +159,6 @@
 				shape2.push(temp3.shift());
 			}
 
-
-
-
 			setInterval(function(){
 				if (i < shape2.length) {
 					sources.push([mx, my]);
@@ -175,7 +169,6 @@
 			}, 10);
 
 			setTimeout(function(){
-
 				_this.reset();
 				_this.start();
 			}, 30000);
@@ -183,7 +176,6 @@
 		};
 
 		this.heart = function() {
-
 			mouseIsDown = true;
 			omx = mx = 70;
 			omy = my = 80;
@@ -257,6 +249,7 @@
 			running = false;
 			clearTimeout(interval);
 		}
+
 		function startAnimation() {
 			if (running)
 				return;
