@@ -18,7 +18,7 @@
 		$(document).on('click', '.user', this.onSendChatRequest);
 
 		this.socket.on('new name', $.proxy(this.onNewName, this));
-		this.socket.on('user list update', this.onUserListUpdate);
+		this.socket.on('user list update', $.proxy(this.onUserListUpdate, this));
 		this.socket.on('incoming chat request', this.onIncomingChatRequest);
 		this.socket.on('chat request accepted', this.onChatRequestAccepted);
 		this.socket.on('chat request refused', this.onChatRequestRefused);
@@ -29,7 +29,7 @@
 	};
 
 	Sockets.prototype.onUserListUpdate = function(data){
-		templates.refresh_user_list(data);
+		templates.refresh_user_list(data, this.user, this.smokers);
 	};
 
 	Sockets.prototype.onNewName = function(data){

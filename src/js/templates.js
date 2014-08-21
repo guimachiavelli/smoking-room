@@ -3,10 +3,10 @@
 
 	var templates = {
 
-		add_message: function(data){
+		add_message: function(data, user){
 			var objDiv = null;
 
-			if (data.from === sockets.user_socket.name) {
+			if (data.from === user.name) {
 				$('.chat-window[data-to='+data.to+']').find('.chat-messages').append('<li class="chat-message current-user">' + data.msg + '</li>');
 				objDiv = $('.chat-window[data-to='+data.to+']').find('.chat-messages')[0];
 				objDiv.scrollTop = objDiv.scrollHeight;
@@ -44,7 +44,7 @@
 
 
 
-		refresh_user_list: function(data){
+		refresh_user_list: function(data, user, smokers){
 			var user, the_user, smoke, $active_users, active_users = [], control_id, new_users = [];
 
 			$active_users = $('.user');
@@ -65,25 +65,24 @@
 						continue;
 					}
 
-					if (sockets.user_socket.name === the_user.name) {
+					if (user.name === the_user.name) {
 						templates.user_list_item(the_user, 'current-user');
 						smoke = new Smoke(the_user.name);
 						smoke.start();
 						$(document).on('click', '#heart', function(e){
-							sockets.socket.emit('smoke shape', {from: sockets.user_socket.name});
+							//sockets.socket.emit('smoke shape', {from: user.name});
 							e.preventDefault();
 							smoke.heart();
 						});
 						$(document).on('click', '#lol', function(e){
-							sockets.socket.emit('smoke shape', {from: sockets.user_socket.name});
+							//sockets.socket.emit('smoke shape', {from: user.name});
 							e.preventDefault();
 							smoke.lol();
 						});
-
 					} else {
 						templates.user_list_item(the_user);
-						sockets.smokers[the_user.name] = new Smoke(the_user.name);
-						sockets.smokers[the_user.name].start();
+						smokers[the_user.name] = new Smoke(the_user.name);
+						smokers[the_user.name].start();
 					}
 				}
 			}
