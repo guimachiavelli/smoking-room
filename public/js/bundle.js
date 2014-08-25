@@ -5525,19 +5525,19 @@ module.exports = FluidField;
 		};
 		this.smokers = {};
 
-		$('#yes').on('click', this.onAcceptRequest);
-		$('#no').on('click', this.onRefuseRequest);
-		$('.chat-send-message').on('keyup', this.onSendMessage);
-		$(document).on('click', '.user', this.onSendChatRequest);
+		$(document).on('click', '#yes', $.proxy(this.onAcceptRequest, this));
+		$(document).on('click', '#no', $.proxy(this.onRefuseRequest), this);
+		$(document).on('keyup', '.chat-send-message', $.proxy(this.onSendMessage, this));
+		$(document).on('click', '.user', $.proxy(this.onSendChatRequest,this));
 
 		this.socket.on('new name', $.proxy(this.onNewName, this));
 		this.socket.on('user list update', $.proxy(this.onUserListUpdate, this));
-		this.socket.on('incoming chat request', this.onIncomingChatRequest);
-		this.socket.on('chat request accepted', this.onChatRequestAccepted);
-		this.socket.on('chat request refused', this.onChatRequestRefused);
-		this.socket.on('message', this.onMessage);
-		this.socket.on('close chat', this.onChatClose);
-		this.socket.on('smoke shape', this.onSmokeShape);
+		this.socket.on('incoming chat request', $.proxy(this.onIncomingChatRequest, this));
+		this.socket.on('chat request accepted', $.proxy(this.startChat, this));
+		this.socket.on('chat request refused', $.proxy(this.onChatRequestRefused, this));
+		this.socket.on('message', $.proxy(this.onMessage, this));
+		this.socket.on('close chat', $.proxy(this.onChatClose, this));
+		this.socket.on('smoke shape', $.proxy(this.onSmokeShape, this));
 
 	};
 
@@ -5562,7 +5562,7 @@ module.exports = FluidField;
 			from: data.from,
 			to: data.to,
 			msg: data.msg
-		});
+		}, this.user);
 	};
 
 	Sockets.prototype.onChatClose = function(to){
@@ -5584,10 +5584,12 @@ module.exports = FluidField;
 		}, 20000);
 	};
 
-	Sockets.prototype.onSendChatRequest = function(data) {
+	Sockets.prototype.onSendChatRequest = function(e) {
 		if ($('.chat-window').length > 3 || $(this).hasClass('current-user')) { return; }
 		var to, request;
-		to = $(this).attr('id').substr(5);
+
+		//to = $(e.target).attr('id').substr(5);
+		to = $(e.target).attr('id');
 
 		this.sendChatRequest(to, this.user.name);
 
@@ -5602,13 +5604,14 @@ module.exports = FluidField;
 
 	Sockets.prototype.sendChatRequest = function(to, from) {
 		var data = {'to': to, 'from': from};
+		console.log(data);
 		this.socket.emit('send chat request', data);
 	};
 
 	Sockets.prototype.onAcceptRequest = function(e) {
 		e.preventDefault();
 
-		var to = $(this).parents('.chat-request').data('from');
+		var to = $(e.target).parents('.chat-request').data('from');
 		$('.chat-request').remove();
 		this.startChat(to);
 		this.acceptChatRequest(to, this.user.name);
@@ -5618,7 +5621,7 @@ module.exports = FluidField;
 		e.preventDefault();
 		$('.chat-request').remove();
 		this.refuseChatRequest(
-			$(this).parents('.chat-request').data('from'),
+			$(e.target).parents('.chat-request').data('from'),
 			this.user.name
 		);
 	};
@@ -5659,13 +5662,13 @@ module.exports = FluidField;
 	Sockets.prototype.onSendMessage = function(e) {
 		var msg, to, msgData;
 		if (e.keyCode === 13) {
-			msg = $(this).val();
-			to = $(this).parents('.chat-window').data('to');
-			$(this).val('');
+			msg = $(e.target).val();
+			to = $(e.target).parents('.chat-window').data('to');
+			$(e.target).val('');
 
 			msgData = {from: this.user.name, to: to, msg: msg};
 
-			templates.add_message(msgData);
+			templates.add_message(msgData, this.user);
 
 			this.socket.emit('message', msgData);
 
