@@ -29,7 +29,7 @@
 	};
 
 	Sockets.prototype.onUserListUpdate = function(data){
-		templates.refresh_user_list(data, this.user, this.smokers);
+		templates.refresh_user_list(data, this);
 	};
 
 	Sockets.prototype.onNewName = function(data){
@@ -65,9 +65,10 @@
 	};
 
 	Sockets.prototype.onSmokeShape = function(data){
+		var self = this;
 		this.smokers[data.from].heart();
 		setTimeout(function() {
-			sockets.smokers[data.from].reset();
+			self.sockets.smokers[data.from].reset();
 		}, 20000);
 	};
 
@@ -91,7 +92,6 @@
 
 	Sockets.prototype.sendChatRequest = function(to, from) {
 		var data = {'to': to, 'from': from};
-		console.log(data);
 		this.socket.emit('send chat request', data);
 	};
 
@@ -124,7 +124,6 @@
 	};
 
 	Sockets.prototype.startChat = function(to) {
-
 		if ($('.chat-window').length > 3) {
 			return;
 		}

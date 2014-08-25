@@ -5542,7 +5542,7 @@ module.exports = FluidField;
 	};
 
 	Sockets.prototype.onUserListUpdate = function(data){
-		templates.refresh_user_list(data, this.user, this.smokers);
+		templates.refresh_user_list(data, this);
 	};
 
 	Sockets.prototype.onNewName = function(data){
@@ -5578,9 +5578,10 @@ module.exports = FluidField;
 	};
 
 	Sockets.prototype.onSmokeShape = function(data){
+		var self = this;
 		this.smokers[data.from].heart();
 		setTimeout(function() {
-			sockets.smokers[data.from].reset();
+			self.sockets.smokers[data.from].reset();
 		}, 20000);
 	};
 
@@ -5604,7 +5605,6 @@ module.exports = FluidField;
 
 	Sockets.prototype.sendChatRequest = function(to, from) {
 		var data = {'to': to, 'from': from};
-		console.log(data);
 		this.socket.emit('send chat request', data);
 	};
 
@@ -5637,7 +5637,6 @@ module.exports = FluidField;
 	};
 
 	Sockets.prototype.startChat = function(to) {
-
 		if ($('.chat-window').length > 3) {
 			return;
 		}
@@ -5741,8 +5740,12 @@ module.exports = FluidField;
 
 
 
-		refresh_user_list: function(data, user, smokers){
-			var user, the_user, smoke, $active_users, active_users = [], control_id, new_users = [];
+		refresh_user_list: function(data, sockets){
+			var user, the_user, smoke,
+				currentUser = sockets.user,
+				smokers = sockets.smokers,
+				$active_users, active_users = [],
+				control_id, new_users = [];
 
 			$active_users = $('.user');
 			$active_users.each(function(){
@@ -5762,17 +5765,19 @@ module.exports = FluidField;
 						continue;
 					}
 
-					if (user.name === the_user.name) {
+					if (currentUser.name === the_user.name) {
 						templates.user_list_item(the_user, 'current-user');
 						smoke = new Smoke(the_user.name);
 						smoke.start();
 						$(document).on('click', '#heart', function(e){
-							//sockets.socket.emit('smoke shape', {from: user.name});
+							console.log(the_user);
+							console.log(user);
+							sockets.socket.emit('smoke shape', {from: currentUser.name});
 							e.preventDefault();
 							smoke.heart();
 						});
 						$(document).on('click', '#lol', function(e){
-							//sockets.socket.emit('smoke shape', {from: user.name});
+							sockets.socket.emit('smoke shape', {from: currentUser.name});
 							e.preventDefault();
 							smoke.lol();
 						});
