@@ -13,9 +13,9 @@
 		this.smokers = {};
 
 		$(document).on('click', '#yes', $.proxy(this.onAcceptRequest, this));
-		$(document).on('click', '#no', $.proxy(this.onRefuseRequest), this);
+		$(document).on('click', '#no', $.proxy(this.onRefuseRequest, this));
 		$(document).on('keyup', '.chat-send-message', $.proxy(this.onSendMessage, this));
-		$(document).on('click', '.user', $.proxy(this.onSendChatRequest,this));
+		$(document).on('click', '.user', $.proxy(this.onSendChatRequest, this));
 
 		this.socket.on('new name', $.proxy(this.onNewName, this));
 		this.socket.on('user list update', $.proxy(this.onUserListUpdate, this));
@@ -73,7 +73,7 @@
 	};
 
 	Sockets.prototype.onSendChatRequest = function(e) {
-		if ($('.chat-window').length > 3 || $(this).hasClass('current-user')) { return; }
+		if ($('.chat-window').length > 3 || $(e.target).closest('.user').hasClass('current-user')) { return; }
 		var to, request;
 
 		//to = $(e.target).attr('id').substr(5);
@@ -141,7 +141,6 @@
 	Sockets.prototype.refuseChatRequest = function(to, from) {
 		var data = {'to':to, 'from': from };
 		this.socket.emit('refuse chat request', data);
-		//console.log('refuse chat request sent to ' + data.to);
 	};
 
 
