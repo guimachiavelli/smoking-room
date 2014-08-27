@@ -16,6 +16,7 @@
 		$(document).on('click', '#no', $.proxy(this.onRefuseRequest, this));
 		$(document).on('keyup', '.chat-send-message', $.proxy(this.onSendMessage, this));
 		$(document).on('click', '.user', $.proxy(this.onSendChatRequest, this));
+		$(document).on('click', '.chat-close', $.proxy(this.closeChat, this));
 
 		this.socket.on('new name', $.proxy(this.onNewName, this));
 		this.socket.on('user list update', $.proxy(this.onUserListUpdate, this));
@@ -160,17 +161,14 @@
 			return false;
 		}
 
-		this.closeChat();
 	};
 
-	Sockets.prototype.closeChat = function() {
-		$(document).on('click', '.chat-close', function(e){
-			e.preventDefault();
-			var to = $(this).parents('.chat-window').data('to');
-			var data = {from: this.user.name, to: to};
-			$('.chat-window[data-to='+to+']').remove();
-			this.socket.emit('close chat', data);
-		});
+	Sockets.prototype.closeChat = function(e) {
+		e.preventDefault();
+		var to = $(e.target).parents('.chat-window').data('to');
+		var data = {from: this.user.name, to: to};
+		$('.chat-window[data-to='+to+']').remove();
+		this.socket.emit('close chat', data);
 	};
 
 	module.exports = Sockets;

@@ -76,8 +76,6 @@
 						smoke = new Smoke(the_user.name);
 						smoke.start();
 						$(document).on('click', '#heart', function(e){
-							console.log(the_user);
-							console.log(user);
 							sockets.socket.emit('smoke shape', {from: currentUser.name});
 							e.preventDefault();
 							smoke.heart();
