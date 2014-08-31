@@ -31,6 +31,7 @@
 			}
 
 			if ('ontouchstart' in document.documentElement) {
+				$('body').addClass('mobile');
 				return 'mobile';
 			}
 

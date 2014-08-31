@@ -64,9 +64,12 @@
 			{'bottom': -1000},
 			1500,
 			function(){
+				$('#intro').remove();
 				$('#room').removeClass('blur');
-				$('#intro').height(0).width(0);
 				$('#buffer').remove();
+				if ($('body').hasClass('mobile')) {
+					return;
+				}
 				$('.smoke-signs').addClass('shake');
 			}
 		);

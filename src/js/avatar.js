@@ -66,7 +66,7 @@
 				position: 'absolute',
 				bottom: 15,
 				'z-index': 10,
-				height: 40,
+				height: 50,
 				opacity: 0
 
 			})
@@ -85,6 +85,7 @@
 					self.ctx.drawImage(image, 0, -466, 466, 350);
 					self.ctx.restore();
 					self.drawCigarette(true);
+					self.makeAvatar();
 				};
 
 				reader.onloadend = function() {
@@ -94,8 +95,6 @@
 				reader.readAsDataURL(file);
 
 			});
-		;
-
 
 	};
 
@@ -153,7 +152,6 @@
 
 			this.sc = comp[0];
 		}
-		console.log(this.sc);
 
 		if (this.sc) {
 			this.ctx.save();
@@ -181,6 +179,7 @@
 			this.avatar = avatar.toDataURL('image/jpeg');
 			this.pauseStream();
 
+			$('#fallbackInput').hide();
 			this.$avatarCanvas.removeClass('hidden');
 			this.$makeButton.addClass('hidden');
 			this.$makeButton.siblings('.hidden').removeClass('hidden');
@@ -191,9 +190,10 @@
 		this.$avatarCanvas.addClass('hidden');
 		this.$tryAgainButton.addClass('hidden').siblings().addClass('hidden');
 		this.$makeButton.removeClass('hidden');
+		$('#fallbackInput').show();
 		this.startAgain();
 		return false;
-	}
+	};
 
 	Avatar.prototype.startAgain = function() {
 		this.stopped = false;
@@ -208,9 +208,12 @@
 
 	Avatar.prototype.stopStream = function() {
 		this.stopped = true;
-		this.$streamCanvas.remove();
+		//this.$streamCanvas.remove();
+		if (!this.stream) {
+			return;
+		}
 		this.stream.stop();
-	}
+	};
 
 	Avatar.prototype.selectAvatar = function() {
 		var avatarImage, username, x, y, data;

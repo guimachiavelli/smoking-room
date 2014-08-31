@@ -36,7 +36,7 @@
 	});
 
 	gulp.task('develop', function() {
-		gulp.watch(['src/js/*.js'], ['browserify']);
+		gulp.watch(['src/js/*.js', 'src/sass/*.scss', 'src/sass/*/*.scss'], ['browserify', 'compass']);
 	});
 
 }());

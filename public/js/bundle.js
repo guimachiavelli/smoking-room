@@ -4445,7 +4445,7 @@ if (typeof define === "function" && define.amd) {
 				position: 'absolute',
 				bottom: 15,
 				'z-index': 10,
-				height: 40,
+				height: 50,
 				opacity: 0
 
 			})
@@ -4464,6 +4464,7 @@ if (typeof define === "function" && define.amd) {
 					self.ctx.drawImage(image, 0, -466, 466, 350);
 					self.ctx.restore();
 					self.drawCigarette(true);
+					self.makeAvatar();
 				};
 
 				reader.onloadend = function() {
@@ -4473,8 +4474,6 @@ if (typeof define === "function" && define.amd) {
 				reader.readAsDataURL(file);
 
 			});
-		;
-
 
 	};
 
@@ -4532,7 +4531,6 @@ if (typeof define === "function" && define.amd) {
 
 			this.sc = comp[0];
 		}
-		console.log(this.sc);
 
 		if (this.sc) {
 			this.ctx.save();
@@ -4560,6 +4558,7 @@ if (typeof define === "function" && define.amd) {
 			this.avatar = avatar.toDataURL('image/jpeg');
 			this.pauseStream();
 
+			$('#fallbackInput').hide();
 			this.$avatarCanvas.removeClass('hidden');
 			this.$makeButton.addClass('hidden');
 			this.$makeButton.siblings('.hidden').removeClass('hidden');
@@ -4570,9 +4569,10 @@ if (typeof define === "function" && define.amd) {
 		this.$avatarCanvas.addClass('hidden');
 		this.$tryAgainButton.addClass('hidden').siblings().addClass('hidden');
 		this.$makeButton.removeClass('hidden');
+		$('#fallbackInput').show();
 		this.startAgain();
 		return false;
-	}
+	};
 
 	Avatar.prototype.startAgain = function() {
 		this.stopped = false;
@@ -4587,9 +4587,12 @@ if (typeof define === "function" && define.amd) {
 
 	Avatar.prototype.stopStream = function() {
 		this.stopped = true;
-		this.$streamCanvas.remove();
+		//this.$streamCanvas.remove();
+		if (!this.stream) {
+			return;
+		}
 		this.stream.stop();
-	}
+	};
 
 	Avatar.prototype.selectAvatar = function() {
 		var avatarImage, username, x, y, data;
@@ -5142,9 +5145,12 @@ module.exports = FluidField;
 			{'bottom': -1000},
 			1500,
 			function(){
+				$('#intro').remove();
 				$('#room').removeClass('blur');
-				$('#intro').height(0).width(0);
 				$('#buffer').remove();
+				if ($('body').hasClass('mobile')) {
+					return;
+				}
 				$('.smoke-signs').addClass('shake');
 			}
 		);
@@ -5921,6 +5927,7 @@ module.exports = FluidField;
 			}
 
 			if ('ontouchstart' in document.documentElement) {
+				$('body').addClass('mobile');
 				return 'mobile';
 			}
 
