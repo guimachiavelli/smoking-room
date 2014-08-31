@@ -4438,6 +4438,43 @@ if (typeof define === "function" && define.amd) {
 	};
 
 	Avatar.prototype.setupFallback = function(stream) {
+		var self = this;
+		$('#buffer-container')
+			.append('<input id="fallbackInput" type="file" name="image" accept="image/*" capture>')
+		$('#fallbackInput').css({
+				position: 'absolute',
+				bottom: 15,
+				'z-index': 10,
+				height: 40,
+				opacity: 0
+
+			})
+			.on('change', function(e) {
+				var file, reader, image;
+
+				file = e.target.files[e.target.files.length - 1];
+
+				reader = new FileReader();
+				image = new Image();
+
+				image.onload = function() {
+					self.ctx.save();
+					self.ctx.clearRect(0,0, 466, 350);
+					self.ctx.rotate(90 * Math.PI / 180);
+					self.ctx.drawImage(image, 0, -466, 466, 350);
+					self.ctx.restore();
+					self.drawCigarette(true);
+				};
+
+				reader.onloadend = function() {
+					image.src = reader.result;
+				};
+
+				reader.readAsDataURL(file);
+
+			});
+		;
+
 
 	};
 
@@ -4475,14 +4512,16 @@ if (typeof define === "function" && define.amd) {
 		this.drawCigarette();
 	};
 
-	Avatar.prototype.drawCigarette = function() {
-		this.ctx.drawImage(this.video[0], 0, 0);
+	Avatar.prototype.drawCigarette = function(file) {
+		if (!file) {
+			this.ctx.drawImage(this.video[0], 0, 0);
+		}
 
 		if(!this.timestamp) {
 			this.timestamp = Date.now();
 		}
 
-		if(Date.now() - this.timestamp > 1000) {
+		if(Date.now() - this.timestamp > 1000 || file === true) {
 			this.timestamp = Date.now();
 			var comp = ccv.detect_objects({
 				'canvas': this.$streamCanvas[0],
@@ -4493,13 +4532,16 @@ if (typeof define === "function" && define.amd) {
 
 			this.sc = comp[0];
 		}
+		console.log(this.sc);
 
 		if (this.sc) {
+			this.ctx.save();
 			this.ctx.drawImage(this.cigarette,
 							   this.sc.x + this.sc.width/7,
 							   this.sc.y + this.sc.height/1.1,
 							   this.sc.width/1.45,
 							   this.sc.height/1.3);
+			this.ctx.restore();
 			this.hasFace = true;
 		} else {
 			this.hasFace = false;
@@ -4508,7 +4550,9 @@ if (typeof define === "function" && define.amd) {
 	};
 
 	Avatar.prototype.makeAvatar = function(e) {
-		e.preventDefault();
+		if (e) {
+			e.preventDefault();
+		}
 
 		if (this.hasFace === true) {
 			var idata = this.ctx.getImageData(206,0, 260, 350);
@@ -5657,23 +5701,23 @@ module.exports = FluidField;
 		this.socket.emit('refuse chat request', data);
 	};
 
-
 	Sockets.prototype.onSendMessage = function(e) {
 		var msg, to, msgData;
-		if (e.keyCode === 13) {
-			msg = $(e.target).val();
-			to = $(e.target).parents('.chat-window').data('to');
-			$(e.target).val('');
-
-			msgData = {from: this.user.name, to: to, msg: msg};
-
-			templates.add_message(msgData, this.user);
-
-			this.socket.emit('message', msgData);
-
+		if (e.keyCode !== 13) {
 			return false;
 		}
 
+		msg = $(e.target).val();
+		to = $(e.target).parents('.chat-window').data('to');
+		$(e.target).val('');
+
+		msgData = {from: this.user.name, to: to, msg: msg};
+
+		templates.add_message(msgData, this.user);
+
+		this.socket.emit('message', msgData);
+
+		return false;
 	};
 
 	Sockets.prototype.closeChat = function(e) {

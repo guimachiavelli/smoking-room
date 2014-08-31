@@ -144,23 +144,23 @@
 		this.socket.emit('refuse chat request', data);
 	};
 
-
 	Sockets.prototype.onSendMessage = function(e) {
 		var msg, to, msgData;
-		if (e.keyCode === 13) {
-			msg = $(e.target).val();
-			to = $(e.target).parents('.chat-window').data('to');
-			$(e.target).val('');
-
-			msgData = {from: this.user.name, to: to, msg: msg};
-
-			templates.add_message(msgData, this.user);
-
-			this.socket.emit('message', msgData);
-
+		if (e.keyCode !== 13) {
 			return false;
 		}
 
+		msg = $(e.target).val();
+		to = $(e.target).parents('.chat-window').data('to');
+		$(e.target).val('');
+
+		msgData = {from: this.user.name, to: to, msg: msg};
+
+		templates.add_message(msgData, this.user);
+
+		this.socket.emit('message', msgData);
+
+		return false;
 	};
 
 	Sockets.prototype.closeChat = function(e) {

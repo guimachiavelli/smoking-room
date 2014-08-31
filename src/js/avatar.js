@@ -59,6 +59,43 @@
 	};
 
 	Avatar.prototype.setupFallback = function(stream) {
+		var self = this;
+		$('#buffer-container')
+			.append('<input id="fallbackInput" type="file" name="image" accept="image/*" capture>')
+		$('#fallbackInput').css({
+				position: 'absolute',
+				bottom: 15,
+				'z-index': 10,
+				height: 40,
+				opacity: 0
+
+			})
+			.on('change', function(e) {
+				var file, reader, image;
+
+				file = e.target.files[e.target.files.length - 1];
+
+				reader = new FileReader();
+				image = new Image();
+
+				image.onload = function() {
+					self.ctx.save();
+					self.ctx.clearRect(0,0, 466, 350);
+					self.ctx.rotate(90 * Math.PI / 180);
+					self.ctx.drawImage(image, 0, -466, 466, 350);
+					self.ctx.restore();
+					self.drawCigarette(true);
+				};
+
+				reader.onloadend = function() {
+					image.src = reader.result;
+				};
+
+				reader.readAsDataURL(file);
+
+			});
+		;
+
 
 	};
 
@@ -96,14 +133,16 @@
 		this.drawCigarette();
 	};
 
-	Avatar.prototype.drawCigarette = function() {
-		this.ctx.drawImage(this.video[0], 0, 0);
+	Avatar.prototype.drawCigarette = function(file) {
+		if (!file) {
+			this.ctx.drawImage(this.video[0], 0, 0);
+		}
 
 		if(!this.timestamp) {
 			this.timestamp = Date.now();
 		}
 
-		if(Date.now() - this.timestamp > 1000) {
+		if(Date.now() - this.timestamp > 1000 || file === true) {
 			this.timestamp = Date.now();
 			var comp = ccv.detect_objects({
 				'canvas': this.$streamCanvas[0],
@@ -114,13 +153,16 @@
 
 			this.sc = comp[0];
 		}
+		console.log(this.sc);
 
 		if (this.sc) {
+			this.ctx.save();
 			this.ctx.drawImage(this.cigarette,
 							   this.sc.x + this.sc.width/7,
 							   this.sc.y + this.sc.height/1.1,
 							   this.sc.width/1.45,
 							   this.sc.height/1.3);
+			this.ctx.restore();
 			this.hasFace = true;
 		} else {
 			this.hasFace = false;
@@ -129,7 +171,9 @@
 	};
 
 	Avatar.prototype.makeAvatar = function(e) {
-		e.preventDefault();
+		if (e) {
+			e.preventDefault();
+		}
 
 		if (this.hasFace === true) {
 			var idata = this.ctx.getImageData(206,0, 260, 350);
