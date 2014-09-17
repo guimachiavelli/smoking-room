@@ -35,9 +35,6 @@
 	  "ccv" : "ccv",
 	  "face-detect" : "cascade"
   },
-  "scripts" : {
-	"install" : "napa"
-  },
   "napa" : {
 	  "ccv" : "https://raw.githubusercontent.com/liuliu/ccv/unstable/js/ccv.js",
 	  "face-detect" : "https://raw.githubusercontent.com/liuliu/ccv/unstable/js/face.js"
