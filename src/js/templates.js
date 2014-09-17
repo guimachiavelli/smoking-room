@@ -1,7 +1,8 @@
 (function(){
 	'use strict';
 
-	var Smoke = require('./smoke');
+	var $ = require('jquery'),
+        Smoke = require('./smoke');
 
 	var templates = {
 

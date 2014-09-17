@@ -186,16 +186,19 @@ input, textarea {
 @-webkit-keyframes slidetounlock {
   0% {
     background-position: -100px 0; }
+
   100% {
     background-position: 350px 0; } }
 @-moz-keyframes slidetounlock {
   0% {
     background-position: -100px 0; }
+
   100% {
     background-position: 350px 0; } }
 @keyframes slidetounlock {
   0% {
     background-position: -100px 0; }
+
   100% {
     background-position: 350px 0; } }
 @-webkit-keyframes shake {
@@ -204,11 +207,13 @@ input, textarea {
     -ms-transform: translate(3px, 2px);
     -webkit-transform: translate(3px, 2px);
     transform: translate(3px, 2px); }
+
   50% {
     -moz-transform: translate(-3px, -2px);
     -ms-transform: translate(-3px, -2px);
     -webkit-transform: translate(-3px, -2px);
     transform: translate(-3px, -2px); }
+
   100% {
     -moz-transform: translate(0, 5px);
     -ms-transform: translate(0, 5px);
@@ -220,11 +225,13 @@ input, textarea {
     -ms-transform: translate(3px, 2px);
     -webkit-transform: translate(3px, 2px);
     transform: translate(3px, 2px); }
+
   50% {
     -moz-transform: translate(-3px, -2px);
     -ms-transform: translate(-3px, -2px);
     -webkit-transform: translate(-3px, -2px);
     transform: translate(-3px, -2px); }
+
   100% {
     -moz-transform: translate(0, 5px);
     -ms-transform: translate(0, 5px);
@@ -236,11 +243,13 @@ input, textarea {
     -ms-transform: translate(3px, 2px);
     -webkit-transform: translate(3px, 2px);
     transform: translate(3px, 2px); }
+
   50% {
     -moz-transform: translate(-3px, -2px);
     -ms-transform: translate(-3px, -2px);
     -webkit-transform: translate(-3px, -2px);
     transform: translate(-3px, -2px); }
+
   100% {
     -moz-transform: translate(0, 5px);
     -ms-transform: translate(0, 5px);
@@ -373,13 +382,13 @@ input, textarea {
     line-height: 1.5em;
     text-align: center; }
     #set-username input:focus.placeholder {
-      color: #fff; }
+      color: white; }
     #set-username input:focus:-moz-placeholder {
-      color: #fff; }
+      color: white; }
     #set-username input:focus::-webkit-input-placeholder {
-      color: #fff; }
+      color: white; }
     #set-username input:focus:-ms-input-placeholder {
-      color: #fff; }
+      color: white; }
 
 #set-cig {
   margin-top: 1.66667em;
@@ -730,3 +739,5 @@ html {
     #credits #collabs.show {
       margin-top: 1.25em;
       height: 80px; }
+
+/*# sourceMappingURL=smoking-main.css.map */

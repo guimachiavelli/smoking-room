@@ -2,6 +2,7 @@
 	'use strict';
 
 	var io = require('socket.io-client'),
+        $ = require('jquery'),
 		templates = require('./templates');
 
 	var Sockets = function() {

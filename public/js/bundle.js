@@ -4419,6 +4419,16 @@ if (typeof define === "function" && define.amd) {
 		if (this.context === 'mobile') {
 			this.setupFallback();
 		}
+
+        var self = this;
+
+		$('.cig').click(function(){
+			var cig_type = $(this).attr('id');
+			$('.cig').removeClass('selected');
+			$(this).addClass('selected');
+			self.updateCigarette('img/' + cig_type + '.png');
+		});
+
 	};
 
 	Avatar.prototype.updateCigarette = function(cigarette) {
@@ -5165,6 +5175,8 @@ module.exports = FluidField;
 (function(){
 	'use strict';
 
+    var $ = require('jquery');
+
 	var Room = function($el, socket) {
 		this.$el = $el;
 		this.socket = socket;
@@ -5239,7 +5251,7 @@ module.exports = FluidField;
 
 
 
-},{}],9:[function(require,module,exports){
+},{"jquery":undefined}],9:[function(require,module,exports){
 (function(){
 	'use strict';
 
@@ -5565,6 +5577,7 @@ module.exports = FluidField;
 	'use strict';
 
 	var io = require('socket.io-client'),
+        $ = require('jquery'),
 		templates = require('./templates');
 
 	var Sockets = function() {
@@ -5738,11 +5751,12 @@ module.exports = FluidField;
 
 }());
 
-},{"./templates":11,"socket.io-client":4}],11:[function(require,module,exports){
+},{"./templates":11,"jquery":undefined,"socket.io-client":4}],11:[function(require,module,exports){
 (function(){
 	'use strict';
 
-	var Smoke = require('./smoke');
+	var $ = require('jquery'),
+        Smoke = require('./smoke');
 
 	var templates = {
 
@@ -5893,9 +5907,11 @@ module.exports = FluidField;
 
 }());
 
-},{"./smoke":9}],12:[function(require,module,exports){
+},{"./smoke":9,"jquery":undefined}],12:[function(require,module,exports){
 (function(){
 	'use strict';
+
+    var $ = require('jquery');
 
 	var setupGetUserMedia = function() {
 		window.navigator.getUserMedia = (window.navigator.getUserMedia ||
@@ -5940,7 +5956,7 @@ module.exports = FluidField;
 
 }());
 
-},{}],"jquery":[function(require,module,exports){
+},{"jquery":undefined}],"jquery":[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v2.1.1
  * http://jquery.com/

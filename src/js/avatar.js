@@ -40,6 +40,16 @@
 		if (this.context === 'mobile') {
 			this.setupFallback();
 		}
+
+        var self = this;
+
+		$('.cig').click(function(){
+			var cig_type = $(this).attr('id');
+			$('.cig').removeClass('selected');
+			$(this).addClass('selected');
+			self.updateCigarette('img/' + cig_type + '.png');
+		});
+
 	};
 
 	Avatar.prototype.updateCigarette = function(cigarette) {

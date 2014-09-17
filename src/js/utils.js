@@ -1,6 +1,8 @@
 (function(){
 	'use strict';
 
+    var $ = require('jquery');
+
 	var setupGetUserMedia = function() {
 		window.navigator.getUserMedia = (window.navigator.getUserMedia ||
 										 window.navigator.webkitGetUserMedia ||

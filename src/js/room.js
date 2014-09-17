@@ -1,6 +1,8 @@
 (function(){
 	'use strict';
 
+    var $ = require('jquery');
+
 	var Room = function($el, socket) {
 		this.$el = $el;
 		this.socket = socket;
