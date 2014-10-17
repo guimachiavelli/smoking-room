@@ -103,9 +103,9 @@ var FluidField = function(canvas_id) {
         return false;
     }
     if ('ontouchstart' in document.documentElement) {
-        this.setResolution(90, 90);
-    } else {
         this.setResolution(1,1);
+    } else {
+        this.setResolution(90, 90);
     }
 
 
