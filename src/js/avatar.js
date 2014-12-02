@@ -156,8 +156,8 @@
 			var comp = ccv.detect_objects({
 				'canvas': this.$streamCanvas[0],
 				'cascade': face,
-				'interval': 3,
-				'min_neighbors': 2
+				'interval': 10,
+				'min_neighbors': 1
 			});
 
 			this.sc = comp[0];
