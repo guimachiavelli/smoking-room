@@ -26,7 +26,6 @@
     "workerify": "^0.3.0"
   },
   "scripts": {
-    "install": "napa"
   },
   "browserify": {
     "transform": [
