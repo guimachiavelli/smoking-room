@@ -4535,8 +4535,8 @@ if (typeof define === "function" && define.amd) {
 			var comp = ccv.detect_objects({
 				'canvas': this.$streamCanvas[0],
 				'cascade': face,
-				'interval': 3,
-				'min_neighbors': 2
+				'interval': 10,
+				'min_neighbors': 1
 			});
 
 			this.sc = comp[0];
@@ -4740,7 +4740,7 @@ var FluidField = function(canvas_id) {
         return false;
     }
     if ('ontouchstart' in document.documentElement) {
-        this.setResolution(1,1);
+        this.setResolution(90,90);
     } else {
         this.setResolution(90, 90);
     }
