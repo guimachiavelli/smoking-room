@@ -22,21 +22,28 @@
     "gulp-plumber": "^0.6.3",
     "gutil": "^1.4.3",
     "napa": "^0.4.1",
-    "vinyl-source-stream": "^0.1.1"
+    "vinyl-source-stream": "^0.1.1",
+    "workerify": "^0.3.0"
   },
-  "browserify" : {
-	  "transform" : ["browserify-shim", "workerify"]
+  "scripts": {
+    "install": "napa"
   },
-  "browser" : {
-	"ccv" : "./node_modules/ccv/ccv.js",
-	"face-detect" : "./node_modules/face-detect/face.js"
+  "browserify": {
+    "transform": [
+      "browserify-shim",
+      "workerify"
+    ]
   },
-  "browserify-shim" : {
-	  "ccv" : "ccv",
-	  "face-detect" : "cascade"
+  "browser": {
+    "ccv": "./node_modules/ccv/ccv.js",
+    "face-detect": "./node_modules/face-detect/face.js"
   },
-  "napa" : {
-	  "ccv" : "https://raw.githubusercontent.com/liuliu/ccv/unstable/js/ccv.js",
-	  "face-detect" : "https://raw.githubusercontent.com/liuliu/ccv/unstable/js/face.js"
+  "browserify-shim": {
+    "ccv": "ccv",
+    "face-detect": "cascade"
+  },
+  "napa": {
+    "ccv": "https://raw.githubusercontent.com/liuliu/ccv/unstable/js/ccv.js",
+    "face-detect": "https://raw.githubusercontent.com/liuliu/ccv/unstable/js/face.js"
   }
 }
