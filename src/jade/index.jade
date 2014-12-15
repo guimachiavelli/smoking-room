@@ -1,83 +1,84 @@
 doctype html
 html
-	head
-		title The smoking room
-		link(rel='stylesheet' href='css/smoking-main.css')
-		meta(name='viewport' content='width=device-width')
-	body
+    head
+        title The smoking room
+        link(rel='stylesheet' href='css/smoking-main.css')
+        meta(name='viewport' content='width=device-width')
+    body
 
-		section#intro
-			b.leaves.right
-			b.leaves.left
+        section#intro
+            b.leaves.right
+            b.leaves.left
 
-			div#intro-wrap
-				h1.site-title Welcome to <br> The smoking room
-				div#welcome
-					h2.site-title.sub Requires camera
-					a#enter.box(href='#') Enter
+            div#intro-wrap
+                h1.site-title Welcome to <br> The smoking room
+                div#welcome
+                    h2.site-title.sub Requires camera
+                    a#enter.box(href='#') Enter
 
 
-				div#setup
-					div.module#selection
-						p.module-title Enter your name, choose<br> an e-cig and start vaping
+                div#setup
+                    div.module#selection
+                        p.module-title Enter your name, choose<br> an e-cig and start vaping
 
-						div#set-username.box
-							input(type='text' placeholder='What\'s your name?')#username
-						div#set-cig.box
-							h2.module-title Which cigarette?
-							ul#cig-list.list
-								li.cig.selected#cig1
-									img(src='img/cig1.png')
-								li.cig#cig2
-									img(src='img/cig2.png')
-								li.cig#cig3
-									img(src='img/cig3.png')
+                        div#set-username.box
+                            input(type='text' placeholder='What\'s your name?')#username
+                        div#set-cig.box
+                            h2.module-title Which cigarette?
+                            ul#cig-list.list
+                                li.cig.selected#cig1
+                                    img(src='img/cig1.png')
+                                li.cig#cig2
+                                    img(src='img/cig2.png')
+                                li.cig#cig3
+                                    img(src='img/cig3.png')
 
-					div#set-avatar.module.box
-						div#webcam
+                    div#set-avatar.module.box
+                        div#webcam
 
-						div#buffer-container
-							canvas#buffer.hidden(width='466' height='350')
+                        div#buffer-container
+                            canvas#buffer.hidden(width='466' height='350')
 
-						div#avatar-container
-							canvas#avatar(width='260' height='350')
+                        div#avatar-container
+                            canvas#avatar(width='260' height='350')
 
-						div#controls
-							a#make-avatar.btn(href='#')
-								img(src='img/ok-btn.png' width='45')
-							a#try-again.btn.hidden(href='#') No, Again
-							a#ready-go.btn.hidden(href='#') Yes, ready
+                        div#controls
+                            a#make-avatar.btn(href='#')
+                                img(src='img/ok-btn.png' width='45')
+                            a#try-again.btn.hidden(href='#') No, Again
+                            a#ready-go.btn.hidden(href='#') Yes, ready
 
-		section#room.blur
-			ul#user-list
+        section#room.blur
+            ul#user-list
 
-			div#chat-windows
+            div#chat-windows
 
-			div.smoke-signs.box
-				a#heart(href='#')
-					img(src='img/heart-btn.png' alt='send a heart')
-				a#lol(href='#')
-					img(src='img/lol-btn.png' alt='send some lulz')
+            div.smoke-signs.box
+                a#heart(href='#')
+                    img(src='img/heart-btn.png' alt='send a heart')
+                a#lol(href='#')
+                    img(src='img/lol-btn.png' alt='send some lulz')
 
-			div#credits.box
-				span.pv Smoking room by
-					a(href='http://twitter.com/pinar_viola' target='_blank') @pinar_viola
-				div#collabs	Code by 
-					a(href='http://guimachiavelli.com' target='_blank') gui machiavelli
-					br
-					span This project is originally made for
-					a(href='http://rhizome.org' target='_blank') Rhizome
-					span as part of
-					a(href='http://www.newmuseum.org/calendar/view/this-is-the-endd-the-e-cigarette-in-context' target='_blank') This is the ENDD
-					span at
-					a(href='http://www.newmuseum.org/' target='_blank') New Museum
+            div#credits.box
+                div.pv Smoking room by
+                    a(href='http://twitter.com/pinar_viola' target='_blank') @pinar_viola
+                div#collabs 
+                    span Code by 
+                    a(href='http://guimachiavelli.com' target='_blank') gui machiavelli
+                    br
+                    span This project is originally made for 
+                    a(href='http://rhizome.org' target='_blank') Rhizome  
+                    span as part of 
+                    a(href='http://www.newmuseum.org/calendar/view/this-is-the-endd-the-e-cigarette-in-context' target='_blank') This is the ENDD 
+                    span at 
+                    a(href='http://www.newmuseum.org/' target='_blank') New Museum
 
-			div#facebook.box
-				a#like(href='#' ) Do you like it?
-				div.hidden
-					iframe(src="//www.facebook.com/plugins/like.php?href=https%3A%2F%2Fwww.facebook.com%2Fonlinesmokingroom&ampwidth=50&amp;layout=button&amp;action=like&amp;show_faces=false&amp;share=false&amp;height=35" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:50px; height:35px;" allowTransparency="true")
+            div#facebook.box
+                a#like(href='#' ) Do you like it?
+                div.hidden
+                    iframe(src="//www.facebook.com/plugins/like.php?href=https%3A%2F%2Fwww.facebook.com%2Fonlinesmokingroom&ampwidth=50&amp;layout=button&amp;action=like&amp;show_faces=false&amp;share=false&amp;height=35" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:50px; height:35px;" allowTransparency="true")
 
-			div#smoke-alert.box You can create smoke shapes in the form of a heart and LOL
+            div#smoke-alert.box You can create smoke shapes in the form of a heart and LOL
 
-		script(src='socket.io/socket.io.js')
-		script(src='js/bundle.js')
+        script(src='socket.io/socket.io.js')
+        script(src='js/bundle.js')
