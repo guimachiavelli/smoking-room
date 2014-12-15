@@ -56,7 +56,8 @@ app.configure () ->
 	app.use express.static(__dirname + '/public')
 
 	# getting rid of pesky verbose socket.io logs
-	io.set 'log level', 2
+	io.set 'log level', 3
+	io.set 'close timeout', (60*60*24)
 
 
 # starting socket magic
